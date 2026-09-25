@@ -1,0 +1,866 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>نجمات الترتيل</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Baloo+Bhaijaan+2:wght@400;500;600;700;800&family=Lalezar&display=swap">
+<style>
+:root{
+  --sky1:#18204E; --sky2:#33307A; --sky3:#6B4A9E; --sky4:#A8568F;
+  --card:#FFFBF3; --card2:#FFF1DC; --line:#EFDCC0;
+  --ink:#2B2350; --muted:#6E6690;
+  --amber:#FFB53D; --amberD:#D98300; --amberL:#FFE3A6;
+  --pink:#FF6FA0; --pinkD:#D14578; --pinkL:#FFD3E2;
+  --mint:#34C7A8; --mintD:#16917A;
+  --violet:#8D7BF2; --violetD:#6352C8;
+  --ok:#1E9E62; --bad:#E0484D;
+  --f-ui:"Baloo Bhaijaan 2","Noto Sans Arabic",Tahoma,sans-serif;
+  --f-disp:"Lalezar","Baloo Bhaijaan 2",Tahoma,sans-serif;
+  --f-q:"Amiri Quran","Amiri","Traditional Arabic","Noto Naskh Arabic",serif;
+}
+html,body{height:100%}
+body{background:linear-gradient(180deg,var(--sky1) 0%,var(--sky2) 45%,var(--sky3) 80%,var(--sky4) 100%) fixed;color:var(--ink);font-family:var(--f-ui);font-size:17px;-webkit-tap-highlight-color:transparent}
+#sky{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+#sky i{position:absolute;width:3px;height:3px;border-radius:50%;background:#fff;opacity:.7;animation:tw 3s ease-in-out infinite}
+#sky .moon{position:absolute;top:22px;left:22px;width:54px;height:54px;border-radius:50%;box-shadow:-12px 8px 0 0 #FFE3A6;transform:rotate(-20deg);opacity:.9}
+@keyframes tw{50%{opacity:.15}}
+#app{position:relative;z-index:1;max-width:580px;margin:0 auto;padding-inline:16px;padding-block:14px 90px;min-height:100%;box-sizing:border-box}
+button{font-family:inherit;cursor:pointer;color:inherit}
+button:focus-visible{outline:3px solid var(--amber);outline-offset:3px}
+.q{font-family:var(--f-q);line-height:2.1}
+.hl{color:var(--pinkD)}
+h1,h2,h3{text-wrap:balance;margin:0}
+
+/* buttons */
+.btn{border:0;border-radius:18px;padding:12px 22px;font-size:19px;font-weight:700;background:var(--amber);color:#3A2400;box-shadow:0 5px 0 var(--amberD);transition:transform .08s,box-shadow .08s}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--amberD)}
+.btn.pink{background:var(--pink);color:#fff;box-shadow:0 5px 0 var(--pinkD)}
+.btn.mint{background:var(--mint);color:#063B31;box-shadow:0 5px 0 var(--mintD)}
+.btn.ghost{background:rgba(255,255,255,.14);color:#fff;box-shadow:0 5px 0 rgba(0,0,0,.25)}
+.btn.small{font-size:16px;padding:8px 14px;border-radius:14px}
+.icon-btn{border:0;background:rgba(255,255,255,.16);color:#fff;border-radius:14px;min-width:44px;height:44px;font-size:20px;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding-inline:10px;font-weight:700}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.center{text-align:center}
+.spacer{flex:1}
+
+/* home */
+.logo{text-align:center;color:#fff;padding-top:26px}
+.logo .sub{font-size:16px;opacity:.85;letter-spacing:.3px}
+.logo h1{font-family:var(--f-disp);font-weight:400;font-size:clamp(52px,15vw,76px);line-height:1.1;color:var(--amberL);text-shadow:0 4px 0 #8A4B00,0 0 30px rgba(255,181,61,.45)}
+.logo h1 span{color:var(--pinkL);text-shadow:0 4px 0 #9B2C57,0 0 30px rgba(255,111,160,.45)}
+.logo p{margin:6px auto 0;max-width:30ch;font-size:17px;opacity:.95;line-height:1.6}
+.pick{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:26px}
+.pcard{border:0;background:var(--card);border-radius:28px;padding:16px 10px 18px;box-shadow:0 8px 0 rgba(0,0,0,.25);display:flex;flex-direction:column;align-items:center;gap:6px;transition:transform .15s}
+.pcard:hover{transform:translateY(-4px) rotate(-1deg)}
+.pcard svg{width:min(120px,30vw);height:auto;animation:bob 3s ease-in-out infinite}
+.pcard:nth-child(2) svg{animation-delay:-1.5s}
+.pcard b{font-family:var(--f-disp);font-weight:400;font-size:32px;line-height:1.2}
+.pcard small{color:var(--muted);font-size:15px}
+@keyframes bob{50%{transform:translateY(-6px)}}
+.home-foot{margin-top:28px;color:#fff;opacity:.8;font-size:14px;text-align:center;line-height:1.7}
+.home-duel{margin-top:18px;display:flex;justify-content:center}
+
+/* top bar */
+.top{display:flex;align-items:center;gap:8px;color:#fff;position:sticky;top:env(safe-area-inset-top,0px);z-index:5;padding-block:8px;background:linear-gradient(180deg,var(--sky1) 70%,rgba(24,32,78,0))}
+.top .me{display:flex;align-items:center;gap:8px;font-weight:700;font-size:19px}
+.top .me svg{width:44px;height:44px}
+.pill{background:rgba(255,255,255,.16);border-radius:999px;padding:4px 12px;font-weight:700;display:inline-flex;align-items:center;gap:4px;font-variant-numeric:tabular-nums}
+
+/* map */
+.map-hero{color:#fff;text-align:center;margin:8px 0 2px}
+.map-hero h2{font-family:var(--f-disp);font-weight:400;font-size:30px;color:var(--amberL)}
+.map-hero p{margin:2px 0 0;opacity:.85;font-size:15px}
+.map{position:relative;padding:18px 0 30px}
+.map svg.path{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.st{position:relative;display:flex;flex-direction:column;align-items:center;width:150px;border:0;background:none;padding:0;margin-block:4px;margin-inline-start:calc(var(--x) - 75px)}
+.st .lan{width:76px;height:100px;filter:drop-shadow(0 6px 10px rgba(0,0,0,.3))}
+.st.cur .lan{animation:swing 2.2s ease-in-out infinite;transform-origin:50% 0}
+.st.lock{cursor:not-allowed}
+.st.lock .lbl{opacity:.6}
+@keyframes swing{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+.st .lbl{background:var(--card);border-radius:14px;padding:3px 12px 5px;font-weight:700;font-size:15px;box-shadow:0 4px 0 rgba(0,0,0,.2);text-align:center;line-height:1.35;max-width:150px}
+.st .lbl small{display:block;color:#E8A200;letter-spacing:2px;font-size:14px}
+.st.cur .lbl{background:var(--pink);color:#fff}
+.st.cur .lbl small{color:#FFE3A6}
+.st .here{position:absolute;top:-8px;inset-inline-end:8px;background:var(--pink);color:#fff;font-size:13px;border-radius:10px;padding:0 8px;font-weight:700}
+.map-end{text-align:center;color:#fff;margin-top:6px;opacity:.9}
+
+/* card surfaces */
+.sheet{background:var(--card);border-radius:28px;padding:20px 18px;box-shadow:0 10px 0 rgba(0,0,0,.22)}
+.head{display:flex;align-items:center;gap:10px;color:#fff;margin-bottom:12px}
+.head h2{font-family:var(--f-disp);font-weight:400;font-size:26px;color:var(--amberL);line-height:1.2}
+.head .step{margin-inline-start:auto;font-size:14px;opacity:.85}
+.guide{display:flex;align-items:flex-end;gap:8px;margin-bottom:12px}
+.guide svg{width:66px;height:66px;flex:none}
+.bubble{background:#fff;border-radius:20px 20px 20px 4px;padding:10px 14px;font-size:16px;line-height:1.55;box-shadow:0 4px 0 rgba(0,0,0,.18);position:relative}
+.sl-t{font-family:var(--f-disp);font-weight:400;font-size:28px;color:var(--c,var(--pinkD));margin-bottom:6px}
+.sl-p{font-size:18px;line-height:1.75;margin:6px 0}
+.sl-p mark{background:var(--amberL);border-radius:6px;padding:0 4px;color:inherit}
+.sl-list{margin:8px 0;padding-inline-start:0;list-style:none;display:grid;gap:8px;counter-reset:n}
+.sl-list li{counter-increment:n;display:flex;gap:10px;align-items:flex-start;background:var(--card2);border-radius:14px;padding:8px 12px;font-size:17px;line-height:1.6}
+.sl-list li::before{content:counter(n);flex:none;width:28px;height:28px;border-radius:50%;background:var(--c,var(--pink));color:#fff;display:grid;place-items:center;font-weight:800;font-size:15px;margin-top:2px}
+.big{font-size:30px;text-align:center;background:var(--card2);border-radius:18px;padding:4px 10px;margin:8px 0}
+.letters{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:12px 0}
+.lt{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-family:var(--f-q);font-size:28px;background:var(--c);color:#fff;box-shadow:0 4px 0 rgba(0,0,0,.2);animation:popin .4s both}
+.mn{border:2px dashed var(--c,var(--amber));border-radius:18px;padding:6px 12px;text-align:center;margin:10px 0;background:#fff}
+.mn small{display:block;color:var(--muted);font-size:14px}
+.mn .q{font-size:24px}
+.exs{display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:8px;margin:10px 0}
+.ex{background:#fff;border:2px solid var(--line);border-radius:14px;padding:2px 8px;text-align:center;font-size:23px}
+.ex em{display:block;font-family:var(--f-ui);font-style:normal;font-size:13px;color:var(--muted);line-height:1.3;margin-top:-4px;padding-bottom:4px}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin:10px 0}
+.rule-chip{background:var(--c);color:#fff;border-radius:16px;padding:10px 8px;text-align:center;font-weight:700;font-size:17px;box-shadow:0 4px 0 rgba(0,0,0,.18);line-height:1.4}
+.rule-chip small{display:block;font-weight:500;font-size:14px;opacity:.95}
+.tip{background:#FFF4D6;border-radius:16px;padding:10px 14px;margin-top:12px;font-size:16px;line-height:1.6;border-inline-start:6px solid var(--amber)}
+.tbl{width:100%;border-collapse:separate;border-spacing:0 6px;font-size:16px}
+.tbl td{background:#fff;padding:6px 10px}
+.tbl td:first-child{border-radius:0 12px 12px 0;font-weight:700;color:var(--c)}
+.tbl td:last-child{border-radius:12px 0 0 12px;text-align:center;font-variant-numeric:tabular-nums}
+.nav{display:flex;gap:10px;margin-top:16px}
+.nav .btn{flex:1}
+.dots{display:flex;gap:6px;justify-content:center;margin-top:12px}
+.dots i{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.35)}
+.dots i.on{background:var(--amber);width:22px;border-radius:6px}
+
+/* play */
+.gprog{display:flex;gap:6px;flex:1;margin-inline:6px}
+.gprog i{flex:1;height:10px;border-radius:6px;background:rgba(255,255,255,.2)}
+.gprog i.done{background:var(--mint)}
+.gprog i.on{background:var(--amber)}
+.gtitle{color:#fff;text-align:center;margin:4px 0 10px}
+.gtitle h3{font-family:var(--f-disp);font-weight:400;font-size:25px;color:var(--amberL)}
+.gtitle p{margin:0;opacity:.85;font-size:15px}
+.cnt{color:#fff;text-align:center;font-size:14px;opacity:.8;margin-bottom:6px;font-variant-numeric:tabular-nums}
+.qcard{background:var(--card);border-radius:26px;padding:16px;text-align:center;box-shadow:0 8px 0 rgba(0,0,0,.22);min-height:120px;display:flex;flex-direction:column;justify-content:center;gap:4px}
+.qq{font-size:19px;font-weight:700;margin:0;line-height:1.6}
+.gtitle + .qq,#stage > .qq{color:#fff;text-align:center;margin-bottom:10px}
+.qw{font-size:40px;line-height:1.9}
+.qt{font-size:20px;font-weight:600;line-height:1.6;background:var(--card2);border-radius:14px;padding:8px 10px}
+.opts{display:grid;gap:10px;margin-top:16px}
+.opts.g2{grid-template-columns:1fr 1fr}
+.opt{border:0;background:#fff;border-radius:18px;padding:12px 10px;font-size:18px;font-weight:700;box-shadow:0 5px 0 #D8C9EE;line-height:1.45;min-height:58px;transition:transform .08s}
+.opt.q{font-family:var(--f-q);font-weight:400;font-size:26px;line-height:1.7}
+.opt:active{transform:translateY(3px)}
+.opt.good{background:var(--ok);color:#fff;box-shadow:0 5px 0 #11734A}
+.opt.bad{background:var(--bad);color:#fff;box-shadow:0 5px 0 #A12A2F}
+.opt:disabled{cursor:default}
+.baskets{display:grid;gap:10px;margin-top:16px;grid-template-columns:repeat(var(--n),1fr)}
+.basket{border:0;background:var(--c);color:#fff;border-radius:18px 18px 26px 26px;padding:12px 6px 10px;font-weight:700;font-size:17px;box-shadow:0 6px 0 rgba(0,0,0,.25);line-height:1.35;position:relative}
+.basket b{display:block;font-size:13px;opacity:.95;font-weight:600}
+.basket .n{position:absolute;top:-10px;inset-inline-start:-6px;background:#fff;color:var(--ink);border-radius:999px;min-width:26px;height:26px;display:grid;place-items:center;font-size:14px;box-shadow:0 2px 0 rgba(0,0,0,.2)}
+.basket.good{outline:4px solid #fff}
+.basket.bad{filter:grayscale(.6)}
+.basket:disabled{cursor:default}
+.basket.bounce{animation:bounce .4s}
+@keyframes bounce{40%{transform:translateY(-10px) scale(1.05)}}
+
+.arena{position:relative;height:min(58vh,440px);border-radius:26px;background:radial-gradient(120% 80% at 50% 110%,rgba(255,111,160,.35),rgba(255,255,255,.06));overflow:hidden;border:2px solid rgba(255,255,255,.2);touch-action:manipulation}
+.bub{position:absolute;left:0;top:0;border:0;border-radius:50%;padding:0;display:grid;place-items:center;font-size:32px;color:var(--ink);background:radial-gradient(circle at 32% 28%,#fff 0 12%,var(--bc,#CFE9FF) 45%,var(--bc2,#8DC7FF) 100%);box-shadow:inset -4px -6px 12px rgba(0,0,0,.12),0 6px 14px rgba(0,0,0,.18);font-family:var(--f-q);line-height:1;will-change:transform}
+.bub.q{font-size:22px;line-height:1.5}
+.bub.popped{animation:popout .3s forwards}
+.bub.nope{background:radial-gradient(circle at 32% 28%,#fff 0 12%,#FFC1C3 45%,#F07C80 100%);animation:wob .4s}
+@keyframes popout{to{scale:1.6;opacity:0}}
+@keyframes wob{25%{rotate:-12deg}75%{rotate:12deg}}
+.need{display:flex;align-items:center;gap:10px;color:#fff;font-weight:700;margin-bottom:10px;font-variant-numeric:tabular-nums}
+.bar{flex:1;height:14px;border-radius:8px;background:rgba(255,255,255,.2);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--amber),var(--pink));border-radius:8px;transition:width .3s}
+
+.mem{display:grid;gap:10px;grid-template-columns:repeat(var(--cols),1fr)}
+.mc{border:0;padding:0;background:none;aspect-ratio:3/3.6;max-width:100%;perspective:600px;position:relative}
+.mc span{position:absolute;inset:0;border-radius:18px;display:grid;place-items:center;backface-visibility:hidden;transition:transform .45s;padding:4px;box-sizing:border-box}
+.mc .back{background:repeating-linear-gradient(45deg,var(--violet) 0 10px,var(--violetD) 10px 20px);color:var(--amberL);font-size:30px;box-shadow:0 5px 0 rgba(0,0,0,.25)}
+.mc .front{background:#fff;transform:rotateY(180deg);font-weight:700;font-size:16px;line-height:1.35;box-shadow:0 5px 0 #D8C9EE}
+.mc .front.q{font-weight:400;font-size:21px;line-height:1.6}
+.mc.flip .back{transform:rotateY(-180deg)}
+.mc.flip .front{transform:rotateY(0)}
+.mc.matched .front{background:#DDF7EC;box-shadow:0 5px 0 var(--ok)}
+
+.slots{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;background:var(--card);border-radius:22px;padding:14px;min-height:70px;box-shadow:0 8px 0 rgba(0,0,0,.22)}
+.slot{min-width:54px;height:54px;border-radius:14px;border:2px dashed #CDBFE8;display:grid;place-items:center;font-family:var(--f-q);font-size:24px;padding-inline:8px;line-height:1.6}
+.slot.filled{border:2px solid var(--mint);background:#E6FBF5;animation:popin .3s}
+.slots.glow{box-shadow:0 0 0 5px var(--amber),0 8px 0 rgba(0,0,0,.22)}
+.toks{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:18px}
+.tok{border:0;background:#fff;border-radius:16px;min-width:56px;height:58px;padding-inline:14px;font-size:25px;box-shadow:0 5px 0 #D8C9EE;line-height:1.6}
+.tok.used{visibility:hidden}
+.shake{animation:shake .4s}
+@keyframes shake{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+@keyframes popin{from{transform:scale(.4);opacity:0}}
+.pop-in{animation:popin .3s both}
+
+.meter{display:flex;gap:6px;justify-content:center;align-items:center;margin-top:8px;flex-wrap:wrap}
+.meter i{width:26px;height:26px;border-radius:50%;background:var(--pinkL);display:grid;place-items:center;font-style:normal;font-size:13px;font-weight:800;color:var(--pinkD);animation:popin .3s both}
+.meter span{font-weight:700;color:var(--muted);font-size:14px}
+
+/* feedback sheet */
+#fb{position:fixed;inset-inline:0;bottom:0;z-index:40;display:flex;justify-content:center;padding:0 12px calc(12px + env(safe-area-inset-bottom,0px));pointer-events:none}
+#fb .in{max-width:560px;width:100%;border-radius:24px;padding:12px 14px;display:flex;gap:10px;align-items:center;box-shadow:0 -4px 30px rgba(0,0,0,.3);pointer-events:auto;animation:up .25s both}
+#fb .in.ok{background:#E3F9EE;border:3px solid var(--ok)}
+#fb .in.no{background:#FFF0F0;border:3px solid var(--bad)}
+#fb svg{width:56px;height:56px;flex:none}
+#fb .tx{flex:1;font-size:16px;line-height:1.55}
+#fb .tx b{font-size:19px;display:block}
+#fb .tx .q{font-size:22px}
+@keyframes up{from{transform:translateY(120%)}}
+#toast{position:fixed;top:calc(70px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);background:#fff;color:var(--ink);border-radius:999px;padding:8px 18px;font-weight:700;z-index:50;box-shadow:0 6px 20px rgba(0,0,0,.25);opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap;max-width:90vw;overflow:hidden;text-overflow:ellipsis}
+#toast.on{opacity:1}
+#fx{position:fixed;inset:0;pointer-events:none;z-index:60;width:100%;height:100%}
+
+/* result */
+.res{text-align:center}
+.res .stars{display:flex;justify-content:center;gap:6px;margin:10px 0 4px}
+.res .stars svg{width:70px;height:70px;animation:starin .5s both}
+.res .stars svg:nth-child(2){animation-delay:.25s;transform:translateY(-10px)}
+.res .stars svg:nth-child(3){animation-delay:.5s}
+@keyframes starin{from{transform:scale(0) rotate(-90deg)}}
+.res h2{font-family:var(--f-disp);font-weight:400;font-size:34px;color:var(--pinkD)}
+.badge{display:inline-flex;align-items:center;gap:10px;background:var(--card2);border-radius:18px;padding:8px 16px;margin-top:10px;font-weight:700}
+.badge span{font-size:34px}
+
+/* arcade */
+.agrid{display:grid;gap:14px}
+.acard{background:var(--card);border-radius:24px;padding:14px 16px;box-shadow:0 8px 0 rgba(0,0,0,.22);display:grid;grid-template-columns:64px 1fr;gap:4px 12px;align-items:center}
+.acard .ic{grid-row:span 2;width:64px;height:64px;border-radius:18px;display:grid;place-items:center;font-size:34px;background:var(--c)}
+.acard h3{font-family:var(--f-disp);font-weight:400;font-size:23px;color:var(--ink)}
+.acard p{margin:0;color:var(--muted);font-size:15px;line-height:1.5}
+.acard .lv{grid-column:1/-1;display:flex;gap:8px;margin-top:8px}
+.acard .lv .btn{flex:1;font-size:16px;padding:8px 6px}
+.acard .best{grid-column:1/-1;font-size:14px;color:var(--muted);margin-top:4px}
+.timer{font-variant-numeric:tabular-nums}
+.duel-sc{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;margin-bottom:10px}
+.duel-sc .p{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.14);border-radius:18px;padding:6px 10px;color:#fff;font-weight:700;transition:all .2s}
+.duel-sc .p svg{width:40px;height:40px}
+.duel-sc .p.on{background:var(--card);color:var(--ink);box-shadow:0 0 0 4px var(--amber)}
+.duel-sc .p b{font-size:24px;margin-inline-start:auto;font-variant-numeric:tabular-nums}
+.duel-sc .vs{color:var(--amberL);font-family:var(--f-disp);font-size:22px}
+
+/* treasures */
+.tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.tb{background:var(--card);border-radius:20px;padding:10px 6px;text-align:center;box-shadow:0 6px 0 rgba(0,0,0,.2);font-size:14px;font-weight:700;line-height:1.35}
+.tb span{font-size:38px;display:block;line-height:1.3}
+.tb.off{background:rgba(255,255,255,.12);color:rgba(255,255,255,.6);box-shadow:none}
+.tb.off span{filter:grayscale(1) brightness(1.6);opacity:.35}
+.tb small{display:block;color:#E8A200;letter-spacing:2px}
+
+/* certificate */
+.cert{background:var(--card);border-radius:24px;padding:10px;box-shadow:0 10px 0 rgba(0,0,0,.25)}
+.cert .in{border:3px double var(--amber);border-radius:18px;padding:22px 16px;text-align:center;background:radial-gradient(circle at 50% 0,#FFF3D6,#FFFBF3 60%)}
+.cert h2{font-family:var(--f-disp);font-weight:400;font-size:36px;color:var(--amberD)}
+.cert .nm{font-family:var(--f-disp);font-size:52px;color:var(--pinkD);line-height:1.3}
+.cert p{font-size:17px;line-height:1.8;margin:6px 0}
+.cert svg{width:110px}
+
+@media (max-width:380px){.qw{font-size:34px}.opt{font-size:16px}.basket{font-size:15px}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+
+<div id="sky" aria-hidden="true"><div class="moon"></div></div>
+<main id="app" dir="rtl" lang="ar"></main>
+<div id="fb" dir="rtl"></div>
+<div id="toast" dir="rtl"></div>
+<canvas id="fx"></canvas>
+
+<script>
+/* ============ ألوان الأحكام ============ */
+const C={adab:'#1E9E62',isti:'#6352C8',ghunna:'#D6336C',izhar:'#1E9E62',idgham:'#7B4FD6',idghamN:'#C2410C',iqlab:'#E8650F',ikhfa:'#0B86C4',meem:'#C0366F',qalq:'#D23350',mith:'#7B4FD6',qarib:'#E8650F',jins:'#0B86C4',tafk:'#B35A00',tarq:'#0E8FA6',wajh:'#1E9E62',madd:'#6D3FD6',hamz:'#D6336C',sukun:'#0B86C4'};
+
+/* ============ محتوى الكتاب: هدي الرحمن في مبادئ تجويد القرآن ============ */
+const STATIONS=[
+{ id:'adab', name:'آداب التلاوة', icon:'🕌', color:C.adab, badge:['🕌','قارئة مؤدّبة'],
+  lesson:[
+   {t:'آداب تلاوة القرآن الكريم', say:'قبل أن نبدأ رحلة التجويد، نتعلم كيف نجلس مع القرآن بأدب وحب.', p:['للتلاوة آداب جميلة نحافظ عليها دائمًا:'],
+    list:['نظافة المكان والثياب والبدن','الابتعاد عن الملهيات مثل التلفاز والألعاب','الاستعاذة والبسملة عند البدء بالقراءة','المحافظة على قراءة القرآن يوميًا'],
+    tip:'🌸 أجلس بهدوء، وأبعد الجهاز عني، وأبدأ: أعوذ بالله من الشيطان الرجيم.'}
+  ],
+  games:[
+   {type:'sort', title:'سلّة الآداب', ask:'هل هذا من آداب التلاوة؟', buckets:[{id:'y',label:'أفعله',sub:'من الآداب ✓',c:C.adab},{id:'n',label:'أتركه',sub:'ليس من الآداب ✗',c:'#D23350'}],
+    items:[{t:'أنظّف مكاني قبل أن أقرأ',b:'y'},{t:'ألبس ثيابًا نظيفة',b:'y'},{t:'أكون نظيفة البدن',b:'y'},{t:'أقرأ والتلفاز يعمل بجانبي',b:'n',why:'نبتعد عن الملهيات مثل التلفاز.'},{t:'ألعب بالجهاز أثناء القراءة',b:'n',why:'نبتعد عن الملهيات مثل الألعاب.'},{t:'أبدأ بالاستعاذة والبسملة',b:'y'},{t:'أقرأ القرآن كل يوم',b:'y'},{t:'أترك القرآن أيامًا كثيرة',b:'n',why:'نحافظ على قراءة القرآن يوميًا.'}]},
+   {type:'quiz', title:'سؤال وجواب', items:[
+    {q:'ماذا نقول قبل أن نبدأ القراءة؟',opts:['الاستعاذة والبسملة','صباح الخير','لا نقول شيئًا'],a:0},
+    {q:'كم مرة نقرأ القرآن؟',opts:['كل يوم','في العيد فقط','مرة في السنة'],a:0},
+    {q:'كيف يكون مكان القراءة؟',opts:['نظيفًا مرتّبًا','بجانب التلفاز','مليئًا بالألعاب'],a:0},
+    {q:'الجهاز اللوحي بجانبي وأنا أقرأ، ماذا أفعل؟',opts:['أبعده عني','ألعب قليلًا ثم أقرأ','أشغّل صوت اللعبة'],a:0}]}
+  ]},
+{ id:'isti', name:'الاستعاذة والبسملة', icon:'🛡️', color:C.isti, badge:['🛡️','حارسة البداية'],
+  lesson:[
+   {t:'الاستعاذة', big:'أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ', p:['الاستعاذة هي قولنا: <mark>أعوذ بالله من الشيطان الرجيم</mark>.','معناها: أتحصّن وأحتمي بالله من الشيطان.','متى نقرؤها؟ يُستحب قراءتها بصوت عالٍ عند بداية قراءة القرآن.'], tip:'🛡️ الاستعاذة مثل درعٍ يحميني قبل أن أبدأ القراءة.'},
+   {t:'البسملة', big:'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ', p:['البسملة هي قولنا: <mark>بسم الله الرحمن الرحيم</mark>.'], list:['تجب قراءة البسملة في أول كل سورة (ما عدا سورة التوبة).','تُستحب قراءة البسملة عند البدء بالقراءة في أواسط السور.']}
+  ],
+  games:[
+   {type:'order', title:'رتّبي الكلمات', items:[
+    {prompt:'رتّبي كلمات الاستعاذة بالترتيب', tokens:['أَعُوذُ','بِاللَّهِ','مِنَ','الشَّيْطَانِ','الرَّجِيمِ']},
+    {prompt:'رتّبي كلمات البسملة بالترتيب', tokens:['بِسْمِ','اللَّهِ','الرَّحْمَٰنِ','الرَّحِيمِ']}]},
+   {type:'quiz', title:'سؤال وجواب', items:[
+    {q:'ما معنى الاستعاذة؟',opts:['أتحصّن وأحتمي بالله من الشيطان','أشكر الله على النعم','أسلّم على الناس'],a:0},
+    {q:'متى نقرأ الاستعاذة؟',opts:['عند بداية قراءة القرآن','بعد انتهاء القراءة فقط','لا نقرؤها أبدًا'],a:0},
+    {q:'ماذا نقرأ في أول كل سورة؟',opts:['البسملة','التكبير','التسبيح'],a:0},
+    {q:'كيف يُستحب أن نقرأ الاستعاذة؟',opts:['بصوت عالٍ','بصوت مخفيّ دائمًا','لا نقرؤها'],a:0}]},
+   {type:'tf', title:'صح أم خطأ؟', items:[
+    {s:'البسملة هي: بسم الله الرحمن الرحيم',a:true},
+    {s:'نقرأ الاستعاذة بعد أن ننتهي من القراءة فقط',a:false,why:'يُستحب قراءتها عند بداية القراءة.'},
+    {s:'تُستحب البسملة إذا بدأنا القراءة من وسط السورة',a:true},
+    {s:'الاستعاذة هي قولنا: أعوذ بالله من الشيطان الرجيم',a:true}]}
+  ]},
+{ id:'shadda', name:'النون والميم المشددتان', icon:'🔔', color:C.ghunna, badge:['🔔','صاحبة الغنّة'],
+  lesson:[
+   {t:'النون والميم المشدّدتان', say:'انظري إلى الشدّة فوق النون والميم!', p:['إذا رأيتِ نونًا عليها شدّة <mark>نّ</mark> أو ميمًا عليها شدّة <mark>مّ</mark>:','حكمهما: <mark>الغنّة</mark>، فنطوّل زمن الغنة فيهما بمقدار <mark>حركتين</mark>.'],
+    ex:['إِ[نَّ]','حَ[مَّ]الَةَ','ثُ[مَّ]','ال[نَّ]اسِ','عَ[مَّ]','الْجَ[نَّ]ةَ'], tip:'🔔 الغنّة صوتٌ جميل يخرج من الأنف، مثل رنين جرسٍ خفيف.'},
+   {t:'ما هي الحركة؟', p:['الحركة هي مقدار زمنيّ صغير، مثل قبض الإصبع أو بسطه.','حركتان = قبض إصبعين ✌️'], tip:'جرّبي الآن: قولي «إنّ» وأمسكي الغنة وأنتِ تقبضين إصبعين.'}
+  ],
+  games:[
+   {type:'pop', title:'فقاعات الغنّة', prompt:'فرقعي الفقاعات التي فيها نونٌ مشدّدة أو ميمٌ مشدّدة', quran:true, need:7,
+    targets:['إِنَّ','ثُمَّ','حَمَّالَةَ','النَّاسِ','عَمَّ','جَنَّةٍ','لَمَّا','أُمَّةٌ'], others:['قُلْ','رَبِّ','مِنْ','لَهُمْ','كِتَابٌ','نُورٌ','يَوْمَ','عَلَيْهِمْ'], hint:'ابحثي عن الشدّة فوق النون أو الميم'},
+   {type:'quiz', title:'سؤال وجواب', items:[
+    {w:'إِ[نَّ]',q:'ما حكم النون في هذه الكلمة؟',opts:['غنّة بمقدار حركتين','إظهار','قلقلة'],a:0},
+    {q:'كم نطوّل الغنّة في النون والميم المشدّدتين؟',opts:['حركتين','ست حركات','لا نطوّلها'],a:0,beats:2},
+    {w:'حَ[مَّ]الَةَ',q:'أين الغنّة في هذه الكلمة؟',opts:['في الميم المشدّدة','في الحاء','في اللام'],a:0},
+    {w:'ثُ[مَّ]',q:'ما الحرف المشدّد هنا؟',opts:['الميم','الثاء','لا يوجد'],a:0}]}
+  ]},
+{ id:'izhar', name:'الإظهار', icon:'☀️', color:C.izhar, badge:['☀️','شمس الإظهار'],
+  lesson:[
+   {t:'أحكام النون الساكنة والتنوين', say:'هذه أهم محطة! تعرّفي على أربعة أحكام.', p:['النون الساكنة هي نونٌ عليها سكون <mark>نْ</mark>، والتنوين هو <mark>ـً ـٍ ـٌ</mark>.','أحكام النون الساكنة والتنوين أربعة:'],
+    rules:[['الإظهار',C.izhar],['الإدغام',C.idgham],['الإقلاب',C.iqlab],['الإخفاء',C.ikhfa]]},
+   {t:'الإظهار ☀️', p:['الإظهار هو: <mark>البيان والوضوح</mark>، كالشمس في إيضاحها للأشياء.','نُظهر النون الساكنة والتنوين إذا أتى بعدها أحد الحروف التالية:'], letters:['ء','هـ','ع','ح','غ','خ'], mn:'أَخِي هَاكَ عِلْمًا حَازَهُ غَيْرُ خَاسِرِ', tip:'أول حرف من كل كلمة في الجملة هو حرف إظهار: أ، هـ، ع، ح، غ، خ'},
+   {t:'أمثلة على الإظهار', p:['في كلمة، وفي كلمتين، ومع التنوين:'], ex:[['يَ[نْهَ]وْنَ','كلمة'],['أَ[نْعَ]مْتَ','كلمة'],['يَ[نْحِ]تُونَ','كلمة'],['مَ[نْ آ]مَنَ','كلمتان'],['مِ[نْ حَ]كِيمٍ','كلمتان'],['مِ[نْ خَ]شْيَةِ','كلمتان'],['قَوْ[مٍ هَ]ادٍ','تنوين'],['عَلِي[مٌ حَ]كِيمٌ','تنوين'],['حَكِي[مٍ خَ]بِيرٍ','تنوين']]}
+  ],
+  games:[
+   {type:'pop', title:'فقاعات الإظهار', prompt:'فرقعي فقاعات حروف الإظهار الستة', need:8, targets:['ء','هـ','ع','ح','غ','خ'], others:['ب','ت','ل','ر','م','ق','س','ي','ك','ف'], hint:'حروف الإظهار: ء هـ ع ح غ خ'},
+   {type:'order', title:'جملة الشمس', items:[{prompt:'رتّبي جملة حروف الإظهار', tokens:['أَخِي','هَاكَ','عِلْمًا','حَازَهُ','غَيْرُ','خَاسِرِ']}]},
+   {type:'quiz', title:'اكتشفي الحرف', q:'ما حرف الإظهار الذي جاء بعد النون الساكنة أو التنوين؟', qopts:true, items:[
+    {w:'مِ[نْ خَ]شْيَةِ',opts:['خ','ش','ي'],a:0},{w:'مَ[نْ عَ]اهَدَ',opts:['ع','هـ','د'],a:0},{w:'مِ[نْ غِ]لٍّ',opts:['غ','ل','م'],a:0},
+    {w:'عَذَا[بًا أَ]لِيمًا',opts:['ء','ل','م'],a:0},{w:'مِ[نْ هَ]ادٍ',opts:['هـ','د','ا'],a:0},{w:'لَعَفُ[وٌّ غَ]فُورٌ',opts:['غ','ف','ر'],a:0}]}
+  ]},
+{ id:'idgham', name:'الإدغام', icon:'☕', color:C.idgham, badge:['☕','سكّر الإدغام'],
+  lesson:[
+   {t:'الإدغام ☕', p:['الإدغام هو: <mark>دمج الحرف الأول بالحرف الثاني</mark>، كالسكّر حين يندمج في الشاي.','نُدغم النون الساكنة والتنوين إذا أتى بعدها أحد حروف كلمة <mark>يَرْمَلُون</mark>:'], letters:['ي','ر','م','ل','و','ن'], mn:'يَرْمَلُونَ'},
+   {t:'١- إدغام بغنّة', say:'حروفه أربعة تجمعها كلمة «يَنْمُو» 🌱', letters:['ي','ن','م','و'], ex:[['إِ[نْ يَ]قُولُونَ','ي'],['لِقَوْ[مٍ يُ]وقِنُونَ','ي'],['إِ[نْ نَ]حْنُ','ن'],['بَاخِ[عٌ نَ]فْسَكَ','ن'],['مِ[ن مَّ]ا','م'],['كَثِي[رٌ مِّ]مَّنْ','م'],['مِ[ن وَّ]لِيٍّ','و'],['غِشَاوَ[ةٌ وَ]لَهُمْ','و']]},
+   {t:'٢- إدغام بلا غنّة', c:C.idghamN, p:['حرفاه: اللام والراء. ندمج النون فيهما بلا غنّة.'], letters:['ل','ر'], ex:[['وَلَٰكِ[ن لَّا]','ل'],['زِينَ[ةً لَّ]هَا','ل'],['مِ[ن رَّ]بِّهِمْ','ر'],['رَءُو[فٌ رَّ]حِيمٌ','ر']]}
+  ],
+  games:[
+   {type:'order', title:'كلمة السر', items:[{prompt:'رتّبي حروف كلمة «يرملون»', tokens:['ي','ر','م','ل','و','ن'], done:'يَرْمَلُونَ'},{prompt:'رتّبي حروف كلمة «ينمو» (الإدغام بغنة)', tokens:['ي','ن','م','و']}]},
+   {type:'sort', title:'بغنّة أم بلا غنّة؟', ask:'ما نوع الإدغام؟', buckets:[{id:'g',label:'بغنّة',sub:'ي ن م و',c:C.idgham},{id:'n',label:'بلا غنّة',sub:'ل ر',c:C.idghamN}],
+    items:[{w:'إِ[نْ يَ]قُولُونَ',b:'g'},{w:'مِ[ن مَّ]ا',b:'g'},{w:'مِ[ن وَّ]لِيٍّ',b:'g'},{w:'إِ[نْ نَ]حْنُ',b:'g'},{w:'كَثِي[رٌ مِّ]مَّنْ',b:'g'},{w:'وَلَٰكِ[ن لَّا]',b:'n'},{w:'مِ[ن رَّ]بِّهِمْ',b:'n'},{w:'رَءُو[فٌ رَّ]حِيمٌ',b:'n'},{w:'زِينَ[ةً لَّ]هَا',b:'n'}]},
+   {type:'pop', title:'فقاعات يرملون', prompt:'فرقعي حروف الإدغام (يرملون)', need:8, targets:['ي','ر','م','ل','و','ن'], others:['ء','هـ','ع','ح','غ','خ','ب','ص','ق','ت'], hint:'حروف الإدغام: ي ر م ل و ن'}
+  ]},
+{ id:'iqlab', name:'الإقلاب والإخفاء', icon:'🌙', color:C.ikhfa, badge:['🌙','قمر الإخفاء'],
+  lesson:[
+   {t:'الإقلاب 🔄', c:C.iqlab, p:['الإقلاب هو: <mark>الإبدال أو التحويل</mark>.','نقلب النون الساكنة والتنوين إلى <mark>ميمٍ مع غنّة</mark> إذا أتى بعدها حرف <mark>الباء</mark>.'], letters:['ب'], ex:[['أَ[نۢبِ]ئُونِي','كلمة'],['أَ[نۢ بُ]ورِكَ','كلمتان'],['عَلِي[مٌۢ بِ]ذَاتِ','تنوين']], tip:'👀 الميم الصغيرة (ۢ) فوق النون في المصحف تذكّرك: هنا إقلاب!'},
+   {t:'الإخفاء 🌙', p:['الإخفاء هو: <mark>السَّتر</mark>، كالغيمة حين يستتر تحتها القمر فلا يظهر كلّه.','نُخفي النون الساكنة والتنوين مع تطويلٍ للغنّة إذا أتى بعدها أوائل كلمات هذا البيت:'], mn:'صِفْ ذَا ثَنَا كَمْ جَادَ شَخْصٌ قَدْ سَمَا<br>دُمْ طَيِّبًا زِدْ فِي تُقًى ضَعْ ظَالِمَا', letters:['ص','ذ','ث','ك','ج','ش','ق','س','د','ط','ز','ف','ت','ض','ظ']},
+   {t:'أمثلة على الإخفاء', ex:[['يَ[نصُ]رُونَ','ص'],['أَ[نذَ]رْتَهُمْ','ذ'],['أَ[ن كَ]انَ','ك'],['إِ[ن جَ]اءَكُمْ','ج'],['مِ[ن شَ]رِّ','ش'],['مِ[ن قَ]بْلُ','ق'],['وَعِ[ندَ]هُ','د'],['يُ[نفِ]قُونَ','ف'],['رِي[حًا صَ]رْصَرًا','ص'],['سَمِي[عٌ قَ]رِيبٌ','ق'],['صَعِي[دًا طَ]يِّبًا','ط'],['ظِلًّ[ا ظَ]لِيلًا','ظ']]}
+  ],
+  games:[
+   {type:'sort', title:'إقلاب أم إخفاء؟', ask:'ما حكم النون الساكنة أو التنوين؟', buckets:[{id:'q',label:'إقلاب',sub:'حرف الباء',c:C.iqlab},{id:'k',label:'إخفاء',sub:'١٥ حرفًا',c:C.ikhfa}],
+    items:[{w:'أَ[نۢبِ]ئُونِي',b:'q'},{w:'أَ[نۢ بُ]ورِكَ',b:'q'},{w:'عَلِي[مٌۢ بِ]ذَاتِ',b:'q'},{w:'مِ[نۢ بَ]عْدِ',b:'q'},{w:'يَ[نصُ]رُونَ',b:'k'},{w:'مِ[ن قَ]بْلُ',b:'k'},{w:'أَ[ن كَ]انَ',b:'k'},{w:'مَ[نثُ]ورًا',b:'k'},{w:'غَفُو[رٌ شَ]كُورٌ',b:'k'},{w:'مِ[ن ضَ]عْفٍ',b:'k'}]},
+   {type:'pop', title:'فقاعات القمر', prompt:'فرقعي حروف الإخفاء الخمسة عشر', need:9, targets:['ص','ذ','ث','ك','ج','ش','ق','س','د','ط','ز','ف','ت','ض','ظ'], others:['ء','هـ','ع','ح','غ','خ','ي','ر','م','ل','و','ن','ب'], hint:'حروف الإخفاء أوائل: صف ذا ثنا كم جاد...'},
+   {type:'quiz', title:'سؤال وجواب', items:[
+    {q:'ما معنى الإقلاب؟',opts:['الإبدال أو التحويل','البيان والوضوح','الستر'],a:0},
+    {q:'ما معنى الإخفاء؟',opts:['الستر','الدمج','الوضوح'],a:0},
+    {q:'إلى أي حرف نقلب النون في الإقلاب؟',opts:['الميم','الباء','اللام'],a:0},
+    {q:'كم عدد حروف الإخفاء؟',opts:['١٥ حرفًا','٦ أحرف','حرف واحد'],a:0}]}
+  ]},
+{ id:'noonrev', name:'تحدّي النون', icon:'🧭', color:C.ikhfa, badge:['🧭','خبيرة النون'],
+  lesson:[
+   {t:'خريطة أحكام النون الساكنة والتنوين', say:'لنجمع كل ما تعلمناه في خريطة واحدة!', table:[['الإظهار','ء هـ ع ح غ خ','٦',C.izhar],['الإدغام','ي ر م ل و ن','٦',C.idgham],['الإقلاب','ب','١',C.iqlab],['الإخفاء','باقي الحروف','١٥',C.ikhfa]],
+    tip:'✨ ٦ + ٦ + ١ + ١٥ = ٢٨ حرفًا… كل حروف الهجاء! لكل حرف بعد النون حكمٌ واحد.'}
+  ],
+  games:[
+   {type:'sort', title:'السلال الأربع', ask:'ما حكم النون الساكنة أو التنوين؟', buckets:[{id:'z',label:'إظهار',c:C.izhar},{id:'d',label:'إدغام',c:C.idgham},{id:'q',label:'إقلاب',c:C.iqlab},{id:'k',label:'إخفاء',c:C.ikhfa}],
+    items:[{w:'مَ[نْ آ]مَنَ',b:'z'},{w:'حَكِي[مٍ خَ]بِيرٍ',b:'z'},{w:'يَ[نْحِ]تُونَ',b:'z'},{w:'إِ[نْ يَ]قُولُونَ',b:'d'},{w:'مِ[ن رَّ]بِّهِمْ',b:'d'},{w:'غِشَاوَ[ةٌ وَ]لَهُمْ',b:'d'},{w:'أَ[نۢبِ]ئُونِي',b:'q'},{w:'عَلِي[مٌۢ بِ]ذَاتِ',b:'q'},{w:'أَ[نذَ]رْتَهُمْ',b:'k'},{w:'مِ[ن سِ]جِّيلٍ',b:'k'},{w:'زَرْ[عًا تَ]أْكُلُ',b:'k'},{w:'مِ[ن طَ]يِّبَاتِ',b:'k'}]},
+   {type:'memory', title:'بطاقات الذاكرة', pairs:[['الإظهار','مِ[نْ حَ]كِيمٍ'],['الإدغام','مِ[ن وَّ]لِيٍّ'],['الإقلاب','أَ[نۢ بُ]ورِكَ'],['الإخفاء','مِ[ن قَ]بْلُ'],['إدغام بلا غنّة','وَلَٰكِ[ن لَّا]'],['حروف الإظهار','ء هـ ع ح غ خ']]},
+   {type:'quiz', title:'سؤال وجواب', items:[
+    {q:'«كالسكّر حين يندمج في الشاي» هذا تشبيه لـ…',opts:['الإدغام','الإظهار','الإخفاء'],a:0},
+    {q:'«كالشمس في إيضاحها للأشياء» هذا تشبيه لـ…',opts:['الإظهار','الإقلاب','الإدغام'],a:0},
+    {q:'«كالغيمة حين يستتر تحتها القمر» هذا تشبيه لـ…',opts:['الإخفاء','الإظهار','الإدغام'],a:0},
+    {q:'كم حكمًا للنون الساكنة والتنوين؟',opts:['أربعة','ثلاثة','خمسة'],a:0}]}
+  ]},
+{ id:'meem', name:'أحكام الميم الساكنة', icon:'👄', color:C.meem, badge:['👄','صديقة الشفتين'],
+  lesson:[
+   {t:'أحكام الميم الساكنة', say:'الميم تخرج من الشفتين، لذلك أحكامها «شفويّة» 👄', p:['أحكام الميم الساكنة <mark>مْ</mark> ثلاثة:'], rules:[['الإدغام الشفوي',C.idgham],['الإخفاء الشفوي',C.ikhfa],['الإظهار الشفوي',C.izhar]]},
+   {t:'١- الإدغام الشفوي', c:C.idgham, p:['نُدغم الميم الساكنة إن جاء بعدها <mark>ميمٌ متحرّكة</mark>، ونطيل زمن الغنّة.'], letters:['م'], ex:[['أَ[م مَّ]نْ',''],['كَ[م مِّ]نْ',''],['وَلَكُ[م مَّ]ا','']]},
+   {t:'٢- الإخفاء الشفوي', c:C.ikhfa, p:['نطيل زمن غنّة الميم الساكنة إن جاء بعدها <mark>باءٌ متحرّكة</mark>.'], letters:['ب'], ex:[['يَعْتَصِ[م بِ]اللَّهِ',''],['أَ[م بِ]ظَاهِرٍ',''],['تَرْمِيهِ[م بِ]حِجَارَةٍ','']]},
+   {t:'٣- الإظهار الشفوي', c:C.izhar, p:['نُظهر الميم الساكنة إن جاء بعدها <mark>كل الحروف عدا الميم والباء</mark>.'], ex:[['أَ[مْ تُ]نَبِّئُونَهُ',''],['الْحَ[مْدُ] لِلَّهِ',''],['أَ[مْ لَ]هُمْ',''],['عَلَيْهِ[مْ وَ]لَا','']]}
+  ],
+  games:[
+   {type:'sort', title:'سلال الشفتين', ask:'ما حكم الميم الساكنة؟', buckets:[{id:'d',label:'إدغام شفوي',sub:'بعدها م',c:C.idgham},{id:'k',label:'إخفاء شفوي',sub:'بعدها ب',c:C.ikhfa},{id:'z',label:'إظهار شفوي',sub:'باقي الحروف',c:C.izhar}],
+    items:[{w:'أَ[م مَّ]نْ',b:'d'},{w:'كَ[م مِّ]نْ',b:'d'},{w:'يَعْتَصِ[م بِ]اللَّهِ',b:'k'},{w:'أَ[م بِ]ظَاهِرٍ',b:'k'},{w:'تَرْمِيهِ[م بِ]حِجَارَةٍ',b:'k'},{w:'الْحَ[مْدُ] لِلَّهِ',b:'z'},{w:'أَ[مْ لَ]هُمْ',b:'z'},{w:'عَلَيْهِ[مْ وَ]لَا',b:'z'},{w:'أَ[مْ تُ]نَبِّئُونَهُ',b:'z'}]},
+   {type:'tf', title:'صح أم خطأ؟', items:[
+    {s:'إذا جاء بعد الميم الساكنة باء، فالحكم إخفاء شفوي',a:true},
+    {s:'إذا جاء بعد الميم الساكنة ميم، فالحكم إظهار شفوي',a:false,why:'الحكم إدغام شفوي.'},
+    {s:'أحكام الميم الساكنة ثلاثة',a:true},
+    {s:'في «الْحَمْدُ» الميم الساكنة مُظهَرة',a:true,why:'جاء بعدها الدال، وهي ليست ميمًا ولا باءً.'}]}
+  ]},
+{ id:'qalq', name:'القلقلة', icon:'🏀', color:C.qalq, badge:['🏀','كرة القلقلة'],
+  lesson:[
+   {t:'القلقلة 🏀', say:'القلقلة مثل كرةٍ صغيرة ترتدّ! 🏀', p:['إذا أتى أحد الحروف التالية <mark>ساكنًا</mark> فإننا نُقلقله.','والحروف مجموعةٌ في قولهم: <mark>قُطْبُ جَدٍّ</mark>'], letters:['ق','ط','ب','ج','د'], mn:'قُطْبُ جَدٍّ',
+    ex:[['يَ[بْ]دَأُ','ب'],['قَ[دْ] بَيَّنَّا','د'],['الْحَ[قُّ]','ق (وقفًا)'],['الْحَ[جُّ]','ج (وقفًا)'],['لَمْ يَلِ[دْ]','د'],['وَلَمْ يُولَ[دْ]','د']]}
+  ],
+  games:[
+   {type:'order', title:'قطب جد', items:[{prompt:'رتّبي حروف القلقلة «قطب جد»', tokens:['ق','ط','ب','ج','د'], done:'قُطْبُ جَدٍّ'}]},
+   {type:'pop', title:'كرات القلقلة', prompt:'فرقعي حروف القلقلة الخمسة', need:8, targets:['ق','ط','ب','ج','د'], others:['ك','ت','م','ح','ذ','س','ل','ن','ف','ع'], hint:'حروف القلقلة: ق ط ب ج د'},
+   {type:'quiz', title:'أين القلقلة؟', q:'في أي كلمة يوجد حرف قلقلة ساكن؟', qopts:true, items:[
+    {opts:['يَبْدَأُ','يَعْلَمُ','يَسْمَعُ'],a:0},{opts:['قَدْ','مِنْ','هُمْ'],a:0},{opts:['يَجْعَلُونَ','يَسْأَلُونَ','يَعْمَلُونَ'],a:0},{opts:['أَطْعَمَهُمْ','أَنْعَمْتَ','أَرْسَلْنَا'],a:0}]}
+  ]},
+{ id:'types', name:'الإدغام وأنواعه', icon:'🧩', color:C.mith, badge:['🧩','ملكة الألغاز'],
+  lesson:[
+   {t:'الإدغام وأنواعه', say:'للإدغام ثلاثة أنواع بشكل عام، كأنها قطع ألغاز تتركب 🧩', rules:[['إدغام المتماثلين',C.mith],['إدغام المتقاربين',C.qarib],['إدغام المتجانسين',C.jins]]},
+   {t:'١- إدغام المتماثلين', c:C.mith, p:['إذا جاء أيّ حرفٍ ساكن وبعده حرفٌ متحرّك <mark>مثله</mark>، ندغم الأول في الثاني.'], ex:[['أَ[م مَّ]نْ','م'],['اتَّقَ[وا وَّ]آمَنُوا','و'],['يُسْرِ[ف فِّ]ي','ف'],['هَ[ل لَّ]نَا','ل'],['يُدْرِ[كْكُ]مُ','ك'],['إِ[ذ ذَّ]هَبَ','ذ']]},
+   {t:'٢- إدغام المتقاربين', c:C.qarib, p:['إذا جاءت <mark>اللام</mark> ساكنة وبعدها <mark>راء</mark> متحركة، أو <mark>قاف</mark> ساكنة وبعدها <mark>كاف</mark> متحركة، ندغم الأول في الثاني.'], ex:[['بَ[ل رَّ]بُّكُمْ','اللام في الراء'],['قُ[ل رَّ]بِّي','اللام في الراء'],['أَلَمْ نَخْلُ[قكُّ]مْ','القاف في الكاف']]},
+   {t:'٣- إدغام المتجانسين', c:C.jins, p:['إذا جاء الحرف الأول ساكنًا وبعده حرفٌ متحرك من <mark>نفس المخرج</mark>، ندغم الأول في الثاني في الحالات التالية:'], ex:[['أَثْقَلَ[ت دَّ]عَوَا','التاء في الدال'],['قَ[د تَّ]بَيَّنَ','الدال في التاء'],['وَقَالَ[ت طَّ]ائِفَةٌ','التاء في الطاء'],['بَسَ[طتَ]','الطاء في التاء'],['فَرَّ[طتُ]','الطاء في التاء'],['يَلْهَ[ث ذَّ]لِكَ','الثاء في الذال'],['إِ[ذ ظَّ]لَمُوا','الذال في الظاء'],['ارْكَ[ب مَّ]عَنَا','الباء في الميم']]}
+  ],
+  games:[
+   {type:'sort', title:'قطع الألغاز', ask:'ما نوع الإدغام؟', buckets:[{id:'m',label:'متماثلين',sub:'حرفان مثلان',c:C.mith},{id:'q',label:'متقاربين',sub:'لر / قك',c:C.qarib},{id:'j',label:'متجانسين',sub:'نفس المخرج',c:C.jins}],
+    items:[{w:'هَ[ل لَّ]نَا',b:'m'},{w:'إِ[ذ ذَّ]هَبَ',b:'m'},{w:'يُسْرِ[ف فِّ]ي',b:'m'},{w:'بَ[ل رَّ]بُّكُمْ',b:'q'},{w:'قُ[ل رَّ]بِّي',b:'q'},{w:'أَلَمْ نَخْلُ[قكُّ]مْ',b:'q'},{w:'قَ[د تَّ]بَيَّنَ',b:'j'},{w:'ارْكَ[ب مَّ]عَنَا',b:'j'},{w:'إِ[ذ ظَّ]لَمُوا',b:'j'},{w:'يَلْهَ[ث ذَّ]لِكَ',b:'j'}]},
+   {type:'memory', title:'بطاقات الذاكرة', pairs:[['الدال في التاء','قَ[د تَّ]بَيَّنَ'],['التاء في الطاء','وَقَالَ[ت طَّ]ائِفَةٌ'],['الباء في الميم','ارْكَ[ب مَّ]عَنَا'],['الذال في الظاء','إِ[ذ ظَّ]لَمُوا'],['اللام في الراء','بَ[ل رَّ]بُّكُمْ'],['القاف في الكاف','نَخْلُ[قكُّ]مْ']]}
+  ]},
+{ id:'ra', name:'أحكام الراء', icon:'🎈', color:C.tafk, badge:['🎈','بالون الراء'],
+  lesson:[
+   {t:'أحكام الراء', say:'الراء مرّةً تكون ممتلئة كالبالون الكبير 🎈، ومرّةً رقيقة كالخيط 🧵', p:['للراء ثلاث حالات:'], rules:[['التفخيم',C.tafk],['الترقيق',C.tarq],['جواز الوجهين',C.wajh]]},
+   {t:'١- التفخيم 🎈', c:C.tafk, p:['تُفخّم الراء بشكل عام في الحالات التالية:'], list:['أن تكون مفتوحة أو مضمومة','أن تكون ساكنة وقبلها فتح أو ضم','أن تكون ساكنة وقبلها همزة وصل','وفي الكلمات: فِرْقَةٍ، قِرْطَاسٍ، مِرْصَادًا، لَبِالْمِرْصَادِ، وَإِرْصَادًا'],
+    ex:[['[رَ]أَوْا','مفتوحة'],['[رُ]زِقُوا','مضمومة'],['مَ[رْ]يَمَ','ساكنة قبلها فتح'],['الْقُ[رْ]آنِ','ساكنة قبلها ضم'],['ا[رْ]جِعُوا','قبلها همزة وصل'],['قِ[رْ]طَاسٍ','كلمة خاصة']]},
+   {t:'٢- الترقيق 🧵', c:C.tarq, p:['تُرقّق الراء بشكل عام في الحالات التالية:'], list:['أن تكون مكسورة','أن تكون ساكنة وقبلها كسرٌ أصلي','أن تكون ساكنة وقبلها ياءٌ ساكنة عند الوقف'],
+    ex:[['[رِ]ئَاءَ','مكسورة'],['الْكَافِ[رِ]ينَ','مكسورة'],['فِ[رْ]عَوْنَ','قبلها كسر أصلي'],['مِ[رْ]يَةٍ','قبلها كسر أصلي'],['خَيْ[رْ]','ياء ساكنة وقفًا'],['بَصِي[رْ]','ياء ساكنة وقفًا']]},
+   {t:'٣- جواز الوجهين', c:C.wajh, p:['يجوز تفخيم الراء وترقيقها في الكلمات التالية:'], ex:[['فِ[رْ]قٍ','وصلًا ووقفًا'],['مِصْ[رَ]','وقفًا فقط'],['الْقِطْ[رِ]','وقفًا فقط']]}
+  ],
+  games:[
+   {type:'sort', title:'بالون أم خيط؟', ask:'هل الراء مفخّمة أم مرقّقة؟', buckets:[{id:'f',label:'تفخيم 🎈',c:C.tafk},{id:'r',label:'ترقيق 🧵',c:C.tarq}],
+    items:[{w:'[رَ]أَوْا',b:'f',why:'الراء مفتوحة.'},{w:'[رُ]زِقُوا',b:'f',why:'الراء مضمومة.'},{w:'مَ[رْ]يَمَ',b:'f',why:'ساكنة وقبلها فتح.'},{w:'ا[رْ]تَضَى',b:'f',why:'ساكنة وقبلها همزة وصل.'},{w:'قِ[رْ]طَاسٍ',b:'f',why:'من الكلمات التي تُفخّم فيها الراء.'},{w:'فَاهْجُ[رْ]',b:'f',why:'ساكنة وقبلها ضم.'},{w:'[رِ]ئَاءَ',b:'r',why:'الراء مكسورة.'},{w:'وَالْغَا[رِ]مِينَ',b:'r',why:'الراء مكسورة.'},{w:'شِ[رْ]عَةً',b:'r',why:'ساكنة وقبلها كسر أصلي.'},{w:'ضَيْ[رْ]',b:'r',why:'ساكنة وقبلها ياء ساكنة عند الوقف.'}]},
+   {type:'quiz', title:'سؤال وجواب', items:[
+    {q:'كم حالة للراء؟',opts:['ثلاث حالات','حالتان','خمس حالات'],a:0},
+    {w:'فِ[رْ]قٍ',q:'ما حكم الراء في هذه الكلمة؟',opts:['يجوز الوجهان وصلًا ووقفًا','تفخيم فقط','ترقيق فقط'],a:0},
+    {w:'مِصْ[رَ]',q:'متى يجوز في راء «مصر» الوجهان؟',opts:['وقفًا فقط','وصلًا فقط','لا يجوز'],a:0},
+    {q:'الراء المكسورة…',opts:['تُرقّق','تُفخّم','يجوز الوجهان'],a:0}]}
+  ]},
+{ id:'madd', name:'حروف المدّ وأنواعه', icon:'🌊', color:C.madd, badge:['🌊','موجة المدّ'],
+  lesson:[
+   {t:'المدّ 🌊', say:'المد مثل الموجة… نطوّل الصوت ونستمتع بالتلاوة 🌊', p:['المدّ يعني: <mark>التطويل</mark>.','ويكون المد في حروف المد الثلاثة:'], list:['الألف الساكنة المفتوح ما قبلها: ـَا','الواو الساكنة المضموم ما قبلها: ـُو','الياء الساكنة المكسور ما قبلها: ـِي'], mn:'نُوحِيهَا', tip:'كلمة «نُوحِيهَا» فيها حروف المدّ الثلاثة: و، ي، ا'},
+   {t:'للمدّ ثلاثة أنواع', rules:[['١- المدّ الأصلي<small>لا يأتي بعد حرف المد همزٌ ولا سكون</small>',C.madd],['٢- مدود سببها الهمز<small>يأتي بعد حرف المد همز</small>',C.hamz],['٣- مدود سببها السكون<small>يأتي بعد حرف المد سكون</small>',C.sukun]],
+    ex:[['وَقَالُوا','أصلي',C.madd],['عَلِيمًا','أصلي',C.madd],['جَاءَ','سببه الهمز',C.hamz],['فَلَا أُقْسِمُ','سببه الهمز',C.hamz],['نَسْتَعِينُ','سببه السكون',C.sukun],['الْحَاقَّةُ','سببه السكون',C.sukun]]}
+  ],
+  games:[
+   {type:'order', title:'كلمة المدّ', items:[{prompt:'رتّبي كلمة «نوحيها» التي تجمع حروف المد', tokens:['نُو','حِي','هَا'], done:'نُوحِيهَا'}]},
+   {type:'quiz', title:'حروف المدّ', items:[
+    {q:'ما معنى المدّ؟',opts:['التطويل','الإخفاء','الدمج'],a:0},
+    {q:'الواو حرف مدّ إذا كانت ساكنة وما قبلها…',opts:['مضموم','مفتوح','مكسور'],a:0},
+    {q:'الياء حرف مدّ إذا كانت ساكنة وما قبلها…',opts:['مكسور','مضموم','مفتوح'],a:0},
+    {q:'الألف الساكنة يكون ما قبلها دائمًا…',opts:['مفتوحًا','مكسورًا','مضمومًا'],a:0},
+    {q:'أي كلمة تجمع حروف المد الثلاثة؟',opts:['نوحيها','يرملون','قطب جد'],a:0}]},
+   {type:'sort', title:'أمواج المدّ', ask:'ما نوع المد؟', buckets:[{id:'a',label:'أصلي',sub:'لا همز ولا سكون',c:C.madd},{id:'h',label:'سببه الهمز',c:C.hamz},{id:'s',label:'سببه السكون',c:C.sukun}],
+    items:[{w:'وَقَالُوا',b:'a'},{w:'عَلِيمًا',b:'a'},{w:'نَصَارَىٰ',b:'a'},{w:'جَاءَ',b:'h'},{w:'السُّوءَ',b:'h'},{w:'فَلَا أُقْسِمُ',b:'h'},{w:'نَسْتَعِينُ',b:'s',why:'بعد حرف المد سكون عارض عند الوقف.'},{w:'الْحَاقَّةُ',b:'s'},{w:'قُرَيْشٍ',b:'s'}]}
+  ]},
+{ id:'asli', name:'المدّ الأصلي', icon:'🌈', color:C.madd, badge:['🌈','قوس المدّ'],
+  lesson:[
+   {t:'للمدّ الأصلي خمسة أنواع', say:'كلها تُمدّ بمقدار حركتين ✌️', list:['المدّ الطبيعي: أن يأتي حرف مدّ وليس بعده همزٌ أو سكون','مدّ البدل: أن يأتي همزٌ وبعده حرف مد','المدّ الطبيعي الحرفي: الواقع في حروف (حَيٌّ طَهُرَ) في أوائل السور، وتُقرأ هكذا (حَا يَا طَا هَا رَا)','مدّ العوض عن التنوين: الوقف بألفٍ على تنوين الفتح','مدّ الصلة الصغرى: مدّ هاء الضمير المضمومة أو المكسورة وليس بعدها همزة قطع'], tip:'✌️ تُمدّ هذه المدود الخمسة بمقدار حركتين.'},
+   {t:'أمثلة المدّ الأصلي', ex:[['وَقَالُوا','طبيعي'],['إِبْرَاهِيمَ','طبيعي'],['ءَامَنُوا','بدل'],['أُوتُوا','بدل'],['طه','طبيعي حرفي'],['حم','طبيعي حرفي'],['غَفُورًا','عوض عن التنوين'],['نِدَاءً','عوض عن التنوين'],['لَهُۥ عَيْنَيْنِ','صلة صغرى'],['إِنَّهُۥ هُوَ','صلة صغرى']]}
+  ],
+  games:[
+   {type:'memory', title:'بطاقات الذاكرة', pairs:[['مدّ طبيعي','نَصَارَىٰ'],['مدّ البدل','إِيمَانًا'],['طبيعي حرفي','الر'],['عوض عن التنوين','عَلِيمًا'],['صلة صغرى','بِهِۦ كَثِيرًا'],['همزٌ بعده حرف مدّ','ءَادَمَ']]},
+   {type:'quiz', title:'اكتشفي نوع المدّ', q:'ما نوع المدّ في هذا المثال؟', items:[
+    {w:'ءَامَنُوا',opts:['مدّ البدل','مدّ العوض','صلة صغرى'],a:0,why:'جاء الهمز وبعده حرف مد.'},
+    {w:'كهيعص',opts:['طبيعي حرفي','مدّ البدل','طبيعي'],a:0},
+    {w:'مَاءً',opts:['عوض عن التنوين','مدّ البدل','صلة صغرى'],a:0,why:'عند الوقف نقف بألف على تنوين الفتح.'},
+    {w:'هَٰذِهِۦ تَذْكِرَةٌ',opts:['صلة صغرى','طبيعي حرفي','مدّ البدل'],a:0,why:'هاء ضمير مكسورة وليس بعدها همزة قطع.'},
+    {w:'وَأَهْلِيكُمْ',opts:['مدّ طبيعي','مدّ البدل','عوض عن التنوين'],a:0},
+    {q:'بكم حركة تُمدّ أنواع المد الأصلي؟',opts:['حركتان','أربع حركات','ست حركات'],a:0,beats:2}]}
+  ]},
+{ id:'far', name:'مدود الهمز والسكون', icon:'🎢', color:C.hamz, badge:['🎢','بطلة المدود'],
+  lesson:[
+   {t:'المدود التي سببها الهمز', c:C.hamz, say:'هذه المدود تُمدّ أربع حركات 🖐️', list:['المدّ الواجب المتصل: حرف مدّ وبعده همز في نفس الكلمة','المدّ الجائز المنفصل: حرف مدّ في آخر الكلمة، والهمز في أول الكلمة التالية','مدّ الصلة الكبرى: هاء الضمير المضمومة أو المكسورة وبعدها همزة قطع'],
+    ex:[['أُولَٰٓئِكَ','متصل'],['السُّوٓءَ','متصل'],['تَفِيٓءَ','متصل'],['إِنِّيٓ أَخَافُ','منفصل'],['قُوٓا أَنفُسَكُمْ','منفصل'],['مَالَهُۥٓ أَخْلَدَهُ','صلة كبرى'],['هَٰذِهِۦٓ أُمَّتُكُمْ','صلة كبرى']], tip:'🖐️ تُمدّ هذه المدود الثلاثة بمقدار أربع حركات.'},
+   {t:'المدود التي سببها السكون', c:C.sukun, list:['المدّ العارض للسكون: حرف مدّ وبعده حرف سكن بسبب الوقف عليه — يُمدّ ٢ أو ٤ أو ٦ حركات','مدّ اللين: واو أو ياء ساكنتان مفتوح ما قبلهما، وبعدهما حرف سكن بسبب الوقف — يُمدّ ٢ أو ٤ أو ٦ حركات','المدّ اللازم: حرف مدّ وبعده حرف ساكن سكونًا أصليًّا أو مشدّدًا — يُمدّ ست حركات'],
+    ex:[['يَعْمَلُونَ','عارض للسكون'],['النَّاسِ','عارض للسكون'],['قُرَيْشٍ','لين'],['خَوْفٍ','لين'],['الْحَآقَّةُ','لازم'],['الٓمٓ','لازم']]}
+  ],
+  games:[
+   {type:'quiz', title:'ميزان المدّ', meter:true, q:'بكم حركة يُمدّ؟', items:[
+    {w:'أُولَٰٓئِكَ',t:'مدّ واجب متصل',opts:['٤ حركات','حركتان','٦ حركات'],a:0,beats:4},
+    {w:'إِنِّيٓ أَخَافُ',t:'مدّ جائز منفصل',opts:['٤ حركات','حركتان','٦ حركات'],a:0,beats:4},
+    {w:'الْحَآقَّةُ',t:'مدّ لازم',opts:['٦ حركات','حركتان','٤ حركات'],a:0,beats:6},
+    {w:'نَسْتَعِينُ',t:'مدّ عارض للسكون (عند الوقف)',opts:['٢ أو ٤ أو ٦','٦ فقط','حركتان فقط'],a:0,beats:6},
+    {w:'خَوْفٍ',t:'مدّ اللين (عند الوقف)',opts:['٢ أو ٤ أو ٦','٤ فقط','لا يُمدّ'],a:0,beats:6},
+    {w:'مَالَهُۥٓ أَخْلَدَهُ',t:'مدّ الصلة الكبرى',opts:['٤ حركات','حركتان','٦ حركات'],a:0,beats:4}]},
+   {type:'sort', title:'همز أم سكون؟', ask:'ما سبب المدّ؟', buckets:[{id:'h',label:'سببه الهمز',sub:'٤ حركات',c:C.hamz},{id:'s',label:'سببه السكون',sub:'٢-٤-٦ أو ٦',c:C.sukun}],
+    items:[{w:'السُّوٓءَ',b:'h'},{w:'تَفِيٓءَ',b:'h'},{w:'عَلَىٰٓ أَن',b:'h'},{w:'فَلَآ أُقْسِمُ',b:'h'},{w:'هَٰذِهِۦٓ أُمَّتُكُمْ',b:'h'},{w:'النَّاسِ',b:'s'},{w:'الْقَوْلِ',b:'s'},{w:'ءَآلْـَٰٔنَ',b:'s'},{w:'صٓ',b:'s'},{w:'يَعْمَلُونَ',b:'s'}]},
+   {type:'quiz', title:'سؤال وجواب', items:[
+    {q:'إذا جاء حرف المد وبعده همز في نفس الكلمة فهو…',opts:['مدّ واجب متصل','مدّ جائز منفصل','مدّ البدل'],a:0},
+    {q:'مدّ اللين يكون في…',opts:['واو أو ياء ساكنتين مفتوح ما قبلهما','الألف فقط','هاء الضمير'],a:0},
+    {q:'المدّ اللازم يُمدّ…',opts:['ست حركات','حركتين','أربع حركات'],a:0,beats:6}]}
+  ]},
+{ id:'final', name:'التحدّي الكبير', icon:'👑', color:C.hamz, badge:['👑','نجمة الترتيل'], final:true,
+  lesson:[
+   {t:'التحدّي الكبير 👑', say:'وصلتِ إلى آخر محطة! أسئلة من كل الرحلة… هيا يا بطلة!', p:['في هذا التحدي أسئلة من كل المحطات: الآداب، النون والتنوين، الميم، القلقلة، الإدغام، الراء، والمدود.','أنهي التحدي لتحصلي على <mark>شهادة نجمة الترتيل</mark> 🏅']}
+  ],
+  games:[ {type:'mix', title:'أسئلة من كل الرحلة', n:12} ]}
+];
+
+/* ============ بنك الأسئلة العام ============ */
+const POOL=[];
+STATIONS.forEach((st,si)=>st.games.forEach(g=>{
+  if(g.type==='quiz') g.items.forEach(it=>POOL.push({...it,q:it.q||g.q,si,c:st.color,qopts:g.qopts}));
+  if(g.type==='sort') g.items.forEach(it=>{const cor=g.buckets.find(b=>b.id===it.b);const oth=g.buckets.filter(b=>b!==cor);POOL.push({q:g.ask,w:it.w,t:it.t,opts:[cor.label,...oth.map(b=>b.label)],a:0,why:it.why,si,c:cor.c})});
+  if(g.type==='tf') g.items.forEach(it=>POOL.push({q:'صح أم خطأ؟',t:it.s,opts:['صح ✓','خطأ ✗'],a:it.a?0:1,why:it.why,si,keep:true}));
+}));
+const MEMPOOL=[];
+STATIONS.forEach((st,si)=>st.games.forEach(g=>{ if(g.type==='memory') g.pairs.forEach(p=>MEMPOOL.push({p,si})) }));
+[['إظهار','مَ[نْ آ]مَنَ',3],['إدغام بغنّة','إِ[نْ يَ]قُولُونَ',4],['إقلاب','أَ[نۢبِ]ئُونِي',5],['إخفاء','يَ[نصُ]رُونَ',5],['قلقلة','قَ[دْ] بَيَّنَّا',8],['إخفاء شفوي','أَ[م بِ]ظَاهِرٍ',7],['إظهار شفوي','أَ[مْ لَ]هُمْ',7],['غنّة مشدّدة','ثُ[مَّ]',2],['مدّ لازم','الْحَآقَّةُ',13],['مدّ متصل','السُّوٓءَ',13],['ترقيق الراء','فِ[رْ]عَوْنَ',10],['تفخيم الراء','[رُ]زِقُوا',10]].forEach(([a,b,si])=>MEMPOOL.push({p:[a,b],si}));
+
+const LETTER_SETS=[
+ {name:'حروف الإظهار',t:['ء','هـ','ع','ح','غ','خ'],c:C.izhar},
+ {name:'حروف الإدغام (يرملون)',t:['ي','ر','م','ل','و','ن'],c:C.idgham},
+ {name:'حروف الإخفاء',t:['ص','ذ','ث','ك','ج','ش','ق','س','د','ط','ز','ف','ت','ض','ظ'],c:C.ikhfa},
+ {name:'حروف القلقلة (قطب جد)',t:['ق','ط','ب','ج','د'],c:C.qalq},
+ {name:'حروف المدّ (نوحيها)',t:['ا','و','ي'],c:C.madd}];
+const ALL_LETTERS=['ء','ب','ت','ث','ج','ح','خ','د','ذ','ر','ز','س','ش','ص','ض','ط','ظ','ع','غ','ف','ق','ك','ل','م','ن','هـ','و','ي','ا'];
+
+/* ============ أدوات ============ */
+const $=(s,r=document)=>r.querySelector(s);
+const $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const pick=a=>a[Math.random()*a.length|0];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const qw=(s,c)=>esc(s).replace(/&lt;br&gt;/g,'<br>').replace(/\[(.+?)\]/g,(m,x)=>`<span class="hl" style="color:${c||'var(--pinkD)'}">${x}</span>`);
+const AR=n=>String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
+
+const PLAYERS={huda:{name:'هدى',c1:'#FF6FA0',c2:'#FFC7DA',pin:'#FFB53D'},sana:{name:'سنا',c1:'#8D7BF2',c2:'#D2CAFF',pin:'#34C7A8'}};
+const KEY='najmat-altarteel-v1';
+let DB={players:{huda:{stars:{},best:{}},sana:{stars:{},best:{}}},sound:true};
+try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.players){DB.sound=s.sound!==false;for(const k in PLAYERS){if(s.players[k])DB.players[k]={stars:s.players[k].stars||{},best:s.players[k].best||{}}}}}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(DB))}catch(e){}}
+const S={p:null};
+const me=()=>DB.players[S.p];
+const nm=id=>PLAYERS[id||S.p].name;
+const other=()=>S.p==='huda'?'sana':'huda';
+const totalStars=id=>Object.values(DB.players[id].stars).reduce((a,b)=>a+b,0);
+const unlocked=i=>i===0||(me().stars[STATIONS[i-1].id]||0)>0;
+
+function avatar(id,happy){
+  const P=PLAYERS[id];
+  return `<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 6C23 6 11 29 13 52c1 20 11 38 37 43 26-5 36-23 37-43 2-23-10-46-37-46z" fill="${P.c1}"/>
+  <path d="M20 80c8 10 18 15 30 15s22-5 30-15c-8-4-18-6-30-6s-22 2-30 6z" fill="${P.c1}" opacity=".85"/>
+  <ellipse cx="50" cy="52" rx="24" ry="25" fill="#FFDCC0"/>
+  <path d="M25 44c3-17 47-17 50 0-7-10-43-10-50 0z" fill="${P.c2}"/>
+  <ellipse cx="41" cy="53" rx="3.2" ry="${happy?1.6:4}" fill="#2B2350"/><ellipse cx="59" cy="53" rx="3.2" ry="${happy?1.6:4}" fill="#2B2350"/>
+  ${happy?'':'<circle cx="42.2" cy="51.5" r="1.1" fill="#fff"/><circle cx="60.2" cy="51.5" r="1.1" fill="#fff"/>'}
+  <circle cx="34" cy="61" r="4.5" fill="#FF8FB1" opacity=".45"/><circle cx="66" cy="61" r="4.5" fill="#FF8FB1" opacity=".45"/>
+  <path d="${happy?'M42 62q8 10 16 0z':'M43 63q7 6 14 0'}" ${happy?'fill="#C2456E"':'stroke="#C2456E" stroke-width="2.6" fill="none" stroke-linecap="round"'}/>
+  <path d="M74 22l2.6 5.4 5.9.8-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8-4.3-4.1 5.9-.8z" fill="${P.pin}"/></svg>`;
+}
+function lantern(state,num){
+  const L={lit:['#FFB53D','#FFF3C4','#8A4B00'],cur:['#FF6FA0','#FFE3EE','#8C2350'],lock:['#4E4A86','#35326A','#2A2758']}[state];
+  return `<svg class="lan" viewBox="0 0 76 100" aria-hidden="true">
+  ${state!=='lock'?`<circle cx="38" cy="56" r="36" fill="${L[0]}" opacity=".22"/>`:''}
+  <circle cx="38" cy="7" r="5" fill="none" stroke="${L[2]}" stroke-width="3"/>
+  <path d="M24 16h28l-5 9H29z" fill="${L[2]}"/>
+  <path d="M22 25h32q6 0 6 6v36q0 6-6 6H22q-6 0-6-6V31q0-6 6-6z" fill="${L[0]}"/>
+  <path d="M27 33q11-9 22 0v30H27z" fill="${L[1]}"/>
+  <path d="M24 73h28l-5 8H29z" fill="${L[2]}"/><path d="M38 81v9" stroke="${L[2]}" stroke-width="3"/><circle cx="38" cy="93" r="3.5" fill="${L[2]}"/>
+  <text x="38" y="56" text-anchor="middle" font-family="Baloo Bhaijaan 2, sans-serif" font-weight="800" font-size="20" fill="${state==='lock'?'#8C88C0':L[2]}">${state==='lock'?'🔒':AR(num)}</text></svg>`;
+}
+const starSVG=on=>`<svg viewBox="0 0 24 24"><path d="M12 2.5l2.9 6 6.6.8-4.9 4.5 1.3 6.5L12 17l-5.9 3.3 1.3-6.5L2.5 9.3l6.6-.8z" fill="${on?'#FFB53D':'rgba(255,255,255,.25)'}" stroke="${on?'#D98300':'rgba(0,0,0,.1)'}" stroke-width="1.2" stroke-linejoin="round"/></svg>`;
+const starsTxt=n=>'★'.repeat(n)+'☆'.repeat(3-n);
+
+/* ============ الصوت ============ */
+let AC=null;
+function tone(f,d,type='sine',when=0,vol=.18){
+  if(!DB.sound)return;
+  try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();const t=AC.currentTime+when;const o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.setValueAtTime(f,t);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+.015);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g).connect(AC.destination);o.start(t);o.stop(t+d+.05)}catch(e){}
+}
+const sfx=k=>({ok:()=>{tone(784,.15,'triangle');tone(1175,.25,'triangle',.1)},bad:()=>{tone(260,.18,'square',0,.07);tone(200,.25,'square',.12,.07)},pop:()=>{tone(900,.08,'sine',0,.2);tone(1400,.06,'sine',.04,.12)},tick:()=>tone(1046,.08,'triangle',0,.12),flip:()=>tone(600,.06,'triangle',0,.08),win:()=>[523,659,784,1046,1318].forEach((f,i)=>tone(f,.3,'triangle',i*.11))}[k]||(()=>{}))();
+
+/* ============ مؤثرات ============ */
+const fx=$('#fx'),fxc=fx.getContext('2d');let parts=[],fxRun=false;
+function sizeFx(){fx.width=innerWidth*devicePixelRatio;fx.height=innerHeight*devicePixelRatio}sizeFx();addEventListener('resize',sizeFx);
+function burstAt(x,y,n=16,big){const cols=['#FFB53D','#FF6FA0','#34C7A8','#8D7BF2','#FFE3A6'];for(let i=0;i<n;i++){const a=Math.random()*Math.PI*2,v=(big?7:4)+Math.random()*5;parts.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-(big?6:2),life:1,c:pick(cols),s:4+Math.random()*5,r:Math.random()*6,star:Math.random()<.4})}if(!fxRun){fxRun=true;requestAnimationFrame(fxLoop)}}
+function burst(el){const r=el.getBoundingClientRect();burstAt(r.left+r.width/2,r.top+r.height/2)}
+function confetti(){for(let i=0;i<6;i++)setTimeout(()=>burstAt(Math.random()*innerWidth,innerHeight*.35,26,true),i*160)}
+function fxLoop(){const d=devicePixelRatio;fxc.clearRect(0,0,fx.width,fx.height);parts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.25;p.vx*=.98;p.life-=.014;p.r+=.1;fxc.save();fxc.globalAlpha=Math.max(0,p.life);fxc.translate(p.x*d,p.y*d);fxc.rotate(p.r);fxc.fillStyle=p.c;if(p.star){fxc.beginPath();for(let k=0;k<10;k++){const rr=(k%2?p.s*.45:p.s)*d,aa=k*Math.PI/5;fxc.lineTo(Math.cos(aa)*rr,Math.sin(aa)*rr)}fxc.fill()}else fxc.fillRect(-p.s*d/2,-p.s*d/4,p.s*d,p.s*d/2);fxc.restore()});parts=parts.filter(p=>p.life>0&&p.y<innerHeight+40);if(parts.length)requestAnimationFrame(fxLoop);else{fxRun=false;fxc.clearRect(0,0,fx.width,fx.height)}}
+let toastT;function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>e.classList.remove('on'),1600)}
+
+/* ============ التنقل ============ */
+const app=$('#app');let cleanup=null,fbT=null;
+function go(fn){if(cleanup){cleanup();cleanup=null}clearTimeout(fbT);$('#fb').innerHTML='';fn();scrollTo(0,0)}
+function stars(){const s=$('#sky');let h='<div class="moon"></div>';for(let i=0;i<60;i++)h+=`<i style="top:${Math.random()*100}%;left:${Math.random()*100}%;animation-delay:${-Math.random()*3}s;${Math.random()<.2?'width:4px;height:4px':''}"></i>`;s.innerHTML=h}
+const PRAISE=['أحسنتِ يا {n}! 🌟','رائعة يا {n}! ✨','ما شاء الله عليكِ! 💫','ممتاز! نجمةٌ تلمع ⭐','بطلة التجويد! 👏','صحيح! استمري يا {n} 💕'];
+const OOPS=['لا بأس يا {n}، نتعلّم معًا 💪','قريبة جدًا! انظري للإجابة الصحيحة 👀','محاولة جميلة، تذكّري هذه 🌱'];
+
+function feedback(ok,correct,why,cont){
+  const guide=other();
+  const html=ok?`<div class="in ok">${avatar(guide,true)}<div class="tx"><b>${pick(PRAISE).replace('{n}',nm())}</b>${why?esc(why):''}</div></div>`
+   :`<div class="in no">${avatar(guide)}<div class="tx"><b>${pick(OOPS).replace('{n}',nm())}</b>${correct?`الإجابة الصحيحة: <strong>${correct}</strong><br>`:''}${why?esc(why):''}</div><button class="btn small mint" id="fbgo">فهمت ✓</button></div>`;
+  const fb=$('#fb');fb.innerHTML=html;
+  const done=()=>{clearTimeout(fbT);fb.innerHTML='';cont()};
+  if(ok){fbT=setTimeout(done,why?1900:1100);fb.firstChild.onclick=done}
+  else{$('#fbgo').onclick=done;$('#fbgo').focus({preventScroll:true})}
+}
+
+/* ============ الشاشة الرئيسية ============ */
+function home(){
+  S.p=null;
+  app.innerHTML=`<div class="logo"><div class="sub">لعبة تعلّم أحكام التجويد</div><h1>نجمات <span>الترتيل</span></h1>
+  <p>رحلةٌ مضيئة مع هدى وسنا، نُشعل فيها الفوانيس ونتعلم تلاوة القرآن الكريم بإتقان</p></div>
+  <div class="pick">${['huda','sana'].map(id=>`<button class="pcard" data-p="${id}">${avatar(id)}<b>أنا ${nm(id)}</b><small>⭐ ${AR(totalStars(id))} نجمة · ${AR(Object.keys(DB.players[id].stars).length)}/${AR(STATIONS.length)} فانوس</small></button>`).join('')}</div>
+  <div class="home-duel"><button class="btn pink" id="duelBtn">⚔️ تحدّي الأختين: هدى ضد سنا</button></div>
+  <div class="home-foot">المحتوى مأخوذ من كتاب «هَدْيُ الرحمن في مبادئ تجويد القرآن»<br>١٥ محطة · ٧ أنواع من الألعاب · ٣ مستويات في ساحة الألعاب</div>`;
+  $$('.pcard').forEach(b=>b.onclick=()=>{S.p=b.dataset.p;sfx('tick');go(map)});
+  $('#duelBtn').onclick=()=>go(()=>duel(1));
+}
+function topbar(back){
+  return `<div class="top">${back?`<button class="icon-btn" id="back" aria-label="رجوع">→</button>`:`<button class="icon-btn" id="swap" aria-label="تغيير اللاعبة">⇄</button>`}
+  <div class="me">${avatar(S.p)}<span>${nm()}</span></div><span class="spacer"></span>
+  <span class="pill">⭐ ${AR(totalStars(S.p))}</span>
+  <button class="icon-btn" id="snd" aria-label="الصوت">${DB.sound?'🔊':'🔈'}</button></div>`;
+}
+function bindTop(back){
+  const s=$('#snd');if(s)s.onclick=()=>{DB.sound=!DB.sound;save();s.textContent=DB.sound?'🔊':'🔈';sfx('tick')};
+  const w=$('#swap');if(w)w.onclick=()=>go(home);
+  const b=$('#back');if(b&&back)b.onclick=back;
+}
+
+/* ============ الخريطة ============ */
+function map(){
+  const xs=['50%','80%','50%','20%'];
+  let cur=STATIONS.findIndex((s,i)=>unlocked(i)&&!me().stars[s.id]);
+  app.innerHTML=topbar()+`<div class="map-hero"><h2>رحلة الفوانيس</h2><p>أشعلي كل فانوس بالتعلّم واللعب — ${AR(Object.keys(me().stars).length)} من ${AR(STATIONS.length)}</p></div>
+  <div class="row" style="justify-content:center;margin-top:10px"><button class="btn small mint" id="arc">🎮 ساحة الألعاب</button><button class="btn small" id="tre">🏆 كنوزي</button>${me().stars.final?'<button class="btn small pink" id="cer">📜 شهادتي</button>':''}</div>
+  <div class="map" id="map"><svg class="path" id="path"></svg>${STATIONS.map((s,i)=>{const st=me().stars[s.id]||0;const state=!unlocked(i)?'lock':(i===cur?'cur':(st?'lit':'cur'));
+   return `<button class="st ${state==='lock'?'lock':''} ${i===cur?'cur':''}" style="--x:${xs[i%4]}" data-i="${i}" aria-label="${s.name}">${i===cur?'<span class="here">هنا!</span>':''}${lantern(state==='cur'&&i!==cur?'lit':state,i+1)}<span class="lbl">${s.icon} ${s.name}<small>${state==='lock'?'':starsTxt(st)}</small></span></button>`}).join('')}</div>
+  <div class="map-end">🌙 أكملي الرحلة لتحصلي على شهادة نجمة الترتيل</div>`;
+  bindTop();
+  $('#arc').onclick=()=>go(arcade);$('#tre').onclick=()=>go(treasures);if($('#cer'))$('#cer').onclick=()=>go(certificate);
+  $$('.st').forEach(b=>b.onclick=()=>{const i=+b.dataset.i;if(!unlocked(i)){toast('أكملي المحطة السابقة أولًا 🔒');sfx('bad');return}sfx('tick');go(()=>lesson(i,0))});
+  requestAnimationFrame(drawPath);
+  if(cur>2){const el=$$('.st')[cur];setTimeout(()=>el&&el.scrollIntoView({block:'center',behavior:'smooth'}),250)}
+}
+function drawPath(){
+  const m=$('#map'),svg=$('#path');if(!m||!svg)return;const mr=m.getBoundingClientRect();
+  const pts=$$('.st .lan',m).map(l=>{const r=l.getBoundingClientRect();return[r.left+r.width/2-mr.left,r.top+r.height/2-mr.top]});
+  let d=`M${pts[0][0]} ${pts[0][1]}`;for(let i=1;i<pts.length;i++){const[a,b]=pts[i-1],[c,e]=pts[i];d+=` C${a} ${(b+e)/2} ${c} ${(b+e)/2} ${c} ${e}`}
+  svg.setAttribute('viewBox',`0 0 ${mr.width} ${mr.height}`);
+  svg.innerHTML=`<path d="${d}" fill="none" stroke="rgba(255,227,166,.45)" stroke-width="5" stroke-linecap="round" stroke-dasharray="2 12"/>`;
+}
+addEventListener('resize',()=>{if($('#map'))drawPath()});
+
+/* ============ الدرس ============ */
+function slideHTML(s,st){
+  const c=s.c||st.color;let h=`<h2 class="sl-t" style="--c:${c}">${s.t}</h2>`;
+  if(s.big)h+=`<div class="q big">${qw(s.big,c)}</div>`;
+  (s.p||[]).forEach(p=>h+=`<p class="sl-p">${p}</p>`);
+  if(s.list)h+=`<ol class="sl-list" style="--c:${c}">${s.list.map(x=>`<li><span>${x}</span></li>`).join('')}</ol>`;
+  if(s.rules)h+=`<div class="rules">${s.rules.map(([n,cc])=>`<div class="rule-chip" style="--c:${cc}">${n}</div>`).join('')}</div>`;
+  if(s.table)h+=`<table class="tbl">${s.table.map(([a,b,n,cc])=>`<tr style="--c:${cc}"><td>${a}</td><td class="q" style="font-size:20px">${b}</td><td>${n}</td></tr>`).join('')}</table>`;
+  if(s.letters)h+=`<div class="letters">${s.letters.map((l,i)=>`<span class="lt" style="--c:${c};animation-delay:${i*.05}s">${l}</span>`).join('')}</div>`;
+  if(s.mn)h+=`<div class="mn" style="--c:${c}"><small>احفظيها هكذا</small><div class="q">${qw(s.mn,c)}</div></div>`;
+  if(s.ex)h+=`<div class="exs">${s.ex.map(e=>{const[w,n,cc]=Array.isArray(e)?e:[e,''];return`<div class="ex q">${qw(w,cc||c)}${n?`<em>${n}</em>`:''}</div>`}).join('')}</div>`;
+  if(s.tip)h+=`<div class="tip">${s.tip}</div>`;
+  return h;
+}
+function lesson(i,k){
+  const st=STATIONS[i],s=st.lesson[k],n=st.lesson.length,g=other();
+  const say=k===0?`أهلًا يا ${nm()}! أنا ${nm(g)}. ${s.say||'تعالي نتعلم هذه المحطة معًا 💕'}`:(s.say||pick(['ركّزي معي في هذه الصفحة 👀','انظري إلى الألوان، إنها تساعدك على الحفظ 🎨','اقرئي الأمثلة بصوتٍ جميل 🎙️']));
+  app.innerHTML=topbar(true)+`<div class="head"><h2>${st.icon} ${st.name}</h2><span class="step">شرح ${AR(k+1)} / ${AR(n)}</span></div>
+  <div class="guide">${avatar(g)}<div class="bubble">${say}</div></div>
+  <div class="sheet pop-in">${slideHTML(s,st)}</div>
+  <div class="nav">${k>0?'<button class="btn ghost" id="prev">→ السابق</button>':''}<button class="btn ${k===n-1?'pink':''}" id="next">${k===n-1?'هيّا نلعب! 🎮':'التالي ←'}</button></div>
+  <div class="dots">${st.lesson.map((_,j)=>`<i class="${j===k?'on':''}"></i>`).join('')}</div>`;
+  bindTop(()=>go(map));
+  $('#next').onclick=()=>{sfx('tick');go(()=>k===n-1?play(i):lesson(i,k+1))};
+  if($('#prev'))$('#prev').onclick=()=>go(()=>lesson(i,k-1));
+}
+
+/* ============ اللعب ============ */
+function play(i){
+  const st=STATIONS[i];const ctx={mistakes:0,color:st.color};let gi=0;
+  const next=()=>{if(gi>=st.games.length)return go(()=>result(i,ctx.mistakes));const g=st.games[gi];gi++;
+    if(cleanup){cleanup();cleanup=null}
+    app.innerHTML=`<div class="top"><button class="icon-btn" id="back" aria-label="خروج">✕</button><div class="gprog">${st.games.map((_,j)=>`<i class="${j<gi-1?'done':j===gi-1?'on':''}"></i>`).join('')}</div><button class="icon-btn" id="snd" aria-label="الصوت">${DB.sound?'🔊':'🔈'}</button></div>
+    <div class="gtitle"><h3>${g.title}</h3><p>لعبة ${AR(gi)} من ${AR(st.games.length)} · ${st.name}</p></div><div id="stage"></div>`;
+    bindTop(()=>go(map));scrollTo(0,0);
+    GAMES[g.type]($('#stage'),g,ctx,next)};
+  next();
+}
+const counter=(k,n)=>n>1?`<div class="cnt">${AR(k+1)} / ${AR(n)}</div>`:'';
+const GAMES={};
+
+GAMES.quiz=(el,g,ctx,next)=>{
+  const items=g.shuffle===false?g.items:shuffle(g.items).slice(0,g.n||g.items.length);let k=0;
+  const one=()=>{if(k>=items.length)return next();const it=items[k];const qo=it.qopts??g.qopts;
+    const opts=it.keep?it.opts.map((o,j)=>({o,ok:j===(it.a||0)})):shuffle(it.opts.map((o,j)=>({o,ok:j===(it.a||0)})));
+    const q=it.q||g.q;
+    el.innerHTML=`${counter(k,items.length)}<div class="qcard pop-in">${q?`<p class="qq">${q}</p>`:''}${it.w?`<div class="q qw">${qw(it.w,it.c||ctx.color)}</div>`:''}${it.t?`<div class="qt">${esc(it.t)}</div>`:''}<div id="mt"></div></div>
+    <div class="opts ${opts.length===4||(qo&&opts.length>2)?'g2':''}" style="${qo&&opts.length===3?'grid-template-columns:repeat(3,1fr)':''}">${opts.map((x,j)=>`<button class="opt ${qo?'q':''}" data-j="${j}" data-ok="${x.ok?1:0}">${qo?qw(x.o):esc(x.o)}</button>`).join('')}</div>`;
+    $$('.opt',el).forEach(b=>b.onclick=()=>{
+      const ok=b.dataset.ok==='1';$$('.opt',el).forEach(x=>x.disabled=true);
+      if(it.beats&&(g.meter||ok))$('#mt',el).innerHTML=`<div class="meter">${Array.from({length:it.beats},(_,z)=>`<i style="animation-delay:${z*.18}s">${AR(z+1)}</i>`).join('')}<span>حركات</span></div>`;
+      if(ok){b.classList.add('good');sfx('ok');burst(b)}else{b.classList.add('bad','shake');ctx.mistakes++;sfx('bad');$$('.opt',el).forEach(x=>{if(x.dataset.ok==='1')x.classList.add('good')})}
+      const cor=opts.find(o=>o.ok).o;
+      feedback(ok,qo?`<span class="q">${qw(cor)}</span>`:esc(cor),it.why,()=>{k++;one()});
+    })};
+  one();
+};
+GAMES.tf=(el,g,ctx,next)=>GAMES.quiz(el,{...g,items:g.items.map(it=>({t:it.s,opts:['صح ✓','خطأ ✗'],a:it.a?0:1,why:it.why,keep:true}))},ctx,next);
+GAMES.mix=(el,g,ctx,next)=>GAMES.quiz(el,{...g,items:shuffle(POOL).slice(0,g.n)},ctx,next);
+
+GAMES.sort=(el,g,ctx,next)=>{
+  const items=shuffle(g.items);let k=0;const cnt={};g.buckets.forEach(b=>cnt[b.id]=0);
+  const one=()=>{if(k>=items.length)return next();const it=items[k];
+    el.innerHTML=`${counter(k,items.length)}<div class="qcard pop-in" id="card"><p class="qq">${g.ask}</p>${it.w?`<div class="q qw">${qw(it.w,ctx.color)}</div>`:`<div class="qt">${esc(it.t)}</div>`}</div>
+    <div class="baskets" style="--n:${g.buckets.length>3?2:g.buckets.length}">${g.buckets.map(b=>`<button class="basket" style="--c:${b.c}" data-b="${b.id}"><span class="n">${AR(cnt[b.id])}</span>🧺 ${b.label}${b.sub?`<b>${b.sub}</b>`:''}</button>`).join('')}</div>`;
+    $$('.basket',el).forEach(b=>b.onclick=()=>{
+      const ok=b.dataset.b===it.b;$$('.basket',el).forEach(x=>x.disabled=true);
+      const cor=g.buckets.find(x=>x.id===it.b);
+      if(ok){cnt[it.b]++;b.querySelector('.n').textContent=AR(cnt[it.b]);b.classList.add('good','bounce');sfx('ok');burst(b);$('#card',el).style.cssText='transition:transform .35s,opacity .35s;transform:scale(.5) translateY(80px);opacity:0'}
+      else{b.classList.add('bad','shake');ctx.mistakes++;sfx('bad');$$('.basket',el).forEach(x=>{if(x.dataset.b===it.b)x.classList.add('good')})}
+      feedback(ok,cor.label,it.why,()=>{k++;one()});
+    })};
+  one();
+};
+
+GAMES.pop=(el,g,ctx,next)=>{
+  el.innerHTML=`<p class="qq">${g.prompt}</p><div class="need"><div class="bar"><i id="pb"></i></div><span id="pn">${AR(0)} / ${AR(g.need)}</span></div><div class="arena" id="arena"></div>`;
+  const A=$('#arena',el);let score=0,alive=true,last=0,spawnT=.2,raf,bubs=[];
+  const speed=g.speed||40,every=g.every||1.05,cols=[['#CFE9FF','#8DC7FF'],['#FFE0EC','#FF9EC0'],['#E2DCFF','#AFA2FF'],['#D6F7EE','#7FDCC6'],['#FFF0CC','#FFD27A']];
+  function spawn(){const isT=Math.random()<.55;const txt=isT?pick(g.targets):pick(g.others);const d=document.createElement('button');d.className='bub'+(g.quran?' q':'');d.innerHTML=g.quran?qw(txt):esc(txt);const size=g.quran?96:72;const cc=pick(cols);d.style.cssText=`width:${size}px;height:${size}px;--bc:${cc[0]};--bc2:${cc[1]}`;
+    const b={d,x:Math.random()*Math.max(10,A.clientWidth-size),y:A.clientHeight+10,ok:g.targets.includes(txt),vy:speed*(.8+Math.random()*.5),ph:Math.random()*6,size};
+    d.addEventListener('pointerdown',e=>{e.preventDefault();hit(b)});A.appendChild(d);bubs.push(b)}
+  function hit(b){if(b.dead||!alive)return;
+    if(b.ok){b.dead=true;score++;sfx('pop');const r=b.d.getBoundingClientRect();burstAt(r.left+r.width/2,r.top+r.height/2,12);b.d.classList.add('popped');setTimeout(()=>b.d.remove(),300);
+      $('#pb',el).style.width=Math.min(100,score/g.need*100)+'%';$('#pn',el).textContent=`${AR(Math.min(score,g.need))} / ${AR(g.need)}`;
+      if(score>=g.need){alive=false;cancelAnimationFrame(raf);sfx('win');setTimeout(()=>feedback(true,'',g.doneMsg||'',next),350)}}
+    else if(!b.wrong){b.wrong=true;ctx.mistakes+=.5;sfx('bad');b.d.classList.add('nope');toast(g.hint||'ليست من الحروف المطلوبة')}}
+  function loop(t){if(!alive)return;const dt=Math.min(.05,(t-(last||t))/1000);last=t;spawnT-=dt;if(spawnT<=0){spawn();spawnT=every}
+    for(const b of bubs){if(b.dead)continue;b.y-=b.vy*dt;b.ph+=dt*2;b.d.style.transform=`translate(${b.x+Math.sin(b.ph)*10}px,${b.y}px)`;if(b.y<-b.size){b.dead=true;b.d.remove()}}
+    bubs=bubs.filter(b=>!b.dead);raf=requestAnimationFrame(loop)}
+  raf=requestAnimationFrame(loop);cleanup=()=>{alive=false;cancelAnimationFrame(raf)};
+};
+
+GAMES.memory=(el,g,ctx,next)=>{
+  const pairs=shuffle(g.pairs).slice(0,g.n||6);const cards=shuffle(pairs.flatMap((p,i)=>[{id:i,f:p[0],q:false},{id:i,f:p[1],q:true}]));
+  el.innerHTML=`<p class="qq">${g.prompt||'اقلبي بطاقتين، ووصّلي كل حكمٍ بمثاله'}</p><div class="mem" style="--cols:${cards.length>12?4:3}">${cards.map((c,i)=>`<button class="mc" data-i="${i}" aria-label="بطاقة"><span class="back">✦</span><span class="front ${c.q?'q':''}">${c.q?qw(c.f,g.color||ctx.color):esc(c.f)}</span></button>`).join('')}</div>`;
+  let open=[],matched=0,miss=0,busy=false;
+  $$('.mc',el).forEach(b=>b.onclick=()=>{if(busy||b.classList.contains('flip'))return;b.classList.add('flip');sfx('flip');open.push(b);
+    if(open.length===2){busy=true;const[a,c]=open.map(x=>cards[+x.dataset.i]);
+      if(a.id===c.id){setTimeout(()=>{open.forEach(x=>{x.classList.add('matched');burst(x)});sfx('ok');open=[];busy=false;matched++;if(matched===pairs.length){ctx.mistakes+=Math.max(0,miss-pairs.length)/2;sfx('win');setTimeout(()=>feedback(true,'','وصّلتِ كل البطاقات!',next),450)}},350)}
+      else{miss++;setTimeout(()=>{open.forEach(x=>x.classList.remove('flip'));open=[];busy=false},950)}}});
+};
+
+GAMES.order=(el,g,ctx,next)=>{
+  let k=0;
+  const one=()=>{if(k>=g.items.length)return next();const it=g.items[k];let pos=0;const toks=shuffle(it.tokens);
+    el.innerHTML=`${counter(k,g.items.length)}<p class="qq">${it.prompt}</p><div class="slots" id="sl">${it.tokens.map((_,i)=>`<span class="slot" data-s="${i}"></span>`).join('')}</div><div class="toks">${toks.map((t,j)=>`<button class="tok q" data-j="${j}">${esc(t)}</button>`).join('')}</div>`;
+    $$('.tok',el).forEach(b=>b.onclick=()=>{const t=toks[+b.dataset.j];
+      if(it.tokens[pos]===t){const s=$(`.slot[data-s="${pos}"]`,el);s.textContent=t;s.classList.add('filled');b.classList.add('used');b.disabled=true;pos++;sfx('tick');
+        if(pos===it.tokens.length){sfx('ok');$('#sl',el).classList.add('glow');burst($('#sl',el));setTimeout(()=>feedback(true,'',it.done?'':'',()=>{k++;one()}),500)}}
+      else{b.classList.remove('shake');void b.offsetWidth;b.classList.add('shake');ctx.mistakes+=.5;sfx('bad');toast('ليست هذه… فكّري بالترتيب 🤔')}})};
+  one();
+};
+
+/* ============ النتيجة ============ */
+function result(i,m){
+  const st=STATIONS[i];const n=m<=1?3:m<=4?2:1;const prev=me().stars[st.id]||0;me().stars[st.id]=Math.max(prev,n);save();
+  const nxt=i+1<STATIONS.length?i+1:null;
+  app.innerHTML=topbar()+`<div class="sheet res pop-in" style="margin-top:14px">${avatar(S.p,true).replace('<svg','<svg style="width:110px"')}
+  <h2>${n===3?'مذهلة يا '+nm()+'!':n===2?'أحسنتِ يا '+nm()+'!':'أتممتِ المحطة يا '+nm()+'!'}</h2>
+  <div class="stars">${[1,2,3].map(k=>starSVG(k<=n)).join('')}</div>
+  <p class="sl-p">أضأتِ فانوس «${st.name}» ${n<3?'<br>العبي مرة أخرى لتجمعي النجوم الثلاث ⭐':''}</p>
+  ${!prev?`<div class="badge"><span>${st.badge[0]}</span>حصلتِ على شارة: ${st.badge[1]}</div>`:''}
+  <div class="nav" style="flex-wrap:wrap">${st.final?'<button class="btn pink" id="cer">📜 استلمي شهادتك</button>':nxt!==null?'<button class="btn pink" id="nx">المحطة التالية ←</button>':''}<button class="btn ghost" style="color:var(--ink);background:var(--card2);box-shadow:0 5px 0 var(--line)" id="again">↻ مرة أخرى</button><button class="btn mint" id="mp">🗺️ الخريطة</button></div></div>`;
+  bindTop();sfx('win');confetti();
+  if($('#nx'))$('#nx').onclick=()=>go(()=>lesson(nxt,0));
+  if($('#cer'))$('#cer').onclick=()=>go(certificate);
+  $('#again').onclick=()=>go(()=>play(i));$('#mp').onclick=()=>go(map);
+}
+
+/* ============ ساحة الألعاب ============ */
+const LV=[['🌱','سهل'],['🌙','متوسط'],['⭐','صعب']];
+const poolFor=l=>POOL.filter(q=>q.si<=[6,10,99][l-1]);
+function arcade(){
+  const B=me().best;
+  const G=[
+   {id:'race',ic:'⏱️',c:'#FFE3A6',t:'سباق النجوم',d:'أجيبي عن أكبر عددٍ من الأسئلة قبل انتهاء الوقت!'},
+   {id:'bub',ic:'🫧',c:'#CFE9FF',t:'فقاعات الحروف',d:'فرقعي حروف الحكم المطلوب قبل أن تطير.'},
+   {id:'mem',ic:'🃏',c:'#E2DCFF',t:'ذاكرة الكنوز',d:'اقلبي البطاقات ووصّلي كل حكمٍ بمثاله.'},
+   {id:'duel',ic:'⚔️',c:'#FFD3E2',t:'تحدّي الأختين',d:'هدى ضد سنا على جهاز واحد، بالتناوب. من تجمع نجومًا أكثر؟'}];
+  app.innerHTML=topbar(true)+`<div class="head"><h2>🎮 ساحة الألعاب</h2></div><p style="color:#fff;margin:-4px 0 14px;opacity:.9">كل لعبة لها ثلاثة مستويات. المستوى السهل من المحطات الأولى، والصعب من كل الرحلة.</p>
+  <div class="agrid">${G.map(x=>`<div class="acard"><div class="ic" style="--c:${x.c}">${x.ic}</div><h3>${x.t}</h3><p>${x.d}</p>
+   <div class="lv">${LV.map((l,j)=>`<button class="btn small ${j===0?'mint':j===1?'':'pink'}" data-g="${x.id}" data-l="${j+1}">${l[0]} ${l[1]}</button>`).join('')}</div>
+   ${x.id==='race'?`<div class="best">أفضل نتيجة: ${LV.map((l,j)=>`${l[1]} ${AR(B['race'+(j+1)]||0)}`).join(' · ')}</div>`:''}</div>`).join('')}</div>`;
+  bindTop(()=>go(map));
+  $$('.lv .btn').forEach(b=>b.onclick=()=>{const l=+b.dataset.l;sfx('tick');go(()=>({race,bub:bubbles,mem:memArc,duel})[b.dataset.g](l))});
+}
+function arcShell(title,sub){
+  app.innerHTML=`<div class="top"><button class="icon-btn" id="back" aria-label="خروج">✕</button><span class="spacer"></span><span class="pill" id="hud"></span><button class="icon-btn" id="snd" aria-label="الصوت">${DB.sound?'🔊':'🔈'}</button></div><div class="gtitle"><h3>${title}</h3><p>${sub}</p></div><div id="stage"></div>`;
+  bindTop(()=>go(arcade));return $('#stage');
+}
+function arcDone(title,msg,again){
+  sfx('win');confetti();
+  app.innerHTML=topbar()+`<div class="sheet res pop-in" style="margin-top:14px">${avatar(S.p,true).replace('<svg','<svg style="width:110px"')}<h2>${title}</h2><p class="sl-p">${msg}</p>
+  <div class="nav"><button class="btn pink" id="ag">↻ العبي مرة أخرى</button><button class="btn mint" id="ar">🎮 الساحة</button></div></div>`;
+  bindTop();$('#ag').onclick=()=>go(again);$('#ar').onclick=()=>go(arcade);
+}
+function race(l){
+  const el=arcShell('⏱️ سباق النجوم',`المستوى: ${LV[l-1][1]}`);let time=[90,70,50][l-1],score=0,alive=true;const pool=shuffle(poolFor(l));let k=0;
+  const hud=()=>$('#hud').innerHTML=`<span class="timer">⏱️ ${AR(time)}</span> · ⭐ ${AR(score)}`;hud();
+  const iv=setInterval(()=>{time--;hud();if(time<=5&&time>0)sfx('tick');if(time<=0)end()},1000);
+  cleanup=()=>{alive=false;clearInterval(iv)};
+  function end(){if(!alive)return;alive=false;clearInterval(iv);cleanup=null;const B=me().best,key='race'+l,rec=score>(B[key]||0);if(rec)B[key]=score;save();go(()=>arcDone(`جمعتِ ${AR(score)} نجمة!`,rec?'🎉 رقمٌ قياسي جديد!':`أفضل نتيجة لكِ: ${AR(B[key])}`,()=>race(l)))}
+  function one(){if(!alive)return;const it=pool[k++%pool.length];const qo=it.qopts;const opts=it.keep?it.opts.map((o,j)=>({o,ok:j===it.a})):shuffle(it.opts.map((o,j)=>({o,ok:j===(it.a||0)})));
+    el.innerHTML=`<div class="qcard pop-in">${it.q?`<p class="qq">${it.q}</p>`:''}${it.w?`<div class="q qw">${qw(it.w,it.c)}</div>`:''}${it.t?`<div class="qt">${esc(it.t)}</div>`:''}</div><div class="opts ${opts.length===4?'g2':''}">${opts.map((x,j)=>`<button class="opt ${qo?'q':''}" data-ok="${x.ok?1:0}">${qo?qw(x.o):esc(x.o)}</button>`).join('')}</div>`;
+    $$('.opt',el).forEach(b=>b.onclick=()=>{$$('.opt',el).forEach(x=>x.disabled=true);if(b.dataset.ok==='1'){score++;hud();b.classList.add('good');sfx('ok');burst(b);setTimeout(one,450)}else{b.classList.add('bad','shake');sfx('bad');$$('.opt',el).forEach(x=>{if(x.dataset.ok==='1')x.classList.add('good')});setTimeout(one,1300)}})}
+  one();
+}
+function bubbles(l){
+  const set=pick(LETTER_SETS);const el=arcShell('🫧 فقاعات الحروف',`المستوى: ${LV[l-1][1]}`);$('#hud').textContent=set.name;
+  const ctx={mistakes:0,color:set.c};const need=[10,14,18][l-1];
+  GAMES.pop(el,{prompt:`فرقعي ${set.name}: <span class="q" style="color:var(--amberL)">${set.t.join(' ')}</span>`,need,targets:set.t,others:ALL_LETTERS.filter(x=>!set.t.includes(x)),speed:[42,60,80][l-1],every:[1.05,.85,.68][l-1],hint:set.name+': '+set.t.join(' ')},ctx,()=>go(()=>arcDone('فرقعتِ كل الفقاعات!',`${AR(need)} حرفًا من ${set.name}${ctx.mistakes?` · أخطاء: ${AR(Math.round(ctx.mistakes*2))}`:' · بلا أي خطأ! 🌟'}`,()=>bubbles(l))));
+}
+function memArc(l){
+  const n=[4,6,8][l-1];const src=shuffle(MEMPOOL.filter(x=>x.si<=[6,10,99][l-1]));const used=new Set(),pairs=[];
+  for(const x of src){if(used.has(x.p[0]))continue;used.add(x.p[0]);pairs.push(x.p);if(pairs.length===n)break}
+  const el=arcShell('🃏 ذاكرة الكنوز',`المستوى: ${LV[l-1][1]} · ${AR(pairs.length)} أزواج`);let t0=Date.now();
+  const iv=setInterval(()=>$('#hud').textContent='⏱️ '+AR(Math.round((Date.now()-t0)/1000)),1000);cleanup=()=>clearInterval(iv);
+  GAMES.memory(el,{pairs,n:pairs.length,color:C.madd},{mistakes:0,color:C.madd},()=>{clearInterval(iv);cleanup=null;const s=Math.round((Date.now()-t0)/1000);go(()=>arcDone('وجدتِ كل الكنوز!',`في ${AR(s)} ثانية ⏱️`,()=>memArc(l)))});
+}
+function duel(l){
+  const rounds=10;const qs=shuffle(poolFor(l)).slice(0,rounds);const sc={huda:0,sana:0};let k=0;
+  const el=arcShell('⚔️ تحدّي الأختين',`${AR(rounds)} أسئلة بالتناوب · المستوى: ${LV[l-1][1]}`);$('#back').onclick=()=>go(S.p?arcade:home);
+  function one(){
+    if(k>=rounds){const w=sc.huda>sc.sana?'huda':sc.sana>sc.huda?'sana':null;const back=()=>duel(l);
+      sfx('win');confetti();
+      app.innerHTML=`<div class="sheet res pop-in" style="margin-top:24px"><div class="row" style="justify-content:center">${avatar('huda',w!=='sana').replace('<svg','<svg style="width:90px"')}${avatar('sana',w!=='huda').replace('<svg','<svg style="width:90px"')}</div>
+      <h2>${w?`فازت ${nm(w)}! 🏆`:'تعادل! كلتاكما بطلة 🤝'}</h2><p class="sl-p">هدى: ${AR(sc.huda)} ⭐ — سنا: ${AR(sc.sana)} ⭐<br>${w?`وأحسنتِ يا ${nm(w==='huda'?'sana':'huda')}، المرة القادمة لكِ! 💕`:''}</p>
+      <div class="nav"><button class="btn pink" id="ag">↻ جولة جديدة</button><button class="btn mint" id="ar">${S.p?'🎮 الساحة':'🏠 الرئيسية'}</button></div></div>`;
+      $('#ag').onclick=()=>go(back);$('#ar').onclick=()=>go(S.p?arcade:home);return}
+    const turn=k%2?'sana':'huda';const it=qs[k];const qo=it.qopts;const opts=it.keep?it.opts.map((o,j)=>({o,ok:j===it.a})):shuffle(it.opts.map((o,j)=>({o,ok:j===(it.a||0)})));
+    $('#hud').textContent=`سؤال ${AR(k+1)} / ${AR(rounds)}`;
+    el.innerHTML=`<div class="duel-sc"><div class="p ${turn==='huda'?'on':''}">${avatar('huda')}هدى<b>${AR(sc.huda)}</b></div><span class="vs">ضد</span><div class="p ${turn==='sana'?'on':''}">${avatar('sana')}سنا<b>${AR(sc.sana)}</b></div></div>
+    <p class="qq" style="color:#fff;text-align:center;margin-bottom:8px">الدور على: <span style="color:${PLAYERS[turn].c2}">${nm(turn)}</span></p>
+    <div class="qcard pop-in">${it.q?`<p class="qq">${it.q}</p>`:''}${it.w?`<div class="q qw">${qw(it.w,it.c)}</div>`:''}${it.t?`<div class="qt">${esc(it.t)}</div>`:''}</div>
+    <div class="opts ${opts.length===4?'g2':''}">${opts.map(x=>`<button class="opt ${qo?'q':''}" data-ok="${x.ok?1:0}">${qo?qw(x.o):esc(x.o)}</button>`).join('')}</div>`;
+    $$('.opt',el).forEach(b=>b.onclick=()=>{$$('.opt',el).forEach(x=>x.disabled=true);k++;
+      if(b.dataset.ok==='1'){sc[turn]++;b.classList.add('good');sfx('ok');burst(b);toast(`أحسنتِ يا ${nm(turn)}! ⭐`);setTimeout(one,1000)}
+      else{b.classList.add('bad','shake');sfx('bad');$$('.opt',el).forEach(x=>{if(x.dataset.ok==='1')x.classList.add('good')});setTimeout(one,1700)}})}
+  one();
+}
+
+/* ============ الكنوز والشهادة ============ */
+function treasures(){
+  app.innerHTML=topbar(true)+`<div class="head"><h2>🏆 كنوز ${nm()}</h2><span class="step">${AR(Object.keys(me().stars).length)} / ${AR(STATIONS.length)} شارة</span></div>
+  <div class="tgrid">${STATIONS.map(s=>{const n=me().stars[s.id];return`<div class="tb ${n?'':'off'}"><span>${s.badge[0]}</span>${n?s.badge[1]:s.name}<small>${n?starsTxt(n):'🔒'}</small></div>`}).join('')}</div>
+  ${me().stars.final?'<div class="nav"><button class="btn pink" id="cer">📜 شهادة نجمة الترتيل</button></div>':''}`;
+  bindTop(()=>go(map));if($('#cer'))$('#cer').onclick=()=>go(certificate);
+}
+function certificate(){
+  const d=new Date().toLocaleDateString('ar',{year:'numeric',month:'long',day:'numeric'});
+  app.innerHTML=topbar(true)+`<div class="cert pop-in" style="margin-top:12px"><div class="in">${avatar(S.p,true)}
+  <h2>شهادة نجمة الترتيل</h2><p>تُمنح هذه الشهادة للبطلة</p><div class="nm">${nm()}</div>
+  <p>لإتمامها رحلة الفوانيس الخمسة عشر في مبادئ تجويد القرآن الكريم،<br>وجمعها <b>${AR(totalStars(S.p))}</b> نجمة من ${AR(STATIONS.length*3)}.</p>
+  <div class="q" style="font-size:26px;color:var(--pinkD)">وَرَتِّلِ الْقُرْآنَ تَرْتِيلًا</div><p style="color:var(--muted);font-size:15px">${d}</p></div></div>`;
+  bindTop(()=>go(map));sfx('win');confetti();
+}
+
+stars();home();
+</script>
+</body>
+</html>
