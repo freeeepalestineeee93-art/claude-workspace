@@ -3,6 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="لعبة تعليمية ممتعة للأطفال لتعلّم أحكام التجويد: ١٥ محطة، ألعاب فقاعات وذاكرة وسلال وتحديات.">
+<meta name="theme-color" content="#18204E">
+<meta property="og:title" content="نجمات الترتيل — لعبة تعلّم التجويد للأطفال">
+<meta property="og:description" content="رحلة مضيئة مع هدى وسنا لتعلّم أحكام التجويد باللعب.">
+<meta property="og:image" content="icon-512.png">
+<meta property="og:type" content="website">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="نجمات الترتيل">
 <title>نجمات الترتيل</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -861,6 +873,7 @@ function certificate(){
 }
 
 stars();home();
+if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
 </body>
 </html>
