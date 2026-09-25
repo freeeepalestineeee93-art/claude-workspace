@@ -1,0 +1,665 @@
+<meta charset="utf-8">
+<title>عالم هدى وسنا</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@500;700;800&family=Tajawal:wght@500;700&display=swap">
+<style>
+  :root {
+    color-scheme: light;
+    --sky: #DDF3FF;
+    --sky-deep: #BFE6FA;
+    --paper: #FFFFFF;
+    --ink: #33204A;
+    --ink-soft: #6E5A86;
+    --berry: #E0457B;
+    --berry-soft: #FFE1EC;
+    --sun: #FFC23A;
+    --sun-soft: #FFF1C9;
+    --mint: #1FB597;
+    --mint-soft: #D5F6EE;
+    --line: #E6DCF0;
+    --good: #22A65A;
+    --oops: #F08A3C;
+    --accent: var(--berry);
+    --accent-soft: var(--berry-soft);
+    --display: "Baloo Bhaijaan 2", "Tajawal", "Segoe UI", Tahoma, sans-serif;
+    --body: "Tajawal", "Baloo Bhaijaan 2", "Segoe UI", Tahoma, sans-serif;
+  }
+  html { height: 100%; background: var(--sky-deep); }
+  body {
+    min-height: 100%;
+    margin: 0;
+    background: var(--sky);
+    background-image:
+      radial-gradient(circle at 12% 18%, #fff 0 28px, transparent 29px),
+      radial-gradient(circle at 16% 20%, #fff 0 22px, transparent 23px),
+      radial-gradient(circle at 86% 10%, #fff 0 24px, transparent 25px),
+      radial-gradient(circle at 90% 12%, #fff 0 18px, transparent 19px),
+      linear-gradient(180deg, var(--sky) 0%, var(--sky-deep) 100%);
+    background-attachment: fixed;
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 18px;
+  }
+  #app {
+    direction: rtl;
+    max-width: 760px;
+    margin: 0 auto;
+    padding-inline: 16px;
+    padding-block: 16px 40px;
+    min-height: 100%;
+    box-sizing: border-box;
+  }
+  #app.huda { --accent: var(--berry); --accent-soft: var(--berry-soft); }
+  #app.suna { --accent: var(--mint); --accent-soft: var(--mint-soft); }
+
+  h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; line-height: 1.2; }
+  button { font-family: inherit; color: inherit; cursor: pointer; }
+  button:focus-visible { outline: 4px solid var(--sun); outline-offset: 3px; }
+
+  /* ---------- top bar ---------- */
+  .bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-block-end: 18px; min-height: 52px; }
+  .pill-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    border: 0; background: var(--paper); border-radius: 999px;
+    padding: 10px 18px; font-family: var(--display); font-weight: 700; font-size: 18px; white-space: nowrap;
+    box-shadow: 0 4px 0 var(--line);
+  }
+  .pill-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--line); }
+  .star-count {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--sun-soft); border: 2px solid var(--sun); border-radius: 999px;
+    padding: 6px 16px; font-family: var(--display); font-weight: 800; font-size: 20px;
+    font-variant-numeric: tabular-nums; white-space: nowrap;
+  }
+
+  /* ---------- home ---------- */
+  .hero { text-align: center; padding-block: 12px 24px; }
+  .hero h1 { font-size: clamp(40px, 9vw, 64px); font-weight: 800; letter-spacing: 0; }
+  .hero h1 .h { color: var(--berry); }
+  .hero h1 .s { color: var(--mint); }
+  .hero p { margin: 8px 0 0; color: var(--ink-soft); font-size: 20px; }
+  .players { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .player {
+    border: 0; background: var(--paper); border-radius: 28px;
+    padding: 20px 12px 18px; display: grid; justify-items: center; gap: 6px;
+    box-shadow: 0 8px 0 var(--pc-shadow);
+    transition: transform .15s ease;
+  }
+  .player:hover { transform: translateY(-4px) rotate(-1deg); }
+  .player:active { transform: translateY(4px); box-shadow: 0 3px 0 var(--pc-shadow); }
+  .player.huda { --pc: var(--berry); --pc-shadow: #F3A9C3; }
+  .player.suna { --pc: var(--mint); --pc-shadow: #93E0CF; }
+  .player svg { width: min(150px, 100%); height: auto; }
+  .player .name { font-family: var(--display); font-size: 34px; font-weight: 800; color: var(--pc); }
+  .player .meta { font-size: 16px; color: var(--ink-soft); }
+  .home-note { text-align: center; color: var(--ink-soft); margin-block-start: 24px; font-size: 16px; }
+
+  /* ---------- menu ---------- */
+  .greet { display: flex; align-items: center; gap: 14px; margin-block-end: 20px; }
+  .greet svg { width: 84px; height: 84px; flex: none; }
+  .greet h2 { font-size: clamp(28px, 6vw, 38px); font-weight: 800; }
+  .greet h2 span { color: var(--accent); }
+  .greet p { margin: 2px 0 0; color: var(--ink-soft); }
+  .games { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
+  .game-card {
+    border: 0; text-align: start; background: var(--paper); border-radius: 24px;
+    padding: 16px 18px; display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 14px;
+    box-shadow: 0 6px 0 var(--line);
+  }
+  .game-card:hover { box-shadow: 0 6px 0 var(--gc); }
+  .game-card:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--gc); }
+  .game-card .ic {
+    width: 64px; height: 64px; border-radius: 20px; display: grid; place-items: center;
+    font-size: 36px; background: var(--gc-soft);
+  }
+  .game-card h3 { font-size: 24px; font-weight: 800; }
+  .game-card p { margin: 0; font-size: 15px; color: var(--ink-soft); }
+  .game-card .best { font-size: 14px; color: var(--ink-soft); margin-block-start: 2px; letter-spacing: 2px; }
+
+  .album { margin-block-start: 26px; background: var(--paper); border-radius: 24px; padding: 18px; }
+  .album-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .album h3 { font-size: 24px; }
+  .album small { color: var(--ink-soft); font-size: 15px; }
+  .stickers { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; margin-block-start: 12px; }
+  .sticker {
+    aspect-ratio: 1; max-width: 100%; border-radius: 18px; display: grid; place-items: center;
+    font-size: clamp(26px, 6vw, 38px); background: var(--accent-soft);
+  }
+  .sticker.locked { background: #F2EEF6; color: #C4B6D3; font-family: var(--display); font-size: 26px; font-weight: 800; }
+
+  /* ---------- game ---------- */
+  .progress { display: flex; flex-wrap: wrap; gap: 5px; flex: 1; justify-content: center; }
+  .progress i { width: 12px; height: 12px; border-radius: 50%; background: var(--paper); border: 2px solid var(--line); }
+  .progress i.done { background: var(--sun); border-color: var(--sun); }
+  .progress i.miss { background: #F3C4A2; border-color: #F3C4A2; }
+  .progress i.now { border-color: var(--accent); transform: scale(1.25); }
+
+  .stage { background: var(--paper); border-radius: 32px; padding: 22px 18px 26px; text-align: center; box-shadow: 0 8px 0 var(--line); }
+  .q-title { font-family: var(--display); font-size: clamp(24px, 5.5vw, 32px); font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; }
+  .speak { border: 0; background: var(--accent-soft); width: 48px; height: 48px; border-radius: 50%; font-size: 24px; flex: none; }
+  .visual { margin-block: 18px; min-height: 120px; display: grid; place-items: center; }
+  .big-emoji { font-size: clamp(90px, 22vw, 130px); line-height: 1; }
+  .word { font-family: var(--display); font-size: clamp(38px, 9vw, 56px); font-weight: 800; margin-block-start: 6px; }
+  .word .gap { color: var(--accent); background: var(--accent-soft); border-radius: 12px; padding-inline: 8px; }
+  .word .hit { color: var(--accent); }
+  .count-box { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; font-size: clamp(38px, 9vw, 52px); max-width: 420px; line-height: 1.1; }
+  .sum { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 10px; }
+  .sum .grp { display: flex; flex-wrap: wrap; justify-content: center; gap: 2px; font-size: clamp(30px, 7vw, 44px); max-width: 190px; background: var(--sun-soft); border-radius: 18px; padding: 8px; }
+  .sum .op { font-family: var(--display); font-size: 44px; font-weight: 800; color: var(--accent); }
+  .blob { width: 140px; height: 140px; border-radius: 42% 58% 52% 48% / 50% 44% 56% 50%; border: 4px solid var(--ink); }
+  .scene { font-size: 20px; color: var(--ink-soft); max-width: 460px; }
+
+  .choices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; max-width: 520px; margin: 0 auto; }
+  .choices.cols-1 { grid-template-columns: 1fr; }
+  .choice {
+    border: 3px solid var(--line); background: var(--paper); border-radius: 22px;
+    padding: 14px 10px; font-family: var(--display); font-weight: 800; font-size: clamp(26px, 6vw, 34px);
+    display: grid; justify-items: center; gap: 2px; min-height: 84px; align-content: center;
+    box-shadow: 0 5px 0 var(--line); transition: transform .1s ease;
+  }
+  .choice:hover { border-color: var(--accent); }
+  .choice:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--line); }
+  .choice.letter { font-size: clamp(40px, 10vw, 52px); }
+  .choice small { font-family: var(--body); font-size: 15px; color: var(--ink-soft); font-weight: 700; }
+  .choice.text { font-size: clamp(20px, 4.6vw, 24px); font-weight: 700; min-height: 64px; }
+  .choice .sw { display: block; width: 100%; height: 56px; border-radius: 14px; border: 3px solid var(--ink); box-sizing: border-box; }
+  .choice.right { border-color: var(--good); background: #E2F7EA; box-shadow: 0 5px 0 #A6E3BE; animation: pop .35s ease; }
+  .choice.wrong { border-color: var(--oops); background: #FFEBDC; animation: shake .35s ease; opacity: .6; }
+  .choice:disabled { cursor: default; }
+  .feedback { min-height: 34px; margin-block-start: 14px; font-family: var(--display); font-size: 24px; font-weight: 800; }
+  .feedback.good { color: var(--good); }
+  .feedback.oops { color: var(--oops); }
+
+  /* memory */
+  .mem { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; max-width: 480px; margin: 16px auto 0; }
+  .card { aspect-ratio: 3 / 4; max-width: 100%; border: 0; border-radius: 18px; perspective: 600px; background: transparent; padding: 0; }
+  .card .in { position: relative; width: 100%; height: 100%; transition: transform .35s ease; transform-style: preserve-3d; }
+  .card.open .in, .card.matched .in { transform: rotateY(180deg); }
+  .card .f, .card .b { position: absolute; inset: 0; border-radius: 18px; display: grid; place-items: center; backface-visibility: hidden; }
+  .card .b { background: var(--accent); color: #fff; font-family: var(--display); font-size: 30px; font-weight: 800;
+    background-image: radial-gradient(circle, rgba(255,255,255,.28) 2px, transparent 3px); background-size: 14px 14px; }
+  .card .f { background: var(--sun-soft); transform: rotateY(180deg); font-size: clamp(34px, 9vw, 52px); border: 3px solid var(--sun); box-sizing: border-box; }
+  .card.matched .f { background: #E2F7EA; border-color: var(--good); }
+  .mem-info { display: flex; justify-content: center; gap: 18px; color: var(--ink-soft); font-size: 17px; font-variant-numeric: tabular-nums; }
+
+  /* result */
+  .result { text-align: center; }
+  .result svg.face { width: 120px; height: 120px; }
+  .result h2 { font-size: clamp(32px, 7vw, 44px); font-weight: 800; margin-block-start: 6px; }
+  .result h2 span { color: var(--accent); }
+  .result .stars { font-size: 56px; letter-spacing: 6px; margin-block: 10px; }
+  .result .stars .off { filter: grayscale(1); opacity: .3; }
+  .result p { color: var(--ink-soft); margin: 4px 0; }
+  .new-sticker { display: inline-grid; place-items: center; gap: 4px; background: var(--sun-soft); border: 3px dashed var(--sun); border-radius: 24px; padding: 12px 22px; margin-block: 12px; }
+  .new-sticker b { font-size: 64px; line-height: 1; }
+  .row-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-block-start: 16px; }
+  .cta { border: 0; background: var(--accent); color: #fff; border-radius: 999px; padding: 14px 28px; font-family: var(--display); font-size: 22px; font-weight: 800; box-shadow: 0 5px 0 rgba(0,0,0,.18); }
+  .cta:active { transform: translateY(3px); box-shadow: 0 2px 0 rgba(0,0,0,.18); }
+
+  #confetti { position: fixed; inset: 0; pointer-events: none; width: 100%; height: 100%; z-index: 5; }
+
+  @keyframes pop { 0% { transform: scale(1); } 50% { transform: scale(1.08); } 100% { transform: scale(1); } }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+  @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+  .bob { animation: bob 2.4s ease-in-out infinite; }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+  @media (max-width: 440px) {
+    .stickers { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .pill-btn { padding: 8px 14px; font-size: 16px; }
+    .star-count { padding: 5px 12px; font-size: 18px; }
+    .player .name { font-size: 28px; }
+    .mem { gap: 7px; }
+  }
+</style>
+
+<div id="app"></div>
+<canvas id="confetti" aria-hidden="true"></canvas>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ---------- characters ---------- */
+  function face(who) {
+    var hair = who === "huda" ? "#3A2230" : "#7A4A2A";
+    var bow = who === "huda" ? "#E0457B" : "#1FB597";
+    var bow2 = who === "huda" ? "#FF8FB3" : "#7FE0C9";
+    var extra = who === "huda"
+      ? '<path d="M28 70 C18 100 24 128 36 138 L46 96 Z" fill="' + hair + '"/><path d="M132 70 C142 100 136 128 124 138 L114 96 Z" fill="' + hair + '"/>'
+      : '<circle cx="30" cy="92" r="16" fill="' + hair + '"/><circle cx="130" cy="92" r="16" fill="' + hair + '"/><circle cx="26" cy="116" r="12" fill="' + hair + '"/><circle cx="134" cy="116" r="12" fill="' + hair + '"/>';
+    return '<svg viewBox="0 0 160 160" role="img" aria-label="' + (who === "huda" ? "هدى" : "سنا") + '">' +
+      extra +
+      '<circle cx="80" cy="88" r="52" fill="#FFD9B8"/>' +
+      '<path d="M28 84 C28 42 56 28 80 28 C104 28 132 42 132 84 C120 66 104 58 80 58 C62 58 44 66 28 84 Z" fill="' + hair + '"/>' +
+      '<path d="M96 30 L124 16 L122 46 Z" fill="' + bow + '"/><path d="M96 30 L100 4 L74 20 Z" fill="' + bow + '"/><circle cx="97" cy="29" r="7" fill="' + bow2 + '"/>' +
+      '<ellipse cx="62" cy="88" rx="6" ry="8" fill="#33204A"/><ellipse cx="98" cy="88" rx="6" ry="8" fill="#33204A"/>' +
+      '<circle cx="64" cy="85" r="2" fill="#fff"/><circle cx="100" cy="85" r="2" fill="#fff"/>' +
+      '<circle cx="50" cy="104" r="8" fill="#FF9BB0" opacity=".6"/><circle cx="110" cy="104" r="8" fill="#FF9BB0" opacity=".6"/>' +
+      '<path d="M66 110 Q80 124 94 110" stroke="#33204A" stroke-width="4" fill="none" stroke-linecap="round"/>' +
+      '</svg>';
+  }
+
+  var NAMES = { huda: "هدى", suna: "سنا" };
+  var STICKERS = ["🦄", "🌈", "🎀", "👑", "🌸", "🧁", "🦋", "🍓", "🐣", "🌟", "🍭", "🐬", "🌻", "🎈", "🐼", "🍩", "🪁", "🏰"];
+  var STARS_PER_STICKER = 3;
+
+  /* ---------- storage (per-device convenience) ---------- */
+  function fresh() { return { huda: { stars: 0, best: {} }, suna: { stars: 0, best: {} } }; }
+  function load() {
+    try {
+      var d = JSON.parse(localStorage.getItem("huda-suna-v1"));
+      if (d && d.huda && d.suna) return d;
+    } catch (e) {}
+    return fresh();
+  }
+  function save() { try { localStorage.setItem("huda-suna-v1", JSON.stringify(data)); } catch (e) {} }
+  var data = load();
+
+  /* ---------- sound + speech ---------- */
+  var actx = null;
+  function tone(freqs, dur) {
+    try {
+      actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+      freqs.forEach(function (f, i) {
+        var o = actx.createOscillator(), g = actx.createGain();
+        o.type = "sine"; o.frequency.value = f;
+        var t = actx.currentTime + i * dur;
+        g.gain.setValueAtTime(0.0001, t);
+        g.gain.exponentialRampToValueAtTime(0.25, t + 0.02);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+        o.connect(g); g.connect(actx.destination);
+        o.start(t); o.stop(t + dur + 0.02);
+      });
+    } catch (e) {}
+  }
+  var sfx = {
+    good: function () { tone([660, 880, 1175], 0.11); },
+    oops: function () { tone([330, 262], 0.14); },
+    flip: function () { tone([520], 0.06); },
+    win: function () { tone([523, 659, 784, 1047, 1319], 0.12); }
+  };
+  var arVoice = null;
+  function pickVoice() {
+    try {
+      var vs = speechSynthesis.getVoices();
+      arVoice = vs.filter(function (v) { return /^ar/i.test(v.lang); })[0] || null;
+    } catch (e) {}
+  }
+  try { pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; } catch (e) {}
+  function say(text) {
+    try {
+      speechSynthesis.cancel();
+      var u = new SpeechSynthesisUtterance(text);
+      u.lang = "ar-SA"; u.rate = 0.85; u.pitch = 1.15;
+      if (arVoice) u.voice = arVoice;
+      speechSynthesis.speak(u);
+    } catch (e) {}
+  }
+
+  /* ---------- helpers ---------- */
+  function shuffle(a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function pick(a) { return a[Math.floor(Math.random() * a.length)]; }
+  function rnd(a, b) { return a + Math.floor(Math.random() * (b - a + 1)); }
+  var AR_DIGITS = "٠١٢٣٤٥٦٧٨٩";
+  function arNum(n) { return String(n).replace(/\d/g, function (d) { return AR_DIGITS[d]; }); }
+  var NUM_NAMES = ["صفر", "واحد", "اثنان", "ثلاثة", "أربعة", "خمسة", "ستة", "سبعة", "ثمانية", "تسعة", "عشرة"];
+  var $app = document.getElementById("app");
+
+  /* ---------- game content ---------- */
+  var WORDS = [
+    ["أ", "أرنب", "🐰"], ["ب", "بطة", "🦆"], ["ت", "تفاحة", "🍎"], ["ث", "ثعلب", "🦊"], ["ج", "جمل", "🐪"],
+    ["ح", "حصان", "🐴"], ["خ", "خروف", "🐑"], ["د", "دب", "🐻"], ["ذ", "ذرة", "🌽"], ["ر", "ريشة", "🪶"],
+    ["ز", "زرافة", "🦒"], ["س", "سمكة", "🐟"], ["ش", "شمس", "☀️"], ["ص", "صاروخ", "🚀"], ["ض", "ضفدع", "🐸"],
+    ["ط", "طائرة", "✈️"], ["ظ", "ظرف", "✉️"], ["ع", "عنب", "🍇"], ["غ", "غيمة", "☁️"], ["ف", "فراشة", "🦋"],
+    ["ق", "قطة", "🐱"], ["ك", "كعكة", "🎂"], ["ل", "ليمون", "🍋"], ["م", "موز", "🍌"], ["ن", "نحلة", "🐝"],
+    ["ه", "هدية", "🎁"], ["و", "وردة", "🌹"], ["ي", "يد", "✋"], ["ف", "فيل", "🐘"], ["ق", "قمر", "🌙"],
+    ["ج", "جزرة", "🥕"], ["ب", "بيت", "🏠"], ["ن", "نجمة", "⭐"], ["ك", "كتاب", "📖"], ["خ", "خيمة", "⛺"]
+  ];
+  var LETTERS = "أبتثجحخدذرزسشصضطظعغفقكلمنهوي".split("");
+
+  var COLORS = [
+    ["الأحمر", "#E5383B"], ["الأزرق", "#2F6FE4"], ["الأصفر", "#FFD23F"], ["الأخضر", "#2DB35D"],
+    ["البرتقالي", "#FF8A1F"], ["البنفسجي", "#8E4FD6"], ["الوردي", "#FF7EB6"], ["البني", "#8B5A2B"],
+    ["الأسود", "#222222"], ["الأبيض", "#FFFFFF"]
+  ];
+  var COLOR_THINGS = [
+    ["🍎", "التفاحة", "الأحمر"], ["🍌", "الموزة", "الأصفر"], ["🐸", "الضفدع", "الأخضر"], ["🍊", "البرتقالة", "البرتقالي"],
+    ["🍇", "العنب", "البنفسجي"], ["🐻", "الدب", "البني"], ["🌊", "البحر", "الأزرق"], ["🍓", "الفراولة", "الأحمر"],
+    ["🌻", "زهرة عباد الشمس", "الأصفر"], ["🥒", "الخيارة", "الأخضر"], ["🥛", "الحليب", "الأبيض"], ["🐧", "البطريق", "الأسود"]
+  ];
+
+  var MANNERS = [
+    ["👋", "عندما نلتقي بصديقتنا نقول:", ["السلام عليكم", "لا نقول شيئاً", "اذهبي من هنا"]],
+    ["🍽️", "قبل أن نبدأ الأكل نقول:", ["بسم الله", "أنا جائعة", "هيا بسرعة"]],
+    ["😋", "بعد أن ننتهي من الأكل نقول:", ["الحمد لله", "أريد المزيد", "لا شيء"]],
+    ["🎁", "عندما يعطينا أحد هدية نقول:", ["شكراً جزيلاً", "هذه صغيرة", "أعطني أخرى"]],
+    ["😔", "إذا أخطأتُ مع أختي أقول لها:", ["أنا آسفة", "أنتِ السبب", "لا يهمني"]],
+    ["🧼", "قبل الأكل وبعده نقوم بـ:", ["غسل اليدين", "اللعب بالطين", "النوم"]],
+    ["🪥", "قبل النوم نقوم بـ:", ["تنظيف الأسنان", "أكل الحلوى", "مشاهدة التلفاز طويلاً"]],
+    ["🤧", "عندما نعطس نقول:", ["الحمد لله", "آه", "لا نقول شيئاً"]],
+    ["🤝", "صديقتي وقعت وتبكي، ماذا أفعل؟", ["أساعدها وأواسيها", "أضحك عليها", "أتركها وأذهب"]],
+    ["🗑️", "وجدت ورقة على الأرض في الحديقة:", ["أضعها في سلة المهملات", "أتركها مكانها", "أرميها أبعد"]],
+    ["👵", "جدتي تحمل كيساً ثقيلاً:", ["أساعدها في حمله", "أمشي بسرعة", "أنظر إليها فقط"]],
+    ["🧸", "أختي تريد اللعب بلعبتي:", ["نلعب بها معاً", "أخبئها منها", "أصرخ عليها"]],
+    ["🚰", "انتهيت من غسل يدي، ماذا أفعل بالماء؟", ["أغلق الصنبور", "أتركه مفتوحاً", "ألعب بالماء"]],
+    ["🙋‍♀️", "في الصف أريد أن أتكلم، ماذا أفعل؟", ["أرفع يدي وأنتظر", "أصرخ بصوت عالٍ", "أقاطع المعلمة"]]
+  ];
+
+  var MEM_SETS = [
+    [["🐰", "أرنب"], ["🦋", "فراشة"], ["🐱", "قطة"], ["🐘", "فيل"], ["🦒", "زرافة"], ["🐝", "نحلة"]],
+    [["🍎", "تفاحة"], ["🍌", "موز"], ["🍇", "عنب"], ["🍓", "فراولة"], ["🍋", "ليمون"], ["🥕", "جزرة"]],
+    [["🌙", "قمر"], ["☀️", "شمس"], ["⭐", "نجمة"], ["🌈", "قوس قزح"], ["☁️", "غيمة"], ["🌹", "وردة"]]
+  ];
+
+  var GAMES = {
+    letters: { title: "الحروف", icon: "🔤", color: "#E0457B", soft: "#FFE1EC", about: "اعرفي أول حرف في الكلمة" },
+    numbers: { title: "الأرقام", icon: "🔢", color: "#FFC23A", soft: "#FFF1C9", about: "عُدّي واجمعي الأشياء" },
+    colors:  { title: "الألوان", icon: "🎨", color: "#2F6FE4", soft: "#DFEAFF", about: "تعلّمي أسماء الألوان" },
+    manners: { title: "أخلاقي الجميلة", icon: "💖", color: "#8E4FD6", soft: "#EFE3FF", about: "ماذا تفعل البنت المهذبة؟" },
+    memory:  { title: "لعبة الذاكرة", icon: "🧠", color: "#1FB597", soft: "#D5F6EE", about: "اقلبي البطاقات وجدي الأزواج" }
+  };
+  var ROUNDS = 8;
+
+  function makeQuestions(game) {
+    var qs = [];
+    if (game === "letters") {
+      shuffle(WORDS).slice(0, ROUNDS).forEach(function (w) {
+        var others = shuffle(LETTERS.filter(function (l) { return l !== w[0]; })).slice(0, 3);
+        qs.push({
+          title: "بأي حرف تبدأ كلمة " + w[1] + "؟",
+          speak: "بأي حرف تبدأ كلمة " + w[1],
+          visual: '<div><div class="big-emoji bob">' + w[2] + '</div><div class="word"><span class="gap">؟</span>' + w[1].slice(1) + '</div></div>',
+          reveal: '<div><div class="big-emoji">' + w[2] + '</div><div class="word"><span class="hit">' + w[1][0] + '</span>' + w[1].slice(1) + '</div></div>',
+          praise: w[1] + " تبدأ بحرف " + w[0],
+          choices: shuffle([{ html: w[0], ok: true }].concat(others.map(function (l) { return { html: l }; })))
+        });
+      });
+    } else if (game === "numbers") {
+      var things = ["🍓", "🐞", "🌸", "🍪", "🐥", "🎈", "🍬", "🐟"];
+      for (var i = 0; i < ROUNDS; i++) {
+        var t = pick(things), ans, visual, title;
+        if (i < 4) {
+          ans = rnd(1, 10);
+          visual = '<div class="count-box">' + new Array(ans + 1).join(t) + '</div>';
+          title = "كم عدد الأشياء؟";
+        } else {
+          var a = rnd(1, 5), b = rnd(1, 5); ans = a + b;
+          visual = '<div class="sum"><div class="grp">' + new Array(a + 1).join(t) + '</div><span class="op">+</span><div class="grp">' + new Array(b + 1).join(t) + '</div><span class="op">=</span><span class="op">؟</span></div>';
+          title = arNum(a) + " + " + arNum(b) + " = ؟";
+        }
+        var opts = [ans];
+        while (opts.length < 4) { var n = ans + rnd(-3, 3); if (n >= 1 && n <= 10 && opts.indexOf(n) < 0) opts.push(n); }
+        qs.push({
+          title: title,
+          speak: i < 4 ? "كم عدد الأشياء؟ عُدّي معي" : NUM_NAMES[a] + " زائد " + NUM_NAMES[b] + " يساوي كم؟",
+          visual: visual,
+          praise: "الجواب " + NUM_NAMES[ans],
+          choices: shuffle(opts).map(function (n) { return { html: arNum(n) + "<small>" + NUM_NAMES[n] + "</small>", ok: n === ans }; })
+        });
+      }
+    } else if (game === "colors") {
+      var things2 = shuffle(COLOR_THINGS);
+      for (var k = 0; k < ROUNDS; k++) {
+        if (k % 2 === 0) {
+          var c = pick(COLORS);
+          var others2 = shuffle(COLORS.filter(function (x) { return x[0] !== c[0]; })).slice(0, 3);
+          qs.push({
+            title: "أين اللون " + c[0].slice(2) + "؟",
+            speak: "أين اللون " + c[0].slice(2),
+            visual: '<div class="big-emoji bob">🖌️</div>',
+            praise: "هذا هو اللون " + c[0].slice(2),
+            choices: shuffle([c].concat(others2)).map(function (x) { return { html: '<span class="sw" style="background:' + x[1] + '"></span>', ok: x[0] === c[0], label: x[0] }; })
+          });
+        } else {
+          var th = things2[k];
+          var right = COLORS.filter(function (x) { return x[0] === th[2]; })[0];
+          var others3 = shuffle(COLORS.filter(function (x) { return x[0] !== th[2]; })).slice(0, 3);
+          qs.push({
+            title: "ما لون " + th[1] + "؟",
+            speak: "ما لون " + th[1],
+            visual: '<div class="big-emoji bob">' + th[0] + '</div>',
+            praise: "لون " + th[1] + " " + right[0].slice(2),
+            choices: shuffle([right].concat(others3)).map(function (x) { return { html: '<span class="sw" style="background:' + x[1] + '"></span><small>' + x[0].slice(2) + '</small>', ok: x === right }; })
+          });
+        }
+      }
+    } else if (game === "manners") {
+      shuffle(MANNERS).slice(0, ROUNDS).forEach(function (m) {
+        qs.push({
+          title: m[1],
+          speak: m[1],
+          visual: '<div class="big-emoji bob">' + m[0] + '</div>',
+          praise: m[2][0],
+          text: true,
+          choices: shuffle(m[2].map(function (t, i) { return { html: t, ok: i === 0 }; }))
+        });
+      });
+    }
+    return qs;
+  }
+
+  /* ---------- state ---------- */
+  var state = { screen: "home", player: null, game: null, qs: [], i: 0, marks: [], locked: false };
+
+  function setPlayerClass() { $app.className = state.player || ""; }
+  function me() { return data[state.player]; }
+  function stickersOwned(p) { return Math.min(STICKERS.length, Math.floor(data[p].stars / STARS_PER_STICKER)); }
+
+  /* ---------- screens ---------- */
+  function renderHome() {
+    state.screen = "home"; state.player = null; setPlayerClass();
+    $app.innerHTML =
+      '<div class="hero"><h1>عالم <span class="h">هدى</span> و<span class="s">سنا</span></h1>' +
+      '<p>من سيلعب الآن؟</p></div>' +
+      '<div class="players">' +
+      ["huda", "suna"].map(function (p) {
+        return '<button class="player ' + p + '" data-p="' + p + '">' + face(p) +
+          '<span class="name">' + NAMES[p] + '</span>' +
+          '<span class="meta">⭐ ' + arNum(data[p].stars) + ' نجمة · ' + arNum(stickersOwned(p)) + ' ملصق</span></button>';
+      }).join("") +
+      '</div>' +
+      '<p class="home-note">خمس ألعاب: الحروف، الأرقام، الألوان، الأخلاق، والذاكرة. كل نجمة تقرّبكِ من ملصق جديد!</p>';
+    $app.querySelectorAll(".player").forEach(function (b) {
+      b.onclick = function () { state.player = b.dataset.p; sfx.good(); say("أهلاً يا " + NAMES[state.player]); renderMenu(); };
+    });
+  }
+
+  function topBar(backLabel, backFn, middle) {
+    var html = '<div class="bar"><button class="pill-btn" id="back">→ ' + backLabel + '</button>' + (middle || "") +
+      '<span class="star-count">⭐ ' + arNum(me().stars) + '</span></div>';
+    return { html: html, bind: function () { document.getElementById("back").onclick = backFn; } };
+  }
+
+  function renderMenu() {
+    state.screen = "menu"; setPlayerClass();
+    var p = state.player, owned = stickersOwned(p);
+    var bar = topBar("تغيير اللاعبة", renderHome);
+    var toNext = STARS_PER_STICKER - (me().stars % STARS_PER_STICKER);
+    $app.innerHTML = bar.html +
+      '<div class="greet">' + face(p) + '<div><h2>أهلاً يا <span>' + NAMES[p] + '</span>!</h2><p>اختاري لعبة، وتعلّمي وأنتِ تلعبين.</p></div></div>' +
+      '<div class="games">' +
+      Object.keys(GAMES).map(function (g) {
+        var G = GAMES[g], best = me().best[g] || 0;
+        return '<button class="game-card" data-g="' + g + '" style="--gc:' + G.color + ';--gc-soft:' + G.soft + '">' +
+          '<span class="ic">' + G.icon + '</span><span><h3>' + G.title + '</h3><p>' + G.about + '</p>' +
+          '<div class="best">' + (best ? "★".repeat(best) + "☆".repeat(3 - best) : "لم تلعبيها بعد") + '</div></span></button>';
+      }).join("") +
+      '</div>' +
+      '<section class="album"><div class="album-head"><h3>ألبوم ملصقات ' + NAMES[p] + '</h3>' +
+      '<small>' + (owned < STICKERS.length ? 'باقي ' + arNum(toNext) + ' ⭐ للملصق القادم' : 'جمعتِ كل الملصقات! 🎉') + '</small></div>' +
+      '<div class="stickers">' +
+      STICKERS.map(function (s, i) { return i < owned ? '<div class="sticker">' + s + '</div>' : '<div class="sticker locked">؟</div>'; }).join("") +
+      '</div></section>';
+    bar.bind();
+    $app.querySelectorAll(".game-card").forEach(function (b) {
+      b.onclick = function () { startGame(b.dataset.g); };
+    });
+  }
+
+  function startGame(g) {
+    state.game = g; state.i = 0; state.marks = [];
+    if (g === "memory") return renderMemory();
+    state.qs = makeQuestions(g);
+    renderQuestion();
+  }
+
+  function progressDots() {
+    var h = '<div class="progress" aria-label="التقدم">';
+    for (var i = 0; i < ROUNDS; i++) {
+      var m = state.marks[i];
+      h += '<i class="' + (m === true ? "done" : m === false ? "miss" : i === state.i ? "now" : "") + '"></i>';
+    }
+    return h + '</div>';
+  }
+
+  function renderQuestion() {
+    state.screen = "q"; state.locked = false;
+    var q = state.qs[state.i], firstTry = true;
+    var bar = topBar("الألعاب", renderMenu, progressDots());
+    $app.innerHTML = bar.html +
+      '<div class="stage"><div class="q-title"><span>' + q.title + '</span><button class="speak" id="spk" aria-label="استمعي">🔊</button></div>' +
+      '<div class="visual" id="vis">' + q.visual + '</div>' +
+      '<div class="choices' + (q.text ? " cols-1" : "") + '">' +
+      q.choices.map(function (c, i) { return '<button class="choice' + (q.text ? " text" : "") + (state.game === "letters" ? " letter" : "") + '" data-i="' + i + '"' + (c.label ? ' aria-label="' + c.label + '"' : "") + '>' + c.html + '</button>'; }).join("") +
+      '</div><div class="feedback" id="fb" aria-live="polite"></div></div>';
+    bar.bind();
+    document.getElementById("spk").onclick = function () { say(q.speak); };
+    say(q.speak);
+    var fb = document.getElementById("fb");
+    $app.querySelectorAll(".choice").forEach(function (b) {
+      b.onclick = function () {
+        if (state.locked) return;
+        var c = q.choices[+b.dataset.i];
+        if (c.ok) {
+          state.locked = true;
+          b.classList.add("right");
+          $app.querySelectorAll(".choice").forEach(function (x) { x.disabled = true; });
+          if (q.reveal) document.getElementById("vis").innerHTML = q.reveal;
+          var cheer = pick(["أحسنتِ!", "رائع!", "ممتاز!", "شاطرة!", "برافو!"]);
+          fb.className = "feedback good"; fb.textContent = cheer + " " + q.praise;
+          sfx.good(); say(cheer + " " + q.praise);
+          state.marks[state.i] = firstTry;
+          setTimeout(next, 1900);
+        } else {
+          firstTry = false;
+          b.classList.add("wrong"); b.disabled = true;
+          fb.className = "feedback oops"; fb.textContent = "حاولي مرة أخرى 💪";
+          sfx.oops();
+        }
+      };
+    });
+  }
+
+  function next() {
+    if (state.screen !== "q") return;
+    state.i++;
+    if (state.i < ROUNDS) renderQuestion();
+    else {
+      var right = state.marks.filter(Boolean).length;
+      var stars = right >= 7 ? 3 : right >= 5 ? 2 : 1;
+      finish(stars, "أجبتِ " + arNum(right) + " من " + arNum(ROUNDS) + " من المحاولة الأولى");
+    }
+  }
+
+  function renderMemory() {
+    state.screen = "mem";
+    var set = pick(MEM_SETS).slice();
+    var cards = shuffle(set.concat(set)).map(function (x, i) { return { e: x[0], n: x[1], id: i, open: false, done: false }; });
+    var moves = 0, pairs = 0, first = null, busy = false;
+    var bar = topBar("الألعاب", renderMenu);
+    $app.innerHTML = bar.html +
+      '<div class="stage"><div class="q-title"><span>' + GAMES.memory.title + '</span><button class="speak" id="spk" aria-label="استمعي">🔊</button></div>' +
+      '<div class="mem-info"><span id="mv">المحاولات: ٠</span><span id="pr">الأزواج: ٠ / ' + arNum(set.length) + '</span></div>' +
+      '<div class="mem">' + cards.map(function (c) {
+        return '<button class="card" data-id="' + c.id + '" aria-label="بطاقة مقلوبة"><span class="in"><span class="b">؟</span><span class="f">' + c.e + '</span></span></button>';
+      }).join("") + '</div><div class="feedback" id="fb" aria-live="polite"></div></div>';
+    bar.bind();
+    var intro = "اقلبي بطاقتين، وابحثي عن الصورتين المتشابهتين";
+    document.getElementById("spk").onclick = function () { say(intro); };
+    say(intro);
+    var fb = document.getElementById("fb");
+    $app.querySelectorAll(".card").forEach(function (el) {
+      el.onclick = function () {
+        var c = cards[+el.dataset.id];
+        if (busy || c.open || c.done || state.screen !== "mem") return;
+        c.open = true; el.classList.add("open"); el.setAttribute("aria-label", c.n); sfx.flip();
+        if (!first) { first = { c: c, el: el }; return; }
+        moves++; document.getElementById("mv").textContent = "المحاولات: " + arNum(moves);
+        if (first.c.e === c.e) {
+          c.done = first.c.done = true;
+          el.classList.add("matched"); first.el.classList.add("matched");
+          pairs++; document.getElementById("pr").textContent = "الأزواج: " + arNum(pairs) + " / " + arNum(set.length);
+          fb.className = "feedback good"; fb.textContent = "وجدتِ " + c.n + "! 🎉";
+          sfx.good(); say(c.n);
+          first = null;
+          if (pairs === set.length) {
+            var stars = moves <= 10 ? 3 : moves <= 15 ? 2 : 1;
+            setTimeout(function () { finish(stars, "أنهيتِ اللعبة في " + arNum(moves) + " محاولة"); }, 1100);
+          }
+        } else {
+          busy = true;
+          var f = first; first = null;
+          fb.className = "feedback oops"; fb.textContent = "ليستا متشابهتين، تذكّري مكانهما 🤔";
+          setTimeout(function () {
+            f.c.open = c.open = false;
+            f.el.classList.remove("open"); el.classList.remove("open");
+            f.el.setAttribute("aria-label", "بطاقة مقلوبة"); el.setAttribute("aria-label", "بطاقة مقلوبة");
+            busy = false;
+          }, 950);
+        }
+      };
+    });
+  }
+
+  function finish(stars, detail) {
+    state.screen = "result";
+    var p = state.player, before = stickersOwned(p);
+    data[p].stars += stars;
+    data[p].best[state.game] = Math.max(data[p].best[state.game] || 0, stars);
+    save();
+    var after = stickersOwned(p);
+    var bar = topBar("الألعاب", renderMenu);
+    var starsHtml = "";
+    for (var i = 0; i < 3; i++) starsHtml += i < stars ? "⭐" : '<span class="off">⭐</span>';
+    var title = stars === 3 ? "بطلة يا " : stars === 2 ? "أحسنتِ يا " : "جيد يا ";
+    var gained = after > before ? STICKERS.slice(before, after) : [];
+    $app.innerHTML = bar.html +
+      '<div class="stage result">' + face(p).replace("<svg", '<svg class="face bob"') +
+      '<h2>' + title + '<span>' + NAMES[p] + '</span>!</h2>' +
+      '<div class="stars" aria-label="' + arNum(stars) + ' نجوم">' + starsHtml + '</div>' +
+      '<p>' + detail + '</p><p>حصلتِ على ' + arNum(stars) + ' ' + (stars === 1 ? "نجمة" : "نجوم") + '</p>' +
+      (gained.length ? '<div class="new-sticker"><b>' + gained.join(" ") + '</b><span>ملصق جديد في ألبومكِ!</span></div>' : "") +
+      '<div class="row-btns"><button class="cta" id="again">العبي مرة أخرى</button><button class="pill-btn" id="menu">ألعاب أخرى</button></div></div>';
+    bar.bind();
+    document.getElementById("again").onclick = function () { startGame(state.game); };
+    document.getElementById("menu").onclick = renderMenu;
+    sfx.win();
+    say(title + NAMES[p] + (gained.length ? "، حصلتِ على ملصق جديد" : ""));
+    confetti();
+  }
+
+  /* ---------- confetti ---------- */
+  function confetti() {
+    if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    var cv = document.getElementById("confetti"), ctx = cv.getContext("2d");
+    var W = cv.width = innerWidth, H = cv.height = innerHeight;
+    var cols = ["#E0457B", "#FFC23A", "#1FB597", "#2F6FE4", "#8E4FD6", "#FF8A1F"];
+    var ps = [];
+    for (var i = 0; i < 140; i++) ps.push({ x: W / 2 + (Math.random() - .5) * 120, y: H * .35, vx: (Math.random() - .5) * 12, vy: -Math.random() * 12 - 4, r: Math.random() * 6 + 4, c: pick(cols), a: Math.random() * 6, s: Math.random() * .3 - .15 });
+    var t0 = performance.now();
+    (function frame(t) {
+      ctx.clearRect(0, 0, W, H);
+      ps.forEach(function (p) {
+        p.vy += .35; p.vx *= .99; p.x += p.vx; p.y += p.vy; p.a += p.s;
+        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.a); ctx.fillStyle = p.c; ctx.fillRect(-p.r / 2, -p.r / 4, p.r, p.r / 2); ctx.restore();
+      });
+      if (t - t0 < 2600) requestAnimationFrame(frame); else ctx.clearRect(0, 0, W, H);
+    })(t0);
+  }
+
+  renderHome();
+})();
+</script>
