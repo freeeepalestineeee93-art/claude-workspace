@@ -191,8 +191,8 @@ h1,h2,h3{font-family:var(--display);font-weight:400;margin:0;text-wrap:balance;l
 .navrow{display:flex;justify-content:space-between;gap:10px;width:100%}
 
 /* bubbles */
-.pond{position:relative;width:100%;height:min(58vh,460px);border-radius:24px;background:linear-gradient(180deg,#E8F7FF,#CFEFFF 60%,#B7E4F7);overflow:hidden;touch-action:manipulation}
-.bubble{position:absolute;width:74px;height:74px;border-radius:50%;display:grid;place-items:center;font-family:var(--quran);font-size:34px;color:var(--ink);background:radial-gradient(circle at 32% 28%,#fff 0 12%,rgba(255,255,255,.55) 13% 30%,rgba(255,255,255,.25) 60%,rgba(170,140,240,.35));border:2.5px solid rgba(255,255,255,.95);box-shadow:inset -6px -8px 14px rgba(138,108,240,.25),0 4px 10px rgba(58,33,80,.12);line-height:1;padding-top:6px;will-change:transform}
+.pond{direction:ltr;position:relative;width:100%;height:min(58vh,460px);border-radius:24px;background:linear-gradient(180deg,#E8F7FF,#CFEFFF 60%,#B7E4F7);overflow:hidden;touch-action:manipulation}
+.bubble{position:absolute;left:0;top:0;padding:0;width:80px;height:80px;border-radius:50%;display:grid;place-items:center;font-family:var(--quran);font-size:40px;font-weight:700;color:#2A1240;background:radial-gradient(circle at 30% 26%,#fff 0 14%,rgba(255,255,255,.96) 15% 55%,#EDE4FF 80%,#D9C8FA);border:3px solid #fff;box-shadow:inset -6px -8px 14px rgba(138,108,240,.28),0 6px 14px rgba(58,33,80,.22);line-height:1;padding-top:8px;will-change:transform;cursor:pointer}
 .bubble.burst{animation:burst .3s forwards;pointer-events:none}
 .bubble.bad{animation:badb .35s forwards;pointer-events:none;background:var(--rose-soft)}
 @keyframes burst{to{transform:scale(1.6);opacity:0}}
@@ -206,8 +206,8 @@ h1,h2,h3{font-family:var(--display);font-weight:400;margin:0;text-wrap:balance;l
 /* memory */
 .mgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;width:100%}
 @media(min-width:560px){.mgrid{grid-template-columns:repeat(4,minmax(0,1fr))}}
-.mcard{perspective:700px;aspect-ratio:3/3.4;max-width:100%}
-.mcard .in{position:relative;width:100%;height:100%;transition:transform .45s;transform-style:preserve-3d}
+.mcard{display:block;width:100%;padding:0;perspective:700px;aspect-ratio:3/3.4;max-width:100%}
+.mcard .in{display:block;position:relative;width:100%;height:100%;transition:transform .45s;transform-style:preserve-3d}
 .mcard.flip .in,.mcard.done .in{transform:rotateY(180deg)}
 .mcard .f,.mcard .b{position:absolute;inset:0;border-radius:18px;display:grid;place-items:center;backface-visibility:hidden;-webkit-backface-visibility:hidden;padding:6px;text-align:center}
 .mcard .f{background:var(--ink);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='.22' stroke-width='1.3'%3E%3Crect x='12' y='12' width='16' height='16'/%3E%3Crect x='12' y='12' width='16' height='16' transform='rotate(45 20 20)'/%3E%3C/g%3E%3C/svg%3E");box-shadow:0 5px 0 #1f0f2e}
@@ -654,7 +654,7 @@ function runBubbles(i,g){
     const W=pond.clientWidth,H=pond.clientHeight;const good=Math.random()<.5;
     const ch=good?target[Math.random()*target.length|0]:others[Math.random()*others.length|0];
     const el=document.createElement('button');el.className='bubble';el.textContent=ch;el.setAttribute('aria-label','حرف '+ch);
-    const b={el,x:Math.random()*(W-80)+3,y:H+10,v:(38+Math.random()*30)*(1+score/20),wob:Math.random()*6.28,good:target.includes(ch)};
+    const b={el,x:Math.random()*Math.max(10,W-100)+8,y:H+10,v:(38+Math.random()*30)*(1+score/20),wob:Math.random()*6.28,good:target.includes(ch)};
     el.style.transform=`translate(${b.x}px,${b.y}px)`;
     el.onclick=()=>{if(over||b.dead)return;b.dead=true;
       if(b.good){score++;sfx.pop();el.classList.add('burst');float(b.x+20,b.y,'+١','#1E9E6A')}
