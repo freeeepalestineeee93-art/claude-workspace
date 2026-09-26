@@ -123,7 +123,14 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 .phead{display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px 18px;justify-content:space-between;padding:24px 0 14px}
 .phead h1{font-size:clamp(22px,3.2vw,30px);font-weight:700;overflow-wrap:anywhere}
 .phead .meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
-.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:22px;overflow-x:auto}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:22px;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.pwrap{position:relative;display:flex;flex-direction:column;gap:0}
+.pwrap .pcard{padding-inline-end:52px;width:100%}
+.pwrap .pdel{position:absolute;top:10px;inset-inline-end:10px;width:32px;height:32px;border-radius:8px;border:1px solid transparent;background:none;color:var(--ink-3);display:grid;place-items:center}
+.pwrap .pdel:hover{color:var(--danger);border-color:var(--line)}
+.pwrap .pdel svg{width:17px;height:17px}
+.pwrap .confirm{margin-top:6px;padding:8px 10px;border-radius:10px;background:var(--danger-soft)}
 .tab{border:0;background:none;padding:10px 14px;font-size:14.5px;font-weight:500;color:var(--ink-3);border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap}
 .tab:hover{color:var(--ink)}
 .tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
@@ -331,9 +338,10 @@ const DEFAULT_SETTINGS = {
   targets: { image: { split: 2500, longMin: 2700, longMax: 3800, shortMin: 1500, shortMax: 2400 },
              video: { split: 5000, longMin: 5200, longMax: 7000, shortMin: 3400, shortMax: 4800 } },
 };
-const BLANK_BIBLE = () => ({ style: "", aspect: "16:9", dialogue: "vo", lang: "English", music: false, sfx: true, director: "creative", audience: "", extra: "", characters: [] });
+const BLANK_BIBLE = () => ({ style: "", aspect: "16:9", dialogue: "vo", lang: "Arabic", music: false, sfx: true, director: "creative", audience: "", extra: "", characters: [] });
 const ICON = {
   copy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/></svg>',
+  trash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>',
   x: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>',
   up: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4"/><path d="m6 10 6-6 6 6"/><path d="M4 20h16"/></svg>',
   sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
@@ -344,9 +352,14 @@ const ICON = {
 const S = {
   sample: null, db: null, downloads: null, uid: null, limits: null, ready: false, storeNote: "",
   settings: clone(DEFAULT_SETTINGS), projects: [], view: "home", newMode: null,
-  cur: null, tab: "bible", images: [], items: [], item: null, wb: null, analysisErr: "",
+  cur: null, tab: "bible", images: [], items: [], wbKind: "video", wbs: { image: null, video: null }, itemBy: { image: null, video: null }, analysisErr: "", confirmDelP: null,
   styleOpts: null, busy: null, confirmDel: null, ptab: {}, lastErr: "",
 };
+
+Object.defineProperty(S, "wb", { get() { return S.wbs[S.wbKind]; }, set(v) { S.wbs[S.wbKind] = v; } });
+Object.defineProperty(S, "item", { get() { return S.itemBy[S.wbKind]; }, set(v) { S.itemBy[S.wbKind] = v; } });
+const tabFor = k => k === "image" ? "wbimg" : "wbvid";
+function goWb(kind) { S.wbKind = kind; S.tab = tabFor(kind); }
 
 /* ====================== storage ====================== */
 const mem = new Map();
@@ -446,7 +459,7 @@ async function addImages(files) {
       const img = { kind: "img", id: nid("m"), name: f.name, label: f.name.replace(/\.[^.]+$/, ""), data, w, h, createdAt: Date.now() };
       await save(P.imgs(p.id) + "/" + img.id, img);
       S.images.push(img); added++;
-      if (uploadTarget === "wb" && S.wb) S.wb.refs.push(img.id);
+      if (uploadTarget === "wb" && S.wb && S.view === "project") S.wb.refs.push(img.id);
     } catch { toast("تعذّر تجهيز الصورة " + f.name); }
   }
   if (added) toast(added === 1 ? "انضافت الصورة" : "انضافت " + added + " صور");
@@ -498,7 +511,9 @@ NON-NEGOTIABLE STANDARDS
 function audioRules(b, out) {
   const L = [];
   if (b.dialogue === "vo") L.push("DIALOGUE MODE: external voice-over. The narration is recorded separately and added in editing. Nobody speaks or lip-syncs on screen: mouths stay closed or show natural non-speaking expressions. Do not write dialogue lines. Pace the visual beats to the meaning of the narration.");
-  else if (b.dialogue === "lipsync") L.push(`DIALOGUE MODE: on-screen dialogue with lip-sync in ${b.lang || "English"}. For each line give: time range, speaker, voice signature, tone. Adapt Arabic script lines into natural ${b.lang || "English"} with the same meaning and spirit (not literal), short enough for its time slot (about 2.5 words per second). Keep names with phonetic spelling. Only the speaker's lips move; everyone else keeps the mouth closed and reacts silently.`);
+  else if (b.dialogue === "lipsync") L.push(b.lang === "Arabic"
+    ? "DIALOGUE MODE: on-screen dialogue with lip-sync in ARABIC. For each line give: time range, speaker, voice signature, tone. Keep each line in Arabic, written in Arabic script inside the prompt, faithful to the script; shorten only if it cannot fit its time slot (about 2 words per second). Only the speaker's lips move; everyone else keeps the mouth closed and reacts silently."
+    : "DIALOGUE MODE: on-screen dialogue with lip-sync in ENGLISH. For each line give: time range, speaker, voice signature, tone. Adapt Arabic script lines into natural English with the same meaning and spirit (not literal), short enough for its time slot (about 2.5 words per second). Keep names with phonetic spelling. Only the speaker's lips move; everyone else keeps the mouth closed and reacts silently.");
   else L.push("DIALOGUE MODE: none. No speech at all.");
   L.push(b.music ? "MUSIC: allowed when it serves the scene; describe only its mood briefly." : "MUSIC: strictly forbidden. Every video prompt states: NO music, no background score.");
   L.push(b.sfx ? "SFX: include precise, motivated sound effects and ambience synced to the actions." : "SFX: none. Ask for no sound effects.");
@@ -541,11 +556,12 @@ function ctxBlock(p, out, sceneN) {
   return L.join("\n\n");
 }
 const modelById = id => S.settings.models.find(m => m.id === id);
-function imagesBlock(refs, out, linkFrame) {
+function imagesBlock(refs, out, linkFrame, seen = true) {
+  const blind = seen ? "" : "\nNOTE: the images could not be delivered to you. You know them only by their labels above; rely on the labels, refer to each image by its number, and tell the tool what to take from it.";
   if (!refs.length) return "ATTACHED IMAGES: none. This is text-only generation: describe identities, places and style fully in words, and keep them identical across units.";
   const lines = refs.map((r, i) => `${out === "video" ? "@Image" + (i + 1) : "Image " + (i + 1)} — ${r.label || "no label"}`).join("\n");
-  if (out === "video") return `ATTACHED IMAGES (you can see them; the user uploads them to the video tool in exactly this order):\n${lines}\nThey are keyframes and references for style, colors, place and identity, NOT compositions to animate as-is: you decide angles, shot sizes, camera moves, and what happens before and after each keyframe.${linkFrame ? "\n@Image1 is the LINKING FRAME (last frame of the previous clip or shot): the first shot opens exactly on it, then moves into new action." : ""}`;
-  return `ATTACHED REFERENCE IMAGES (you can see them; the user attaches them to the image tool in this order):\n${lines}\nBuild the prompt on them: state explicitly what to take from each image (for example "the woman from Image 1: same face, hair and dress"). References lock identity, costume, place and style; the composition is yours.`;
+  if (out === "video") return `ATTACHED IMAGES (you can see them; the user uploads them to the video tool in exactly this order):\n${lines}\nThey are keyframes and references for style, colors, place and identity, NOT compositions to animate as-is: you decide angles, shot sizes, camera moves, and what happens before and after each keyframe.${linkFrame ? "\n@Image1 is the LINKING FRAME (last frame of the previous clip or shot): the first shot opens exactly on it, then moves into new action." : ""}${blind}`;
+  return `ATTACHED REFERENCE IMAGES (you can see them; the user attaches them to the image tool in this order):\n${lines}\nBuild the prompt on them: state explicitly what to take from each image (for example "the woman from Image 1: same face, hair and dress"). References lock identity, costume, place and style; the composition is yours.${blind}`;
 }
 function unitsRules(w, m) {
   if (w.out === "video") {
@@ -556,10 +572,10 @@ TOTAL DURATION: ${w.duration} seconds, set by the user. Respect it exactly: the 
 MAX PER GENERATION with ${m.name}: ${max} s. ${w.vmode === "startend" ? "" : `If the total is above ${max} s, split into the fewest clips possible, each ≤ ${max} s, cutting at dramatic turning points (never at the arithmetic middle).`}
 Every clip is complete on its own: it opens on a clear action and ends on a completed action held in a stable, readable pose that can serve as the linking frame for the next clip. From clip 2 on, @Image1 is the final frame of the previous clip (the user extracts it) and the scene images follow as @Image2, @Image3… in the same order; the clip opens exactly on that frame and moves into a new action.`;
   }
-  if (w.scope === "shot") return w.frames === "startend" ? "FRAMES: exactly 2 frames: a START frame and an END frame for a video tool to interpolate. Same place, light, costume and identity; the end frame shows the completed result of one clear action; a camera change between them only if it is motivated and achievable in one move." : "FRAMES: exactly 1 frame.";
+  if (w.scope === "shot") return "FRAMES: exactly 1 image.";
   return `FRAMES: ${w.frames === "auto" ? "decide the key frames needed to cover this scene as a storyboard (usually 2–6), each serving one beat" : "exactly " + w.frames + " key frames"}. Vary shot sizes and angles with intent; keep continuity (screen direction, light, costume).`;
 }
-function planPrompt(p, w, refs, extra) {
+function planPrompt(p, w, refs, extra, seen = true) {
   const m = modelById(w.model) || {};
   const video = w.out === "video";
   const fmt = video
@@ -574,7 +590,7 @@ TOOL NOTES: ${m.notes || "-"}
 ASPECT RATIO FOR THIS JOB: ${w.aspect}
 ${unitsRules(w, m)}
 
-${imagesBlock(refs, w.out, video && w.link)}
+${imagesBlock(refs, w.out, video && w.link, seen)}
 ${str(w.direction) ? "\nUSER DIRECTION FOR THIS JOB: " + w.direction : ""}${extra.approved?.length ? "\nAPPROVED CREATIVE IDEAS (apply them now): " + extra.approved.map(s => s.title_ar + " — " + s.detail_ar).join(" | ") : ""}${extra.rejected?.length ? "\nREJECTED IDEAS (do not use): " + extra.rejected.map(s => s.title_ar).join(" | ") : ""}${extra.note ? "\nUSER NOTE ON THE PREVIOUS PLAN (fix this): " + extra.note : ""}${extra.prevPlan ? "\nPREVIOUS PLAN (for reference): " + extra.prevPlan : ""}
 
 MATERIAL (Arabic script or description):
@@ -586,7 +602,7 @@ If something essential is unclear, write ONE specific question in question_ar an
 Reply with ONLY this JSON:
 ${fmt}`;
 }
-function unitPrompt(p, w, refs, plan, u, extra = {}) {
+function unitPrompt(p, w, refs, plan, u, extra = {}, seen = true) {
   const m = modelById(w.model) || {};
   const video = w.out === "video";
   const T = S.settings.targets[video ? "video" : "image"];
@@ -613,7 +629,7 @@ ${ctxBlock(p, w.out, w.sceneN)}
 
 TOOL: ${m.name || "-"}. ${m.notes || ""}
 ASPECT RATIO: ${w.aspect}
-${imagesBlock(refs, w.out, video && w.link)}
+${imagesBlock(refs, w.out, video && w.link, seen)}
 ${str(w.direction) ? "USER DIRECTION: " + w.direction : ""}
 
 APPROVED PLAN (whole job): ${planBrief}
@@ -719,12 +735,14 @@ async function createProject(mode, name, type) {
   if (type === "reels") p.bible.aspect = "9:16";
   await save(P.project(p.id), p);
   S.projects.unshift(p);
-  await openProject(p.id, mode === "film" ? "bible" : "wb");
+  await openProject(p.id, mode === "film" ? "bible" : "wbvid");
 }
 async function openProject(id, tab) {
   const p = S.projects.find(x => x.id === id); if (!p) return;
-  S.cur = clone(p); S.view = "project"; S.tab = tab || (p.mode === "film" ? (p.analysis ? "script" : "bible") : "wb");
-  S.item = null; S.styleOpts = null; S.confirmDel = null; S.wb = freshWb(S.cur);
+  S.cur = clone(p); S.view = "project"; S.tab = tab || (p.mode === "film" ? (p.analysis ? "script" : "bible") : "wbvid");
+  S.wbKind = S.tab === "wbimg" ? "image" : "video";
+  S.itemBy = { image: null, video: null }; S.styleOpts = null; S.confirmDel = null;
+  S.wbs = { image: freshWb(S.cur, "image"), video: freshWb(S.cur, "video") };
   S.images = []; S.items = [];
   render();
   try {
@@ -747,14 +765,14 @@ async function deleteProject(id) {
     for (const d of imgs) await store.del(P.imgs(id) + "/" + d.id);
     for (const d of items) await store.del(P.items(id) + "/" + d.id);
     await store.del(P.project(id));
-    S.projects = S.projects.filter(p => p.id !== id); S.confirmDel = null; toast("انحذف المشروع"); render();
+    S.projects = S.projects.filter(p => p.id !== id); S.confirmDelP = null; toast("انحذف المشروع"); render();
   } catch { toast("تعذّر حذف المشروع."); }
 }
 
 /* ====================== workbench ====================== */
-function freshWb(p) {
+function freshWb(p, out) {
   const img = S.settings.models.find(m => m.kind === "image"), vid = S.settings.models.find(m => m.kind === "video");
-  return { scope: p.mode === "shot" ? "shot" : "scene", sceneN: 0, text: "", out: "video", imgModel: img?.id || "", vidModel: vid?.id || "", vmode: p.mode === "shot" ? "single" : "multi", frames: p.mode === "shot" ? "one" : "auto", duration: p.mode === "shot" ? 5 : 10, aspect: p.bible.aspect || "16:9", refs: [], link: false, direction: "" };
+  return { scope: p.mode === "shot" ? "shot" : "scene", sceneN: 0, text: "", out: out || "video", imgModel: img?.id || "", vidModel: vid?.id || "", vmode: p.mode === "shot" ? "single" : "multi", frames: "auto", duration: p.mode === "shot" ? 5 : 10, aspect: p.bible.aspect || "16:9", refs: [], link: false, direction: "" };
 }
 const wbModel = w => w.out === "video" ? w.vidModel : w.imgModel;
 function itemTitle(w) {
@@ -770,21 +788,31 @@ async function runDirect() {
   if (w.out === "video" && w.vmode === "startend" && w.refs.length < 2) toast("تنبيه: وضع Start/End بيحتاج صورتين (بداية ونهاية). رح أكمل بالموجود.");
   const refs = w.refs.map(id => S.images.find(i => i.id === id)).filter(Boolean);
   const max = S.limits?.images?.maxCount;
-  if (refs.length && !S.limits?.images) { toast(ERR.images_unavailable); return; }
   if (max && refs.length > max) { toast("الحد الأقصى " + max + " صور بالطلب الواحد."); return; }
   const input = clone(w); input.model = wbModel(w);
   const item = { kind: "item", id: nid("i"), title: itemTitle(w), createdAt: Date.now(), updatedAt: Date.now(), input, refs: refs.map(r => ({ id: r.id, label: r.label })), plan: null, units: [], sugg: {}, approved: [], rejected: [] };
-  S.item = item; S.tab = "wb";
+  S.item = item; S.tab = tabFor(w.out);
   await planAndWrite(item, {});
 }
+const blobsFor = item => item.imgFallback ? [] : refsOf(item).map(r => dataURLToBlob(r.data));
+const IMG_CODES = ["images_unavailable", "image_rejected"];
 const refsOf = item => item.refs.map(r => { const im = S.images.find(i => i.id === r.id); return im ? { ...im, label: im.label || r.label } : null; }).filter(Boolean);
 async function planAndWrite(item, extra) {
   const p = S.cur, w = item.input, refs = refsOf(item);
-  const blobs = refs.map(r => dataURLToBlob(r.data));
+  let blobs = blobsFor(item);
   const signal = busyStart("المخرج عم يقرأ ويخطط الإخراج…");
   render();
   try {
-    const plan = cleanPlan(await ask(planPrompt(p, { ...w, model: w.model }, refs, extra), { images: blobs, signal }), w.out);
+    let raw;
+    try { raw = await ask(planPrompt(p, w, refs, extra, !item.imgFallback), { images: blobs, signal }); }
+    catch (e) {
+      if (!blobs.length || !IMG_CODES.includes(e?.code)) throw e;
+      item.imgFallback = e.code; blobs = [];
+      toast(e.code === "image_rejected" ? "في صورة ما انقبلت، فالمخرج رح يشتغل على وصف الصور بدل ما يشوفها." : "claude.ai ما قبل يبعت الصور، فالمخرج رح يشتغل على وصف الصور بدل ما يشوفها.");
+      busyMsg("المخرج عم يخطط بالاعتماد على وصف الصور…");
+      raw = await ask(planPrompt(p, w, refs, extra, false), { images: blobs, signal });
+    }
+    const plan = cleanPlan(raw, w.out);
     if (!plan.units.length) throw { code: "empty_plan" };
     item.plan = plan; item.sugg = {}; item.units = plan.units.map(u => ({ n: u.n, status: "pending", long: "", short: "", custom: "", change: "", versions: [] }));
     item.updatedAt = Date.now(); await storeItem(item); render();
@@ -802,7 +830,7 @@ async function writeUnit(item, u, extra, signal, blobs) {
   const pu = item.plan.units.find(x => x.n === u.n);
   u.status = "working"; u.err = ""; render();
   try {
-    const r = await ask(unitPrompt(p, w, refs, item.plan, pu, extra), { images: blobs || refs.map(x => dataURLToBlob(x.data)), signal });
+    const r = await ask(unitPrompt(p, w, refs, item.plan, pu, extra, !item.imgFallback), { images: blobs || blobsFor(item), signal });
     let long = str(r?.long), short = str(r?.short);
     if (!long && !short) throw { code: "empty_completion" };
     const T = S.settings.targets[w.out === "video" ? "video" : "image"];
@@ -955,11 +983,14 @@ function viewHome() {
       <button class="btn primary big" type="submit">ابدأ ${MODES[S.newMode].ar === "فيلم" ? "الفيلم" : MODES[S.newMode].ar === "مشهد" ? "المشهد" : "اللقطة"}</button>
     </form>` : "";
   const list = S.projects.length ? `<div class="plist">${S.projects.map(p => `
-      <button type="button" class="pcard" data-act="open" data-id="${p.id}">
+      <div class="pwrap"><button type="button" class="pcard" data-act="open" data-id="${p.id}">
         <b>${esc(p.name)}</b>
         <span class="meta"><span class="badge acc">${MODES[p.mode]?.ar || ""}</span><span class="badge">${esc((TYPES[p.type] || {}).ar || "")}</span><span class="badge mono">${esc(p.bible?.aspect || "")}</span>${p.analysis ? `<span class="badge">${p.analysis.scenes.length} مشاهد</span>` : ""}</span>
         <span class="date">آخر تعديل ${fmtDate(p.updatedAt)}</span>
-      </button>`).join("")}</div>` : `<div class="panel empty">لسا ما في مشاريع. اختار فيلم أو مشهد أو لقطة من فوق لتبدأ.</div>`;
+      </button>
+      <button type="button" class="pdel" data-act="askdelp" data-id="${p.id}" aria-label="حذف المشروع ${esc(p.name)}" title="حذف المشروع">${ICON.trash}</button>
+      ${S.confirmDelP === p.id ? `<div class="confirm">بدك تحذف «${esc(p.name)}» مع كل صوره وأعماله؟ ما في رجعة. <button class="btn sm danger" type="button" data-act="delp" data-id="${p.id}">احذف</button><button class="btn sm" type="button" data-act="canceldelp">لا</button></div>` : ""}
+      </div>`).join("")}</div>` : `<div class="panel empty">لسا ما في مشاريع. اختار فيلم أو مشهد أو لقطة من فوق لتبدأ.</div>`;
   return `${banner()}
   <section class="hero"><h1>شو رح نخرج اليوم؟</h1><p>بتعطي المخرج السكربت أو الوصف، مع الصور إذا عندك، وهو بيرجعلك برومبتات صور وفيديو جاهزة للنسخ، بالطول اللي بيناسب الأداة، وبالمدة اللي بتحددها إنت.</p></section>
   <section class="modes">${cards}</section>
@@ -968,7 +999,7 @@ function viewHome() {
 }
 function viewProject() {
   const p = S.cur;
-  const tabs = p.mode === "film" ? [["bible", "الهوية"], ["script", "السكربت والتحليل"], ["wb", "الورشة"], ["items", "الأعمال (" + S.items.length + ")"]] : [["bible", "الهوية"], ["wb", "الورشة"], ["items", "الأعمال (" + S.items.length + ")"]];
+  const tabs = p.mode === "film" ? [["bible", "الهوية"], ["script", "السكربت والتحليل"], ["wbimg", "ورشة الصور"], ["wbvid", "ورشة الفيديو"], ["items", "الأعمال (" + S.items.length + ")"]] : [["bible", "الهوية"], ["wbimg", "ورشة الصور"], ["wbvid", "ورشة الفيديو"], ["items", "الأعمال (" + S.items.length + ")"]];
   let body = "";
   if (S.tab === "bible") body = viewBible();
   else if (S.tab === "script") body = viewScript();
@@ -996,7 +1027,7 @@ function viewBible() {
     <div class="panel card">
       <h3>الصوت والمخرج</h3>
       <div class="f" style="display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600;color:var(--ink-2)">الحوار${seg("bdia", b.dialogue, [["vo", "فويس أوفر خارجي"], ["lipsync", "حوار مع ليب سينك"], ["silent", "بدون كلام"]])}</div>
-      ${b.dialogue === "lipsync" ? `<label class="f">لغة الحوار بالفيديو<input type="text" id="b-lang" value="${esc(b.lang)}"></label>` : ""}
+      <label class="f">لغة الحوار<select id="b-lang"><option value="Arabic" ${b.lang !== "English" ? "selected" : ""}>عربي</option><option value="English" ${b.lang === "English" ? "selected" : ""}>إنجليزي</option></select></label>
       <div class="row"><div class="f" style="display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600;color:var(--ink-2)">الموسيقى${seg("bmusic", b.music ? "1" : "0", [["0", "ممنوعة"], ["1", "مسموحة"]])}</div>
       <div class="f" style="display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600;color:var(--ink-2)">المؤثرات الصوتية${seg("bsfx", b.sfx ? "1" : "0", [["1", "نعم"], ["0", "لا"]])}</div></div>
       <div class="f" style="display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600;color:var(--ink-2)">أسلوب المخرج${seg("bdir", b.director, [["creative", "مبدع ويقترح أفكار"], ["strict", "ملتزم بالسكربت"]])}<span class="hint" style="font-weight:400;color:var(--ink-3);font-size:12.5px">بالوضع المبدع، الأفكار بتطلع كبطاقات منفصلة، وما بتنطبق إلا إذا قبلتها.</span></div>
@@ -1085,7 +1116,7 @@ function viewWorkbench() {
   return `<div class="panel wb">
     <div class="f full" style="display:flex;flex-wrap:wrap;gap:12px 22px;align-items:center">
       ${seg("wbscope", w.scope, [["scene", "مشهد"], ["shot", "لقطة"]])}
-      ${seg("wbout", w.out, [["video", "برومبت فيديو"], ["image", "برومبت صور"]])}
+      <span class="badge ${w.out === "video" ? "acc" : "amb"}">${w.out === "video" ? "برومبت فيديو" : "برومبت صور"}</span>
     </div>
     ${scenePick ? `<div class="full">${scenePick}</div>` : ""}
     <label class="f full">${w.scope === "shot" ? "وصف اللقطة" : "نص المشهد"} <span class="hint">اكتب بالعربي عادي. المخرج بيقرر الإخراج، وما بيلتزم بالمعادل البصري المكتوب إلا كاقتراح.</span><textarea id="wb-text" rows="${w.scope === "shot" ? 4 : 7}" dir="auto">${esc(w.text)}</textarea></label>
@@ -1097,8 +1128,8 @@ function viewWorkbench() {
         <span class="hint" style="font-weight:400;font-size:12.5px;color:${over ? "var(--amber)" : "var(--ink-3)"}">${over ? `أطول من حد ${esc(vm.name)} (${vm.max} ث)، فالمخرج رح يقسّمها لـ ${Math.ceil(w.duration / vm.max)} مقاطع أو أكتر، والقص عند نقاط التحول الدرامي.` : "المخرج بيوزّع اللقطات والحركة على هالمدة بالظبط."}</span>
       </div>` : `
       <label class="f">أداة الصور<select id="wb-img">${imgs.map(m => `<option value="${m.id}" ${w.imgModel === m.id ? "selected" : ""}>${esc(m.name)}</option>`).join("")}</select></label>
-      <div class="f" style="display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600;color:var(--ink-2)">${w.scope === "shot" ? "عدد الفريمات" : "فريمات المشهد (ستوري بورد)"}
-        ${w.scope === "shot" ? seg("wbframes", w.frames === "startend" ? "startend" : "one", [["one", "فريم واحد"], ["startend", "Start + End"]]) : `<select id="wb-frames"><option value="auto" ${w.frames === "auto" ? "selected" : ""}>المخرج بيقرر</option>${[1, 2, 3, 4, 5, 6, 8].map(n => `<option value="${n}" ${String(w.frames) === String(n) ? "selected" : ""}>${n}</option>`).join("")}</select>`}
+      <div class="f" style="display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600;color:var(--ink-2)">${w.scope === "shot" ? "عدد الصور" : "عدد صور المشهد (ستوري بورد)"}
+        ${w.scope === "shot" ? `<span class="muted" style="font-weight:400;padding-top:8px">صورة واحدة للقطة</span>` : `<select id="wb-frames"><option value="auto" ${w.frames === "auto" ? "selected" : ""}>المخرج بيقرر</option>${[1, 2, 3, 4, 5, 6, 8].map(n => `<option value="${n}" ${String(w.frames) === String(n) ? "selected" : ""}>${n}</option>`).join("")}</select>`}
       </div>`}
     <label class="f">الأبعاد<select id="wb-aspect">${ASPECTS.map(a => `<option ${w.aspect === a ? "selected" : ""}>${a}</option>`).join("")}</select></label>
     <div class="f full" style="display:flex;flex-direction:column;gap:8px;font-size:13px;font-weight:600;color:var(--ink-2)">
@@ -1118,6 +1149,7 @@ function viewResult(it) {
   const T = S.settings.targets[video ? "video" : "image"];
   return `<div class="result" id="result">
     <div class="rhead"><h2>${esc(it.title)}</h2><span class="badge acc">${video ? "فيديو" : "صور"}</span><span class="badge">${esc(m?.name || "")}</span>${video ? `<span class="badge mono">${it.input.duration} ث</span>` : ""}<span class="badge mono">${esc(it.input.aspect)}</span></div>
+    ${it.imgFallback ? `<div class="notice warn">المخرج ما قدر يشوف الصور (claude.ai رفض إرسالها)، فاشتغل على الوصف المكتوب تحت كل صورة. كل ما كان الوصف أدق، كانت النتيجة أدق.</div>` : ""}
     ${pl.question_ar ? `<div class="notice warn q-banner"><b>سؤال من المخرج:</b> ${esc(pl.question_ar)} <span class="small">جاوبه بملاحظة على الإخراج تحت.</span></div>` : ""}
     <div class="panel summary"><p><b>الفكرة:</b> ${esc(pl.approach_ar)}</p><p>${esc(pl.summary_ar)}</p></div>
     ${it.units.map(u => unitHTML(it, u, T)).join("")}
@@ -1166,8 +1198,12 @@ function unitHTML(it, u, T) {
     </div></article>`;
 }
 function viewItems() {
-  if (!S.items.length) return `<div class="panel empty">لسا ما في أعمال. روح على الورشة واضغط «أخرِج».</div>`;
-  return `<div class="ilist">${S.items.map(it => {
+  if (!S.items.length) return `<div class="panel empty">لسا ما في أعمال. روح على ورشة الصور أو ورشة الفيديو واضغط «أخرِج».</div>`;
+  const grp = (k, title) => { const list = S.items.filter(it => (it.input?.out === "image" ? "image" : "video") === k); return `<div><div class="sec"><h2>${title}</h2><span class="rule"></span><span class="muted small">${list.length}</span></div>${list.length ? itemsList(list) : `<div class="panel empty">ما في.</div>`}</div>`; };
+  return `<div class="stack">${grp("video", "أعمال الفيديو")}${grp("image", "أعمال الصور")}</div>`;
+}
+function itemsList(list) {
+  return `<div class="ilist">${list.map(it => {
     const m = modelById(it.input?.model);
     return `<div class="irow"><button type="button" class="open" data-act="openitem" data-id="${it.id}"><b>${esc(it.title)}</b><span class="meta"><span class="badge acc">${it.input?.out === "video" ? "فيديو" : "صور"}</span><span class="badge">${esc(m?.name || "")}</span>${it.input?.out === "video" ? `<span class="badge mono">${it.input.duration} ث</span>` : ""}<span class="badge">${it.units?.length || 0} ${it.input?.out === "video" ? "مقاطع" : "فريمات"}</span><span class="muted small">${fmtDate(it.updatedAt)}</span></span></button>
       <button class="btn sm danger" type="button" data-act="askdelitem" data-id="${it.id}">حذف</button>
@@ -1202,17 +1238,20 @@ document.addEventListener("click", async ev => {
   const a = el.dataset.act, d = el.dataset;
   const p = S.cur;
   switch (a) {
-    case "home": S.view = "home"; S.cur = null; S.item = null; render(); scrollTo(0, 0); break;
+    case "home": S.view = "home"; S.cur = null; S.itemBy = { image: null, video: null }; S.confirmDelP = null; render(); scrollTo(0, 0); break;
+    case "askdelp": S.confirmDelP = d.id; render(); break;
+    case "canceldelp": S.confirmDelP = null; render(); break;
+    case "delp": deleteProject(d.id); break;
     case "settings": S.view = "settings"; render(); scrollTo(0, 0); break;
     case "theme": { const next = isDark() ? "light" : "dark"; rootEl.setAttribute("data-theme", next); try { localStorage.setItem("dc-theme", next); } catch {} paintTheme(); break; }
     case "stop": S.busy?.ctl.abort(); break;
     case "pickmode": S.newMode = d.mode; S.npType = S.npType || "cinematic"; render(); setTimeout(() => $("#npName")?.focus(), 0); break;
     case "nptype": S.npType = d.type; $("#npType").querySelectorAll(".chip").forEach(c => c.setAttribute("aria-pressed", c.dataset.type === d.type)); break;
     case "open": await openProject(d.id); scrollTo(0, 0); break;
-    case "tab": S.tab = d.tab; S.confirmDel = null; render(); break;
+    case "tab": S.tab = d.tab; if (d.tab === "wbimg") S.wbKind = "image"; if (d.tab === "wbvid") S.wbKind = "video"; S.confirmDel = null; render(); break;
     case "export": exportWord(); break;
     case "btype": p.type = d.type; persistProject(); render(); break;
-    case "baspect": p.bible.aspect = d.v; S.wb.aspect = d.v; persistProject(); render(); break;
+    case "baspect": p.bible.aspect = d.v; S.wbs.image.aspect = d.v; S.wbs.video.aspect = d.v; persistProject(); render(); break;
     case "bdia": p.bible.dialogue = d.v; persistProject(); render(); break;
     case "bmusic": p.bible.music = d.v === "1"; persistProject(); render(); break;
     case "bsfx": p.bible.sfx = d.v === "1"; persistProject(); render(); break;
@@ -1229,7 +1268,7 @@ document.addEventListener("click", async ev => {
     }
     case "upload": ev.preventDefault(); uploadTarget = d.target; $("#imgInput").click(); break;
     case "delimg": {
-      const id = d.id; S.images = S.images.filter(i => i.id !== id); if (S.wb) S.wb.refs = S.wb.refs.filter(r => r !== id);
+      const id = d.id; S.images = S.images.filter(i => i.id !== id); ["image", "video"].forEach(k => { if (S.wbs[k]) S.wbs[k].refs = S.wbs[k].refs.filter(r => r !== id); });
       store.del(P.imgs(p.id) + "/" + id).catch(() => toast("تعذّر حذف الصورة")); render(); break;
     }
     case "toggleref": { const w = S.wb, i = w.refs.indexOf(d.id); if (i >= 0) w.refs.splice(i, 1); else w.refs.push(d.id); render(); break; }
@@ -1239,14 +1278,12 @@ document.addEventListener("click", async ev => {
     case "analyze": analyze(); break;
     case "fsugg": p.suggState = p.suggState || {}; p.suggState[d.i] = p.suggState[d.i] === d.v ? undefined : d.v; persistProject(); render(); break;
     case "toscene": {
-      const s = p.analysis.scenes.find(x => x.n === +d.n); const w = S.wb;
-      w.scope = "scene"; w.sceneN = s.n; w.text = s.text || (s.title_ar + "\n" + s.summary_ar); w.out = d.out; if (s.est_seconds) w.duration = s.est_seconds;
-      S.item = null; S.tab = "wb"; render(); scrollTo(0, 0); break;
+      const s = p.analysis.scenes.find(x => x.n === +d.n); goWb(d.out); const w = S.wb;
+      w.scope = "scene"; w.sceneN = s.n; w.text = s.text || (s.title_ar + "\n" + s.summary_ar); if (s.est_seconds) w.duration = s.est_seconds;
+      S.item = null; render(); scrollTo(0, 0); break;
     }
-    case "wbscope": S.wb.scope = d.v; if (d.v === "shot") { S.wb.vmode = S.wb.vmode === "multi" ? "single" : S.wb.vmode; S.wb.frames = "one"; } else { S.wb.frames = "auto"; } render(); break;
-    case "wbout": S.wb.out = d.v; render(); break;
+    case "wbscope": S.wb.scope = d.v; if (d.v === "shot") S.wb.vmode = S.wb.vmode === "multi" ? "single" : S.wb.vmode; else S.wb.frames = "auto"; render(); break;
     case "wbvmode": S.wb.vmode = d.v; render(); break;
-    case "wbframes": S.wb.frames = d.v; render(); break;
     case "direct": runDirect(); break;
     case "ptab": S.ptab[d.k] = d.v; render(); break;
     case "copy": {
@@ -1263,13 +1300,13 @@ document.addEventListener("click", async ev => {
     case "replan": replan(true); break;
     case "openitem": {
       const it = S.items.find(x => x.id === d.id); if (!it) break;
-      S.item = it; S.wb = { ...freshWb(p), ...clone(it.input), refs: it.refs.map(r => r.id).filter(id => S.images.some(i => i.id === id)) };
-      if (it.input.out === "video") S.wb.vidModel = it.input.model; else S.wb.imgModel = it.input.model;
-      S.tab = "wb"; render(); setTimeout(() => $("#result")?.scrollIntoView({ block: "start" }), 0); break;
+      goWb(it.input.out === "image" ? "image" : "video");
+      S.item = it; S.wb = { ...freshWb(p, it.input.out), ...clone(it.input), refs: it.refs.map(r => r.id).filter(id => S.images.some(i => i.id === id)) };
+      if (it.input.out === "video") S.wb.vidModel = it.input.model; else S.wb.imgModel = it.input.model; render(); setTimeout(() => $("#result")?.scrollIntoView({ block: "start" }), 0); break;
     }
     case "askdelitem": S.confirmDel = d.id; render(); break;
     case "canceldel": S.confirmDel = null; render(); break;
-    case "delitem": { const id = d.id; S.items = S.items.filter(x => x.id !== id); if (S.item?.id === id) S.item = null; S.confirmDel = null; store.del(P.items(p.id) + "/" + id).catch(() => toast("تعذّر الحذف")); render(); break; }
+    case "delitem": { const id = d.id; S.items = S.items.filter(x => x.id !== id); ["image", "video"].forEach(k => { if (S.itemBy[k]?.id === id) S.itemBy[k] = null; }); S.confirmDel = null; store.del(P.items(p.id) + "/" + id).catch(() => toast("تعذّر الحذف")); render(); break; }
     case "addmodel": S.settings.models.push({ id: nid("t"), name: d.kind === "video" ? "أداة فيديو جديدة" : "أداة صور جديدة", kind: d.kind, max: d.kind === "video" ? 10 : 0, notes: "" }); saveSettings(); render(); break;
     case "delmodel": if (S.settings.models.filter(m => m.kind === (modelById(d.id)?.kind)).length <= 1) { toast("لازم تضل أداة وحدة على الأقل من كل نوع."); break; } S.settings.models = S.settings.models.filter(m => m.id !== d.id); saveSettings(); render(); break;
     case "resetmodels": S.settings.models = clone(DEFAULT_MODELS); saveSettings(); render(); toast("رجعت الأدوات للأصل"); break;
@@ -1287,7 +1324,6 @@ document.addEventListener("input", ev => {
   if (t.id === "b-name") { p.name = t.value; persistProject(); return; }
   if (t.id === "b-style") { p.bible.style = t.value; persistProject(); return; }
   if (t.id === "b-audience") { p.bible.audience = t.value; persistProject(); return; }
-  if (t.id === "b-lang") { p.bible.lang = t.value; persistProject(); return; }
   if (t.id === "b-extra") { p.bible.extra = t.value; persistProject(); return; }
   if (t.dataset.char) { const c = p.bible.characters.find(x => x.id === t.dataset.char); if (c) { c[t.dataset.k] = t.value; persistProject(); } return; }
   if (t.dataset.imglabel) {
@@ -1308,6 +1344,7 @@ document.addEventListener("input", ev => {
 });
 document.addEventListener("change", ev => {
   const t = ev.target, w = S.wb;
+  if (t.id === "b-lang") { S.cur.bible.lang = t.value; persistProject(); return; }
   if (t.id === "wb-scene") {
     const n = +t.value; w.sceneN = n;
     if (n) { const s = S.cur.analysis.scenes.find(x => x.n === n); w.text = s.text || (s.title_ar + "\n" + s.summary_ar); if (s.est_seconds) w.duration = s.est_seconds; }
