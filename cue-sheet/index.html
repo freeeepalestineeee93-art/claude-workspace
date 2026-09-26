@@ -1,0 +1,991 @@
+<title>كيو شيت</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alexandria:wght@500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+:root{
+  --bg:#EEF0F3; --surface:#FFFFFF; --surface-2:#F6F7F9; --line:#DADDE3; --line-strong:#C3C8D1;
+  --ink:#15181E; --ink-2:#4A505C; --ink-3:#7A808C;
+  --music:#B26A00; --music-soft:#FFF1DC; --sfx:#0B7A70; --sfx-soft:#DDF3EF;
+  --accent:#B26A00; --accent-ink:#FFFFFF; --danger:#B3261E; --focus:#2D6CDF;
+  --an:#C8102E; --ld:#15181E; --ev:#5A8C1F;
+  --shadow:0 1px 2px rgba(20,24,32,.06),0 8px 24px -12px rgba(20,24,32,.18);
+  --f-display:"Alexandria","IBM Plex Sans Arabic",Tahoma,sans-serif;
+  --f-body:"IBM Plex Sans Arabic",Tahoma,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#101217; --surface:#171A21; --surface-2:#1D2029; --line:#2A2E39; --line-strong:#3A3F4C;
+    --ink:#ECEAE4; --ink-2:#B3B6BF; --ink-3:#80858F;
+    --music:#F2A83B; --music-soft:#2E2413; --sfx:#4FC2B4; --sfx-soft:#122A28;
+    --accent:#F2A83B; --accent-ink:#1A1204; --danger:#FF8A80; --focus:#7FA8FF;
+    --an:#FF5A6E; --ld:#ECEAE4; --ev:#9ACD5A;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px -14px rgba(0,0,0,.6);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#101217; --surface:#171A21; --surface-2:#1D2029; --line:#2A2E39; --line-strong:#3A3F4C;
+  --ink:#ECEAE4; --ink-2:#B3B6BF; --ink-3:#80858F;
+  --music:#F2A83B; --music-soft:#2E2413; --sfx:#4FC2B4; --sfx-soft:#122A28;
+  --accent:#F2A83B; --accent-ink:#1A1204; --danger:#FF8A80; --focus:#7FA8FF;
+  --an:#FF5A6E; --ld:#ECEAE4; --ev:#9ACD5A;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px -14px rgba(0,0,0,.6);
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.65;padding-inline:16px;padding-block:0 64px}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:6px}
+.wrap{max-width:1180px;margin-inline:auto}
+
+/* ---------- header ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);margin-inline:-16px;padding-inline:16px}
+.top .wrap{display:flex;align-items:center;gap:12px;height:62px}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--f-display);font-weight:700;font-size:21px;letter-spacing:0}
+.brand-mark{display:flex;align-items:flex-end;gap:2px;height:22px}
+.brand-mark i{display:block;width:3px;border-radius:2px;background:var(--music)}
+.brand-mark i:nth-child(2n){background:var(--sfx)}
+.brand small{font-family:var(--f-body);font-weight:500;font-size:12.5px;color:var(--ink-3);margin-inline-start:4px}
+.top .spacer{flex:1}
+@media (max-width:560px){.brand small,.icon-btn .lbl{display:none}}
+[hidden]{display:none!important}
+.icon-btn{display:inline-flex;align-items:center;gap:8px;height:38px;padding-inline:12px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink-2);font-size:13.5px;font-weight:500}
+.icon-btn:hover{border-color:var(--line-strong);color:var(--ink)}
+.icon-btn svg{width:17px;height:17px}
+.icon-btn .count{min-width:20px;height:20px;border-radius:10px;background:var(--surface-2);font-size:11.5px;display:inline-grid;place-items:center;padding-inline:5px;font-family:var(--f-mono)}
+
+/* ---------- input panel ---------- */
+.intake{display:grid;grid-template-columns:1.35fr 1fr;gap:20px;margin-top:28px}
+@media (max-width:860px){.intake{grid-template-columns:1fr}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}
+.drop{position:relative;padding:28px;min-height:260px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:10px;border:1.5px dashed var(--line-strong);border-radius:16px;background:var(--surface);transition:border-color .15s,background .15s;cursor:pointer;overflow:hidden}
+.drop:hover,.drop.over{border-color:var(--music);background:color-mix(in srgb,var(--music-soft) 55%,var(--surface))}
+.drop canvas{position:absolute;inset:auto 0 0 0;width:100%;height:70px;opacity:.55;pointer-events:none}
+.drop h2{font-family:var(--f-display);font-size:22px;font-weight:600;margin:0;text-wrap:balance}
+.drop p{margin:0;color:var(--ink-2);font-size:14px}
+.drop .formats{display:flex;gap:6px;margin-top:6px}
+.fmt{font-family:var(--f-mono);font-size:11.5px;padding:3px 8px;border-radius:6px;background:var(--surface-2);border:1px solid var(--line);color:var(--ink-2)}
+.drop .up{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;background:var(--music-soft);color:var(--music)}
+.drop .up svg{width:26px;height:26px}
+.file-chip{display:none;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;background:var(--surface-2);border:1px solid var(--line);text-align:start;width:100%;max-width:440px;position:relative;z-index:1}
+.drop.has-file .file-chip{display:flex}
+.drop.has-file .idle{display:none}
+.file-chip .ext{font-family:var(--f-mono);font-size:11px;font-weight:500;padding:6px 7px;border-radius:7px;background:var(--music);color:var(--accent-ink);text-transform:uppercase}
+.file-chip b{display:block;font-weight:600;font-size:14.5px;overflow-wrap:anywhere}
+.file-chip span{font-size:12.5px;color:var(--ink-3)}
+.file-chip .x{margin-inline-start:auto;border:0;background:none;color:var(--ink-3);padding:6px;border-radius:8px}
+.file-chip .x:hover{color:var(--danger)}
+.paste-toggle{margin-top:10px;background:none;border:0;color:var(--ink-3);font-size:13px;text-decoration:underline;text-underline-offset:3px;position:relative;z-index:1}
+.paste-box{display:none;margin-top:12px}
+.paste-box.open{display:block}
+.paste-box textarea{width:100%;min-height:150px;border-radius:12px;border:1px solid var(--line);background:var(--surface);padding:12px;resize:vertical;line-height:1.7}
+
+.controls{padding:22px;display:flex;flex-direction:column;gap:18px}
+.label{font-size:12.5px;font-weight:600;color:var(--ink-3);letter-spacing:.2px;margin-bottom:8px;display:block}
+.types{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--surface-2);border-radius:999px;padding:6px 13px;font-size:13.5px;color:var(--ink-2)}
+.chip:hover{border-color:var(--line-strong);color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chip.auto[aria-pressed="true"]{background:var(--music);border-color:var(--music);color:var(--accent-ink)}
+.hint-line{font-size:12.5px;color:var(--ink-3);margin:6px 0 0}
+.go{display:flex;align-items:center;justify-content:center;gap:10px;height:54px;border-radius:14px;border:0;background:var(--accent);color:var(--accent-ink);font-family:var(--f-display);font-size:18px;font-weight:600;transition:transform .08s,filter .15s}
+.go:hover{filter:brightness(1.06)}
+.go:active{transform:scale(.99)}
+.go:disabled{opacity:.45;cursor:not-allowed}
+.go svg{width:20px;height:20px}
+.notice{font-size:13px;border-radius:10px;padding:10px 12px;background:var(--surface-2);border:1px solid var(--line);color:var(--ink-2)}
+.notice.err{border-color:color-mix(in srgb,var(--danger) 45%,var(--line));color:var(--danger)}
+
+/* ---------- progress ---------- */
+.progress{margin-top:22px;padding:18px 22px;display:none}
+.progress.on{display:block}
+.steps{display:flex;flex-wrap:wrap;gap:10px 26px;align-items:center}
+.step{display:flex;align-items:center;gap:9px;font-size:14px;color:var(--ink-3)}
+.step .dot{width:10px;height:10px;border-radius:50%;border:2px solid var(--line-strong)}
+.step.active{color:var(--ink);font-weight:500}
+.step.active .dot{border-color:var(--music);background:var(--music);animation:pulse 1.1s ease-in-out infinite}
+.step.done{color:var(--ink-2)}
+.step.done .dot{border-color:var(--sfx);background:var(--sfx)}
+@keyframes pulse{50%{box-shadow:0 0 0 5px color-mix(in srgb,var(--music) 25%,transparent)}}
+.progress .row{display:flex;align-items:center;gap:14px;margin-top:14px}
+.bar{flex:1;height:6px;border-radius:3px;background:var(--surface-2);overflow:hidden;border:1px solid var(--line)}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--sfx),var(--music));transition:width .4s}
+.stop{border:1px solid var(--line);background:var(--surface);border-radius:9px;padding:5px 12px;font-size:13px;color:var(--ink-2)}
+.stop:hover{color:var(--danger);border-color:var(--danger)}
+.progress .msg{font-size:13px;color:var(--ink-3);margin-top:8px}
+
+/* ---------- results ---------- */
+.results{margin-top:34px;display:flex;flex-direction:column;gap:34px}
+.sample-flag{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink-3);border:1px dashed var(--line-strong);border-radius:999px;padding:4px 12px;align-self:flex-start}
+.head-row{display:flex;flex-wrap:wrap;align-items:flex-end;gap:14px 20px;justify-content:space-between}
+.head-row h1{font-family:var(--f-display);font-weight:700;font-size:clamp(24px,3.4vw,34px);line-height:1.25;margin:0;text-wrap:balance}
+.head-row .sub{font-size:14px;color:var(--ink-3);margin-top:4px}
+.actions{display:flex;flex-wrap:wrap;gap:8px}
+.btn{display:inline-flex;align-items:center;gap:7px;height:38px;padding-inline:14px;border-radius:10px;border:1px solid var(--line);background:var(--surface);font-size:13.5px;font-weight:500;color:var(--ink)}
+.btn:hover{border-color:var(--line-strong)}
+.btn svg{width:16px;height:16px}
+.btn.ok{border-color:var(--sfx);color:var(--sfx)}
+
+.summary{display:grid;grid-template-columns:repeat(4,1fr);border-radius:16px;overflow:hidden;border:1px solid var(--line);background:var(--line);gap:1px}
+@media (max-width:860px){.summary{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:460px){.summary{grid-template-columns:1fr}}
+.sum{background:var(--surface);padding:16px 18px;display:flex;flex-direction:column;gap:6px}
+.sum .k{font-size:12px;font-weight:600;color:var(--ink-3);letter-spacing:.2px}
+.sum .v{font-size:15px;font-weight:500;line-height:1.55}
+.sum .type-edit{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.sum select{border:1px solid var(--line);background:var(--surface-2);border-radius:8px;padding:3px 8px;font-size:13px}
+.sum .rerun{border:0;background:var(--music);color:var(--accent-ink);border-radius:8px;padding:4px 10px;font-size:12.5px;font-weight:600}
+
+.sec-title{display:flex;align-items:center;gap:12px;margin:0 0 14px}
+.sec-title h2{font-family:var(--f-display);font-size:21px;font-weight:600;margin:0}
+.sec-title .rule{flex:1;height:1px;background:var(--line)}
+.sec-title .tag{font-size:12px;color:var(--ink-3)}
+
+.libs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+@media (max-width:940px){.libs{grid-template-columns:1fr}}
+.lib{background:var(--surface);border:1px solid var(--line);border-radius:14px;display:flex;flex-direction:column;min-width:0}
+.lib-head{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line)}
+.lib-head .sw{width:8px;height:22px;border-radius:3px}
+.lib-head b{font-family:var(--f-mono);font-size:13.5px;font-weight:500;direction:ltr}
+.lib-head a{margin-inline-start:auto;display:inline-flex;align-items:center;gap:5px;font-size:12.5px;color:var(--ink-3);text-decoration:none;border:1px solid var(--line);border-radius:8px;padding:3px 9px}
+.lib-head a:hover{color:var(--ink);border-color:var(--line-strong)}
+.lib-head a svg{width:13px;height:13px}
+.group{padding:12px 14px 14px;display:flex;flex-direction:column;gap:8px}
+.group + .group{border-top:1px dashed var(--line)}
+.g-label{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600}
+.g-label::before{content:"";width:7px;height:7px;border-radius:2px;background:currentColor}
+.g-label.music{color:var(--music)}
+.g-label.sfx{color:var(--sfx)}
+.item{display:grid;grid-template-columns:1fr auto;gap:2px 8px;align-items:center;padding:8px 10px;border-radius:10px;background:var(--surface-2);border:1px solid transparent}
+.item.music{background:var(--music-soft)}
+.item.sfx{background:var(--sfx-soft)}
+.item:hover{border-color:var(--line-strong)}
+.q{font-family:var(--f-mono);font-size:13.5px;font-weight:500;direction:ltr;unicode-bidi:isolate;text-align:right;overflow-wrap:anywhere;color:var(--ink)}
+.item .meta{grid-column:1 / -1;font-size:12.5px;color:var(--ink-2);line-height:1.5}
+.item .at{grid-column:1 / -1;font-size:12.5px;color:var(--ink-2);display:flex;gap:6px;align-items:baseline}
+.item .at::before{content:"الموضع";flex:none;font-size:11px;font-weight:600;color:var(--sfx);border:1px solid color-mix(in srgb,var(--sfx) 45%,transparent);border-radius:5px;padding:0 5px;line-height:1.6}
+.alt{font-size:10.5px;font-weight:600;color:var(--ink-3);border:1px solid var(--line-strong);border-radius:5px;padding:0 5px;margin-inline-start:6px;vertical-align:1px}
+.copy{border:0;background:transparent;color:var(--ink-3);width:30px;height:30px;border-radius:8px;display:grid;place-items:center;grid-row:1}
+.copy:hover{background:var(--surface);color:var(--ink)}
+.copy svg{width:16px;height:16px}
+.copy.done{color:var(--sfx)}
+.empty-note{font-size:12.5px;color:var(--ink-3);font-style:normal;padding:4px 2px}
+
+.scene-nav{display:flex;flex-wrap:wrap;gap:6px;margin:-4px 0 16px}
+.scene-nav a{font-size:12.5px;text-decoration:none;color:var(--ink-2);border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:3px 10px;font-family:var(--f-mono)}
+.scene-nav a:hover{border-color:var(--music);color:var(--music)}
+.scenes{display:flex;flex-direction:column;gap:18px}
+.scene{border-radius:16px;border:1px solid var(--line);background:color-mix(in srgb,var(--surface) 45%,var(--bg));padding:16px;scroll-margin-top:80px}
+.scene-head{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin-bottom:14px}
+.scene-no{font-family:var(--f-display);font-weight:700;font-size:17px}
+.scene-no .n{font-family:var(--f-mono);font-size:12px;font-weight:500;color:var(--ink-3);margin-inline-start:6px}
+.scene-title{font-size:15px;color:var(--ink-2)}
+.mood{font-size:12px;border-radius:999px;padding:2px 10px;background:var(--surface);border:1px solid var(--line);color:var(--ink-2)}
+.silence{font-size:12.5px;color:var(--ink-2);background:var(--surface);border:1px dashed var(--line-strong);border-radius:10px;padding:8px 12px;margin-bottom:12px}
+.scene.pending{min-height:120px;display:flex;align-items:center;gap:12px;color:var(--ink-3);font-size:14px}
+.scene.pending .spin{width:16px;height:16px;border-radius:50%;border:2px solid var(--line-strong);border-top-color:var(--music);animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.scene.failed{color:var(--danger)}
+.retry{margin-inline-start:auto;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:4px 12px;font-size:13px}
+
+/* ---------- history drawer ---------- */
+.scrim{position:fixed;inset:0;background:rgba(10,12,16,.45);z-index:40;opacity:0;pointer-events:none;transition:opacity .2s}
+.scrim.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;bottom:0;inset-inline-start:0;width:min(400px,92vw);background:var(--surface);border-inline-end:1px solid var(--line);z-index:41;transform:translateX(105%);transition:transform .22s ease;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.drawer.on{transform:none!important}
+.drawer header{display:flex;align-items:center;padding:16px 18px;border-bottom:1px solid var(--line)}
+.drawer header h3{margin:0;font-family:var(--f-display);font-size:18px;font-weight:600;flex:1}
+.drawer .list{overflow:auto;padding:10px;display:flex;flex-direction:column;gap:6px}
+.h-item{display:grid;grid-template-columns:1fr auto;gap:2px 8px;padding:11px 12px;border-radius:11px;border:1px solid var(--line);background:var(--surface-2);text-align:start;width:100%}
+.h-item:hover{border-color:var(--line-strong)}
+.h-item b{font-weight:600;font-size:14.5px;overflow-wrap:anywhere}
+.h-item .m{font-size:12.5px;color:var(--ink-3);grid-column:1}
+.h-item .del{grid-row:1 / span 2;grid-column:2;align-self:center;border:0;background:none;color:var(--ink-3);padding:6px;border-radius:8px}
+.h-item .del:hover{color:var(--danger)}
+.h-item .del svg{width:16px;height:16px}
+.h-confirm{grid-column:1 / -1;display:flex;gap:8px;align-items:center;font-size:13px;color:var(--danger);margin-top:6px}
+.h-confirm button{border:1px solid var(--line);background:var(--surface);border-radius:7px;padding:2px 10px;font-size:12.5px}
+.h-confirm .yes{border-color:var(--danger);color:var(--danger)}
+.drawer .empty{padding:30px 20px;text-align:center;color:var(--ink-3);font-size:14px}
+
+.toast{position:fixed;bottom:calc(20px + env(safe-area-inset-bottom,0px));left:50%;transform:translate(-50%,20px);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:10px;font-size:13.5px;opacity:0;transition:.2s;z-index:60;pointer-events:none}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+/* export sheet (light, for PDF render) */
+.sheet{position:fixed;left:-10000px;top:0;width:780px;background:#fff;color:#111;font-family:var(--f-body);direction:rtl;padding:36px 40px;font-size:13px;line-height:1.7}
+.sheet h1{font-family:var(--f-display);font-size:24px;margin:0 0 4px}
+.sheet .s-sub{color:#666;font-size:12px;margin-bottom:16px}
+.sheet h2{font-family:var(--f-display);font-size:17px;margin:22px 0 8px;padding-bottom:4px;border-bottom:2px solid #111}
+.sheet h3{font-size:14px;margin:12px 0 4px;direction:ltr;text-align:right}
+.sheet ul{margin:0;padding-inline-start:18px}
+.sheet .kw{font-family:var(--f-mono);direction:ltr;unicode-bidi:isolate}
+.sheet .blk{break-inside:avoid;page-break-inside:avoid}
+.sheet .sumt{display:grid;grid-template-columns:1fr 1fr;gap:4px 18px;border:1px solid #ddd;border-radius:8px;padding:10px 14px}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div dir="rtl" lang="ar">
+<div class="top">
+  <div class="wrap">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true"><i style="height:9px"></i><i style="height:17px"></i><i style="height:12px"></i><i style="height:22px"></i><i style="height:7px"></i></span>
+      كيو شيت
+      <small>موسيقى ومؤثرات السكربت</small>
+    </div>
+    <span class="spacer"></span>
+    <button class="icon-btn" id="historyBtn" type="button" aria-label="السجل">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></svg>
+      <span class="lbl">السجل</span><span class="count" id="histCount">0</span>
+    </button>
+    <button class="icon-btn" id="themeBtn" type="button" aria-label="تبديل الوضع الفاتح والداكن">
+      <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></svg>
+    </button>
+  </div>
+</div>
+
+<main class="wrap">
+  <section class="intake">
+    <div>
+      <label class="drop" id="drop" for="fileInput">
+        <canvas id="wave" aria-hidden="true"></canvas>
+        <div class="idle" style="display:flex;flex-direction:column;align-items:center;gap:10px;position:relative;z-index:1">
+          <div class="up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4"/><path d="m6 10 6-6 6 6"/><path d="M4 20h16"/></svg></div>
+          <h2>اسحب ملف السكربت وأفلته هنا</h2>
+          <p>أو اضغط لاختيار الملف من جهازك</p>
+          <div class="formats"><span class="fmt">DOCX</span><span class="fmt">PDF</span><span class="fmt">TXT</span></div>
+        </div>
+        <div class="file-chip" id="fileChip">
+          <span class="ext" id="fileExt">docx</span>
+          <div><b id="fileName"></b><span id="fileMeta"></span></div>
+          <button class="x" id="clearFile" type="button" aria-label="إزالة الملف"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+        </div>
+        <input type="file" id="fileInput" accept=".docx,.pdf,.txt" hidden>
+      </label>
+      <button class="paste-toggle" id="pasteToggle" type="button">أو الصق نص السكربت مباشرة</button>
+      <div class="paste-box" id="pasteBox"><textarea id="pasteText" placeholder="الصق نص السكربت هنا…"></textarea></div>
+    </div>
+
+    <div class="panel controls">
+      <div>
+        <span class="label">نوع المحتوى</span>
+        <div class="types" id="types" role="group" aria-label="نوع المحتوى"></div>
+        <p class="hint-line">اترك «تلقائي» ليحدد النوع من السكربت. اختر نوعاً فقط إذا أردت فرضه.</p>
+      </div>
+      <div class="notice" id="notice" hidden></div>
+      <button class="go" id="goBtn" type="button" disabled>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        ابحث
+      </button>
+    </div>
+  </section>
+
+  <section class="panel progress" id="progress" aria-live="polite">
+    <div class="steps">
+      <div class="step" data-step="read"><span class="dot"></span>قراءة الملف</div>
+      <div class="step" data-step="analyze"><span class="dot"></span>تحليل السكربت والاقتراح العام</div>
+      <div class="step" data-step="scenes"><span class="dot"></span>اقتراحات المشاهد <span id="sceneProg"></span></div>
+    </div>
+    <div class="row"><div class="bar"><i id="barFill"></i></div><button class="stop" id="stopBtn" type="button">إيقاف</button></div>
+    <div class="msg" id="progMsg"></div>
+  </section>
+
+  <section class="results" id="results"></section>
+</main>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="سجل التحليلات">
+  <header><h3>آخر التحليلات</h3><button class="icon-btn" id="closeDrawer" type="button" aria-label="إغلاق"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></header>
+  <div class="list" id="histList"></div>
+</aside>
+<div class="toast" id="toast"></div>
+<div class="sheet" id="sheet" aria-hidden="true"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.8.0/mammoth.browser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
+<script>
+(() => {
+"use strict";
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+/* ================= constants ================= */
+const TYPES = {
+  film:        { label: "فيلم سينمائي",       whole: "الفيلم كاملاً",   sfx: true  },
+  animation:   { label: "كرتون / أنيميشن",    whole: "الفيلم كاملاً",   sfx: true  },
+  series:      { label: "مسلسل / دراما",       whole: "الحلقة كاملة",    sfx: true  },
+  documentary: { label: "فيلم وثائقي",         whole: "الفيلم كاملاً",   sfx: true  },
+  promo:       { label: "إعلان / برومو",       whole: "الفيديو كاملاً",  sfx: true  },
+  news_report: { label: "تقرير خبري",          whole: "التقرير كاملاً",  sfx: false },
+  videograph:  { label: "فيديو جراف",          whole: "الفيديو كاملاً",  sfx: false },
+  other:       { label: "فيديو",               whole: "الفيديو كاملاً",  sfx: true  },
+};
+const TYPE_ORDER = ["film","animation","series","documentary","promo","news_report","videograph"];
+const LIBS = [
+  { key: "audionetwork",    name: "audionetwork",    color: "var(--an)", home: "https://www.audionetwork.com/track/searchkeyword" },
+  { key: "lensdistortions", name: "lensdistortions", color: "var(--ld)", home: "https://lensdistortions.com/" },
+  { key: "envato",          name: "envato",          color: "var(--ev)", home: "https://app.envato.com/" },
+];
+const ORD = ["الأول","الثاني","الثالث","الرابع","الخامس","السادس","السابع","الثامن","التاسع","العاشر","الحادي عشر","الثاني عشر","الثالث عشر","الرابع عشر","الخامس عشر","السادس عشر","السابع عشر","الثامن عشر","التاسع عشر","العشرون"];
+const sceneName = n => "المشهد " + (ORD[n-1] || n);
+const MAX_BYTES = 60000;          // leave headroom under the 64 KiB input cap
+const BATCH = 5;
+
+const ICON = {
+  copy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/></svg>',
+  check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>',
+  ext: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6"/><path d="M20 4 10 14"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>',
+  pdf: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5"/><path d="M9 14h6M9 17h4"/></svg>',
+  trash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>',
+  sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+  moon: '<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/>',
+};
+
+/* ================= search links ================= */
+const plus = q => encodeURIComponent(q.trim().toLowerCase()).replace(/%20/g, "+");
+const LD_SFX = { archetype: "https://lensdistortions.com/sfx/archetype-sfx/", anticipation: "https://lensdistortions.com/sfx/anticipation-sfx/", statement: "https://lensdistortions.com/statement-sound-effects/", endurance: "https://lensdistortions.com/endurance-sound-effects/" };
+function linkFor(lib, kind, q) {
+  if (lib === "envato") return kind === "music"
+    ? "https://elements.envato.com/audio/royalty-free-music/" + plus(q)
+    : "https://elements.envato.com/audio/sound-effects/" + plus(q);
+  if (lib === "lensdistortions") {
+    if (kind === "sfx") { const k = Object.keys(LD_SFX).find(k => q.toLowerCase().includes(k)); return LD_SFX[k] || "https://lensdistortions.com/sfx/"; }
+    return "https://lensdistortions.com/music/";
+  }
+  return "https://www.audionetwork.com/track/searchkeyword";
+}
+
+/* ================= state ================= */
+let source = { text: "", name: "", ext: "" };
+let forcedType = "auto";
+let current = null;           // {id, meta, analysis, scenes:{n:data}}
+let runCtl = null;
+let sample = null, db = null, downloads = null;
+let history = [];
+
+/* ================= theme ================= */
+const rootEl = document.documentElement;
+function isDark() {
+  const t = rootEl.getAttribute("data-theme");
+  return t ? t === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+}
+function paintThemeIcon() { $("#themeIcon").innerHTML = isDark() ? ICON.sun : ICON.moon; drawWave(); }
+try { const t = localStorage.getItem("cs-theme"); if (t) rootEl.setAttribute("data-theme", t); } catch {}
+$("#themeBtn").onclick = () => {
+  const next = isDark() ? "light" : "dark";
+  rootEl.setAttribute("data-theme", next);
+  try { localStorage.setItem("cs-theme", next); } catch {}
+  paintThemeIcon();
+};
+matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", paintThemeIcon);
+
+/* decorative waveform in the drop zone */
+function drawWave() {
+  const c = $("#wave"); if (!c) return;
+  const w = c.clientWidth, h = c.clientHeight; if (!w) return;
+  const dpr = devicePixelRatio || 1; c.width = w * dpr; c.height = h * dpr;
+  const g = c.getContext("2d"); g.scale(dpr, dpr); g.clearRect(0, 0, w, h);
+  const cs = getComputedStyle(document.body);
+  const m = cs.getPropertyValue("--music").trim(), s = cs.getPropertyValue("--sfx").trim();
+  let seed = 7; const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
+  for (let x = 2, i = 0; x < w; x += 5, i++) {
+    const env = Math.sin((x / w) * Math.PI) * 0.8 + 0.2;
+    const a = (0.25 + rnd() * 0.75) * env * (h - 8);
+    g.fillStyle = i % 9 === 0 ? s : m; g.globalAlpha = i % 9 === 0 ? .9 : .35;
+    g.fillRect(x, h - a, 2.5, a);
+  }
+}
+addEventListener("resize", drawWave);
+
+/* ================= type chips ================= */
+function renderTypes() {
+  const box = $("#types");
+  const items = [["auto", "تلقائي"], ...TYPE_ORDER.map(k => [k, TYPES[k].label])];
+  box.innerHTML = items.map(([k, l]) => `<button type="button" class="chip${k === "auto" ? " auto" : ""}" data-t="${k}" aria-pressed="${forcedType === k}">${l}</button>`).join("");
+  box.querySelectorAll(".chip").forEach(b => b.onclick = () => { forcedType = b.dataset.t; renderTypes(); });
+}
+
+/* ================= file intake ================= */
+const drop = $("#drop");
+["dragenter","dragover"].forEach(e => drop.addEventListener(e, ev => { ev.preventDefault(); drop.classList.add("over"); }));
+["dragleave","drop"].forEach(e => drop.addEventListener(e, ev => { ev.preventDefault(); drop.classList.remove("over"); }));
+drop.addEventListener("drop", ev => { const f = ev.dataTransfer?.files?.[0]; if (f) loadFile(f); });
+$("#fileInput").addEventListener("change", ev => { const f = ev.target.files[0]; if (f) loadFile(f); ev.target.value = ""; });
+$("#clearFile").addEventListener("click", ev => { ev.preventDefault(); ev.stopPropagation(); source = { text: "", name: "", ext: "" }; drop.classList.remove("has-file"); updateGo(); });
+$("#pasteToggle").onclick = () => { $("#pasteBox").classList.toggle("open"); if ($("#pasteBox").classList.contains("open")) $("#pasteText").focus(); };
+$("#pasteText").addEventListener("input", updateGo);
+
+function notice(msg, err) { const n = $("#notice"); n.hidden = !msg; n.textContent = msg || ""; n.classList.toggle("err", !!err); }
+function scriptText() { return source.text || $("#pasteText").value.trim(); }
+function updateGo() { $("#goBtn").disabled = !scriptText() || !!runCtl; }
+const wordCount = t => (t.match(/\S+/g) || []).length;
+
+async function loadFile(file) {
+  notice("");
+  const ext = (file.name.split(".").pop() || "").toLowerCase();
+  if (!["docx","pdf","txt"].includes(ext)) {
+    notice(ext === "doc" ? "صيغة ‎.doc‎ القديمة غير مدعومة. افتح الملف في Word واحفظه بصيغة ‎.docx‎ ثم ارفعه." : "الصيغة غير مدعومة. ارفع ملف DOCX أو PDF أو TXT.", true);
+    return;
+  }
+  $("#fileName").textContent = file.name; $("#fileExt").textContent = ext; $("#fileMeta").textContent = "جارٍ قراءة الملف…";
+  drop.classList.add("has-file");
+  try {
+    const buf = await file.arrayBuffer();
+    let text = "";
+    if (ext === "txt") text = new TextDecoder("utf-8").decode(buf);
+    else if (ext === "docx") text = (await mammoth.extractRawText({ arrayBuffer: buf })).value;
+    else text = await pdfText(buf);
+    text = text.replace(/\r/g, "").replace(/[ \t]+\n/g, "\n").replace(/\n{3,}/g, "\n\n").trim();
+    if (!text) throw new Error("empty");
+    source = { text, name: file.name, ext };
+    $("#fileMeta").textContent = wordCount(text).toLocaleString("ar") + " كلمة";
+  } catch (e) {
+    source = { text: "", name: "", ext: "" };
+    drop.classList.remove("has-file");
+    notice(ext === "pdf" ? "تعذّر استخراج النص من ملف PDF. إذا كان صورة ممسوحة ضوئياً فلن يُقرأ؛ جرّب نسخة Word أو الصق النص." : "تعذّر قراءة الملف. تأكد أنه غير تالف أو الصق النص مباشرة.", true);
+  }
+  updateGo();
+}
+async function pdfText(buf) {
+  const lib = window.pdfjsLib;
+  lib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+  const doc = await lib.getDocument({ data: buf, disableWorker: true }).promise;
+  const out = [];
+  for (let p = 1; p <= doc.numPages; p++) {
+    const tc = await (await doc.getPage(p)).getTextContent();
+    let line = "";
+    for (const it of tc.items) { line += it.str; if (it.hasEOL) { out.push(line); line = ""; } else if (it.str && !/\s$/.test(it.str)) line += " "; }
+    if (line.trim()) out.push(line);
+    out.push("");
+  }
+  return out.join("\n");
+}
+
+/* ================= prompts ================= */
+const LIB_RULES = `LIBRARY-SPECIFIC RULES
+- audionetwork (Audio Network): large production-music catalogue (orchestral, cinematic, documentary, news, world, electronic…), searched by mood / style / instrument / tempo; it also has a sound-effects collection for realistic sounds. Write q the way its mood/style/instrument tags read, e.g. "tense investigative pulse", "reflective oud strings".
+- lensdistortions (Lens Distortions): boutique modern cinematic catalogue. Music: cinematic / ambient / emotional / epic tracks, searched by mood + genre (e.g. "emotional ambient piano"). SFX: use ONLY these real libraries and categories —
+  Archetype (dark, weighty: hits, risers, whooshes, drones, atmospheres),
+  Anticipation (bright, hopeful: risers, hits, whooshes, moments, atmospheres),
+  Statement (modern, bold, slightly futuristic: risers, hits, whooshes, accents, undertones, moments),
+  Endurance (rhythmic underscore: pulses, drones, percussive patterns, textures).
+  Write lensdistortions sfx q as "Library – Category" (e.g. "Archetype – Hits"). It has no literal foley (doors, footsteps, cars, crowds, animals): for such beats choose the cinematic design element that serves the same moment (impact, whoosh, riser, atmosphere, undertone). Never invent pack names.
+- envato (Envato Elements): very large music library and the broadest sound-effects library (detailed foley, ambiences, vehicles, weapons, UI, cartoon). For sfx write q literally and concretely, e.g. "heavy wooden door slam", "rain on tin roof", "cartoon slide whistle".`;
+
+const ITEM_RULES = `HOW TO WRITE EACH SUGGESTION
+- q: the exact English phrase to paste into that library's search box. 2–5 words. Precise: style/genre + mood + key instrument or sound source. No site names, no quotes, no filler words like "music", "background", "sound effect", "royalty free".
+- hint: Arabic, 3–8 words: what it is / why (add a BPM range for music when useful).
+- at (sfx only): Arabic, max 10 words: the exact moment it goes — quote the script beat briefly or name the action.`;
+
+const ACCURACY = `ACCURACY RULES
+- Every suggestion must be justified by explicit evidence in the script: genre, setting, era, geography/culture, time of day, weather, actions, emotions, editing rhythm. No generic filler, no random choices, no duplicates across libraries unless truly the best fit.
+- Use regional/ethnic instruments only when the script's setting or tone calls for them.
+- For news_report / videograph music: serious, voice-over-friendly underscore (no vocals, no dominant lead melody), matching the topic's tone (tragedy, conflict, politics, economy, technology, sport, human story…) and the piece's pacing.
+- Animation: playful / comedic-orchestral / whimsical language where the script is light; cartoon sound effects.
+- q in English; all other text in Arabic.`;
+
+function stage1Prompt(text, forced, fileName) {
+  const force = forced !== "auto" ? `\nThe user has confirmed the content type is "${forced}". Treat that as authoritative.\n` : "";
+  return `You are a senior music supervisor and sound designer working on Arabic-language film, animation and news productions. Analyse the script below with great precision and recommend music and sound effects that can be found on exactly three libraries: audionetwork, lensdistortions, envato.
+
+STEP 1 — Classify. content_type is one of:
+"film" (live-action narrative film / short film), "animation" (cartoon / animated narrative), "series" (drama episode), "documentary", "promo" (ad / promo / trailer), "news_report" (TV news package: voice-over, interviews/SOT, stand-up), "videograph" (news explainer / motion-graphics video: numbered frames, on-screen text, figures, maps), "other".
+Being divided into numbered parts does NOT make a script a film: news videographs and reports are often split into frames/sections. Classify by content and purpose.${force}
+
+STEP 2 — summary, in Arabic, short phrases (max ~12 words each): genre, pacing (describe the arc, e.g. "هادئ ← متصاعد ← انفجاري"), mood, climax (where and what; for news: the most impactful moment).
+
+STEP 3 — Whole-piece recommendations ("global") for each library:
+- music: exactly 2 items (first = main direction, second = alternative).
+- sfx: only for film, animation, series, documentary, promo, other: 3–5 signature/recurring sounds for the whole piece, each with "at" describing when it recurs. For news_report and videograph, sfx MUST be [].
+
+STEP 4 — scenes: if content_type is film, animation or series (or a documentary/promo clearly written as separate dramatic scenes), list EVERY scene in order: n (1-based), title (Arabic, max 6 words, from location/action), anchor = the EXACT first 4–8 words of that scene as written in the script (copied verbatim, same spelling and punctuation). Otherwise scenes = [].
+
+${ITEM_RULES}
+
+${LIB_RULES}
+
+${ACCURACY}
+
+Reply with ONLY this JSON (no commentary):
+{"content_type":"","title":"Arabic working title taken from the script","summary":{"genre":"","pacing":"","mood":"","climax":""},"global":{"audionetwork":{"music":[{"q":"","hint":""}],"sfx":[{"q":"","hint":"","at":""}]},"lensdistortions":{"music":[],"sfx":[]},"envato":{"music":[],"sfx":[]}},"scenes":[{"n":1,"title":"","anchor":""}]}
+
+SCRIPT${fileName ? " (file: " + fileName + ")" : ""}:
+<<<
+${text}
+>>>`;
+}
+
+function stage2Prompt(a, batch, texts) {
+  const g = LIBS.map(l => l.name + ": " + (a.global?.[l.key]?.music || []).map(m => m.q).join(" | ")).join("\n");
+  const body = batch.map(s => `### SCENE ${s.n} — ${s.title}\n${texts[s.n]}`).join("\n\n");
+  return `You are a senior music supervisor and sound designer. The script has already been analysed:
+- content_type: ${a.content_type}
+- title: ${a.title}
+- genre: ${a.summary?.genre} | pacing: ${a.summary?.pacing} | mood: ${a.summary?.mood} | climax: ${a.summary?.climax}
+- whole-piece music direction already chosen:
+${g}
+- total scenes: ${a.scenes.length}
+
+Now recommend music and sound effects for EACH scene below, on the same three libraries. For every scene:
+- mood: Arabic, max 5 words (the scene's emotional state).
+- music: exactly 1 item per library — the cue for THIS scene, matching its emotion and pace while keeping continuity with the whole-piece direction.
+- If the scene is better with NO music (silence for tension, dialogue-only realism), give music [] for all libraries and explain in silence_note (Arabic, one short sentence). Otherwise silence_note = "".
+- sfx: 2–5 items per library, each tied to a concrete event or ambience in that scene, each with a precise "at".
+
+${ITEM_RULES}
+
+${LIB_RULES}
+
+${ACCURACY}
+
+Reply with ONLY this JSON:
+{"scenes":[{"n":1,"mood":"","silence_note":"","audionetwork":{"music":[{"q":"","hint":""}],"sfx":[{"q":"","hint":"","at":""}]},"lensdistortions":{"music":[],"sfx":[]},"envato":{"music":[],"sfx":[]}}]}
+
+SCENES:
+${body}`;
+}
+
+/* ================= text budget helpers ================= */
+const enc = new TextEncoder();
+const bytes = s => enc.encode(s).length;
+function condense(text, budget) {
+  if (bytes(text) <= budget) return { text, condensed: false };
+  let cap = 400;
+  while (cap >= 60) {
+    const t = text.split("\n").map(l => l.length > cap ? l.slice(0, cap) + " …" : l).join("\n");
+    if (bytes(t) <= budget) return { text: t, condensed: true };
+    cap = Math.floor(cap * 0.75);
+  }
+  let t = text; while (bytes(t) > budget) t = t.slice(0, Math.floor(t.length * 0.9));
+  return { text: t + "\n…", condensed: true };
+}
+const norm = s => s.replace(/[ً-ْـ]/g, "").replace(/[إأآ]/g, "ا").replace(/\s+/g, " ").trim();
+function sliceScenes(text, scenes) {
+  // map normalised offsets back to the raw text by normalising progressively
+  const nt = norm(text);
+  const starts = [];
+  let from = 0;
+  for (const s of scenes) {
+    const a = norm(s.anchor || "");
+    let i = a ? nt.indexOf(a, from) : -1;
+    if (i < 0 && a) { const short = a.split(" ").slice(0, 4).join(" "); i = nt.indexOf(short, from); }
+    starts.push(i);
+    if (i >= 0) from = i + 1;
+  }
+  if (starts.some(i => i < 0)) return null;
+  const out = {};
+  scenes.forEach((s, k) => { out[s.n] = nt.slice(starts[k], k + 1 < scenes.length ? starts[k + 1] : nt.length).trim(); });
+  return out;
+}
+
+/* ================= analysis run ================= */
+const ERR = {
+  not_granted: "لم يُسمح للصفحة باستخدام Claude. اسمح بذلك عند السؤال ثم أعد المحاولة.",
+  sampling_disabled: "Claude غير متاح لهذا الحساب.",
+  rate_limited: "تم الوصول لحد الاستخدام مؤقتاً. انتظر قليلاً ثم أعد المحاولة.",
+  prompt_too_large: "السكربت أطول من الحد المسموح لمرة واحدة. قسّمه إلى جزأين وحلّل كل جزء على حدة.",
+  session_expired: "انتهت الجلسة. سجّل الدخول من جديد ثم أعد المحاولة.",
+  invalid_json: "وصلت النتيجة بصيغة غير مكتملة. اضغط «ابحث» مرة أخرى.",
+  refused: "تعذّر تحليل هذا النص.",
+};
+const errMsg = e => ERR[e?.code] || "حدث خطأ أثناء التحليل. اضغط «ابحث» مرة أخرى.";
+
+function setStep(name, state) { const el = document.querySelector(`.step[data-step="${name}"]`); el.classList.remove("active","done"); if (state) el.classList.add(state); }
+function setBar(p, msg) { $("#barFill").style.width = Math.round(p * 100) + "%"; if (msg != null) $("#progMsg").textContent = msg; }
+
+$("#goBtn").onclick = () => run(forcedType);
+$("#stopBtn").onclick = () => runCtl?.abort();
+
+async function run(typeChoice) {
+  const raw = scriptText();
+  if (!raw) return;
+  if (!sample) { notice("التحليل يعمل فقط عند فتح الصفحة داخل claude.ai.", true); return; }
+  notice("");
+  runCtl = new AbortController(); const signal = runCtl.signal; updateGo();
+  const prog = $("#progress"); prog.classList.add("on");
+  ["read","analyze","scenes"].forEach(s => setStep(s, null)); $("#sceneProg").textContent = "";
+  setStep("read", "done"); setStep("analyze", "active"); setBar(.08, "يقرأ Claude السكربت ويحدد نوعه وإيقاعه… قد يستغرق ذلك دقيقة أو أكثر للسكربتات الطويلة.");
+
+  const fixed = stage1Prompt("", typeChoice, source.name);
+  const { text: body, condensed } = condense(raw, MAX_BYTES - bytes(fixed) - 200);
+  let analysis;
+  try {
+    analysis = await sample.json(stage1Prompt(body, typeChoice, source.name), { signal, modelTier: "complex" });
+  } catch (e) {
+    finishRun(); if (e.code !== "cancelled") notice(errMsg(e), true); return;
+  }
+  analysis = cleanAnalysis(analysis, typeChoice);
+  current = {
+    id: "a" + Date.now().toString(36),
+    meta: { fileName: source.name || "نص ملصوق", words: wordCount(raw), date: Date.now(), condensed, forced: typeChoice },
+    analysis, scenes: {}, failed: {},
+  };
+  setStep("analyze", "done");
+  renderResults();
+  $("#results").scrollIntoView({ behavior: "smooth", block: "start" });
+
+  const list = analysis.scenes;
+  if (list.length) {
+    setStep("scenes", "active");
+    const texts = sliceScenes(raw, list);
+    const batches = []; for (let i = 0; i < list.length; i += BATCH) batches.push(list.slice(i, i + BATCH));
+    let done = 0;
+    const tick = () => { $("#sceneProg").textContent = `(${done}/${list.length})`; setBar(.25 + .75 * done / list.length, `يجهّز Claude اقتراحات المشاهد… ${done} من ${list.length}`); };
+    tick();
+    const runBatch = async b => {
+      try { await sceneBatch(b, texts, raw, signal); } catch (e) { if (e.code === "cancelled") throw e; b.forEach(s => current.failed[s.n] = errMsg(e)); }
+      done += b.length; tick(); renderScenes();
+    };
+    try {
+      let idx = 0;
+      const worker = async () => { while (idx < batches.length && !signal.aborted) await runBatch(batches[idx++]); };
+      await Promise.all([worker(), worker()]);
+    } catch (e) { /* stopped */ }
+    setStep("scenes", signal.aborted ? null : "done");
+  }
+  setBar(1, signal.aborted ? "تم الإيقاف. ما اكتمل محفوظ أدناه." : "اكتمل التحليل.");
+  finishRun();
+  renderResults();
+  saveHistory(current);
+}
+function finishRun() { runCtl = null; updateGo(); setTimeout(() => { if (!runCtl) $("#progress").classList.remove("on"); }, 1800); }
+
+async function sceneBatch(batch, texts, raw, signal) {
+  let t = texts;
+  if (!t) { t = {}; batch.forEach(s => t[s.n] = "(see full script — locate scene by title/anchor: " + s.anchor + ")"); }
+  let prompt = stage2Prompt(current.analysis, batch, t);
+  if (!texts) {
+    const room = MAX_BYTES - bytes(prompt) - 200;
+    prompt += "\n\nFULL SCRIPT:\n<<<\n" + condense(raw, room).text + "\n>>>";
+  } else if (bytes(prompt) > MAX_BYTES) {
+    const per = Math.floor((MAX_BYTES - bytes(stage2Prompt(current.analysis, batch, Object.fromEntries(batch.map(s => [s.n, ""]))))) / batch.length) - 50;
+    const tt = {}; batch.forEach(s => tt[s.n] = condense(texts[s.n], per).text);
+    prompt = stage2Prompt(current.analysis, batch, tt);
+  }
+  const res = await sample.json(prompt, { signal });
+  const arr = Array.isArray(res?.scenes) ? res.scenes : [];
+  batch.forEach(s => {
+    const got = arr.find(x => Number(x.n) === s.n);
+    if (got) { current.scenes[s.n] = cleanScene(got); delete current.failed[s.n]; }
+    else current.failed[s.n] = "لم تصل اقتراحات هذا المشهد.";
+  });
+}
+
+/* ================= sanitising model output ================= */
+const str = v => (typeof v === "string" ? v : v == null ? "" : String(v)).trim();
+function cleanItems(arr, withAt) {
+  return (Array.isArray(arr) ? arr : []).map(x => ({ q: str(x?.q), hint: str(x?.hint), ...(withAt ? { at: str(x?.at) } : {}) })).filter(x => x.q);
+}
+function cleanLibs(o, sfxAllowed) {
+  const out = {};
+  LIBS.forEach(l => { const v = o?.[l.key] || {}; out[l.key] = { music: cleanItems(v.music), sfx: sfxAllowed ? cleanItems(v.sfx, true) : [] }; });
+  return out;
+}
+function cleanAnalysis(a, forced) {
+  let type = forced !== "auto" ? forced : str(a?.content_type);
+  if (!TYPES[type]) type = "other";
+  const sfx = TYPES[type].sfx;
+  const scenes = (Array.isArray(a?.scenes) ? a.scenes : []).map((s, i) => ({ n: i + 1, title: str(s?.title), anchor: str(s?.anchor) }));
+  return {
+    content_type: type, title: str(a?.title) || "سكربت بدون عنوان",
+    summary: { genre: str(a?.summary?.genre), pacing: str(a?.summary?.pacing), mood: str(a?.summary?.mood), climax: str(a?.summary?.climax) },
+    global: cleanLibs(a?.global, sfx),
+    scenes: sfx ? scenes : [],
+  };
+}
+function cleanScene(s) { return { mood: str(s?.mood), silence_note: str(s?.silence_note), ...cleanLibs(s, true) }; }
+
+/* ================= rendering ================= */
+function itemHTML(it, kind, lib, idx) {
+  return `<div class="item ${kind}">
+    <span class="q">${esc(it.q)}${kind === "music" && idx === 1 ? '<span class="alt">بديل</span>' : ""}</span>
+    <button type="button" class="copy" data-copy="${esc(it.q)}" aria-label="نسخ ${esc(it.q)}">${ICON.copy}</button>
+    ${it.hint ? `<span class="meta">${esc(it.hint)}</span>` : ""}
+    ${kind === "sfx" && it.at ? `<span class="at">${esc(it.at)}</span>` : ""}
+  </div>`;
+}
+function libsHTML(block, showSfx) {
+  return `<div class="libs">${LIBS.map(l => {
+    const v = block[l.key] || { music: [], sfx: [] };
+    const firstQ = (v.music[0] || v.sfx[0] || {}).q;
+    const href = firstQ ? linkFor(l.key, v.music[0] ? "music" : "sfx", firstQ) : l.home;
+    return `<article class="lib">
+      <header class="lib-head"><span class="sw" style="background:${l.color}"></span><b>${l.name}</b>
+        <a href="${esc(href)}" target="_blank" rel="noopener">فتح الموقع ${ICON.ext}</a></header>
+      <div class="group"><div class="g-label music">الموسيقى المقترحة</div>
+        ${v.music.length ? v.music.map((it, i) => itemHTML(it, "music", l.key, i)).join("") : '<div class="empty-note">بدون موسيقى لهذا الجزء.</div>'}
+      </div>
+      ${showSfx ? `<div class="group"><div class="g-label sfx">الساوند افكت المقترح</div>
+        ${v.sfx.length ? v.sfx.map((it, i) => itemHTML(it, "sfx", l.key, i)).join("") : '<div class="empty-note">لا حاجة لمؤثرات من هذه المكتبة.</div>'}
+      </div>` : ""}
+    </article>`;
+  }).join("")}</div>`;
+}
+
+function renderResults() {
+  const box = $("#results");
+  if (!current) { box.innerHTML = ""; return; }
+  const a = current.analysis, T = TYPES[a.content_type], m = current.meta;
+  const date = new Date(m.date).toLocaleDateString("ar", { day: "numeric", month: "long", year: "numeric" });
+  box.innerHTML = `
+    ${current.isSample ? '<span class="sample-flag">نتيجة تجريبية لسكربت قصير. ارفع سكربتك واضغط «ابحث» لتحليله.</span>' : ""}
+    <div class="head-row">
+      <div><h1>${esc(a.title)}</h1><div class="sub">${esc(m.fileName)} · ${m.words.toLocaleString("ar")} كلمة · ${date}${a.scenes.length ? " · " + a.scenes.length.toLocaleString("ar") + " مشاهد" : ""}</div></div>
+      <div class="actions">
+        <button class="btn" type="button" id="copyAll">${ICON.copy} نسخ الكل</button>
+        <button class="btn" type="button" id="expPdf" ${downloads ? "" : "hidden"}>${ICON.pdf} تصدير PDF</button>
+        <button class="btn" type="button" id="expDocx" ${downloads ? "" : "hidden"}>${ICON.pdf} تصدير Word</button>
+      </div>
+    </div>
+    ${m.condensed ? '<div class="notice">السكربت طويل جداً، فأُرسلت الفقرات الطويلة مختصرة في التحليل العام. اقتراحات المشاهد استخدمت نص كل مشهد كاملاً.</div>' : ""}
+    <div class="summary">
+      <div class="sum"><span class="k">النوع</span><span class="v">${esc(T.label)}${a.summary.genre ? " — " + esc(a.summary.genre) : ""}</span>
+        <span class="type-edit"><select id="typeFix" aria-label="تصحيح النوع">${TYPE_ORDER.map(k => `<option value="${k}" ${k === a.content_type ? "selected" : ""}>${TYPES[k].label}</option>`).join("")}</select><button class="rerun" id="rerun" type="button" hidden>أعد التحليل</button></span></div>
+      <div class="sum"><span class="k">الإيقاع</span><span class="v">${esc(a.summary.pacing) || "—"}</span></div>
+      <div class="sum"><span class="k">المزاج العام</span><span class="v">${esc(a.summary.mood) || "—"}</span></div>
+      <div class="sum"><span class="k">نقطة الذروة</span><span class="v">${esc(a.summary.climax) || "—"}</span></div>
+    </div>
+    <section>
+      <div class="sec-title"><h2>${T.whole}</h2><span class="rule"></span>${T.sfx ? "" : '<span class="tag">محتوى خبري: موسيقى فقط بدون مؤثرات</span>'}</div>
+      ${libsHTML(a.global, T.sfx)}
+    </section>
+    ${a.scenes.length ? `<section>
+      <div class="sec-title"><h2>المشاهد</h2><span class="rule"></span><span class="tag">${a.scenes.length.toLocaleString("ar")} مشاهد</span></div>
+      <nav class="scene-nav" aria-label="الانتقال إلى مشهد">${a.scenes.map(s => `<a href="#s${s.n}">${s.n}</a>`).join("")}</nav>
+      <div class="scenes" id="scenes"></div>
+    </section>` : ""}`;
+  renderScenes();
+  const sel = $("#typeFix"), rr = $("#rerun");
+  sel.onchange = () => { rr.hidden = sel.value === a.content_type || current.isSample; };
+  rr.onclick = () => { if (!scriptText()) { notice("ارفع السكربت من جديد لإعادة تحليله بالنوع المصحّح.", true); window.scrollTo({ top: 0, behavior: "smooth" }); return; } forcedType = sel.value; renderTypes(); run(sel.value); };
+  $("#copyAll").onclick = e => copyText(plainText(current), e.currentTarget, "نُسخت النتيجة كاملة");
+  $("#expPdf").onclick = exportPdf;
+  $("#expDocx").onclick = exportDocx;
+}
+function renderScenes() {
+  const box = $("#scenes"); if (!box || !current) return;
+  box.innerHTML = current.analysis.scenes.map(s => {
+    const d = current.scenes[s.n], f = current.failed[s.n];
+    const head = `<div class="scene-head"><span class="scene-no">${sceneName(s.n)}<span class="n">#${s.n}</span></span><span class="scene-title">${esc(s.title)}</span>${d?.mood ? `<span class="mood">${esc(d.mood)}</span>` : ""}</div>`;
+    if (d) return `<article class="scene" id="s${s.n}">${head}${d.silence_note ? `<div class="silence">${esc(d.silence_note)}</div>` : ""}${libsHTML(d, true)}</article>`;
+    if (f) return `<article class="scene pending failed" id="s${s.n}"><span>${sceneName(s.n)}: ${esc(f)}</span><button class="retry" type="button" data-retry="${s.n}">أعد المحاولة</button></article>`;
+    return `<article class="scene pending" id="s${s.n}"><span class="spin"></span>${sceneName(s.n)} — ${esc(s.title)} · ${runCtl ? "قيد التحضير…" : "لم يكتمل"}</article>`;
+  }).join("");
+  box.querySelectorAll("[data-retry]").forEach(b => b.onclick = () => retryScene(Number(b.dataset.retry), b));
+}
+async function retryScene(n, btn) {
+  const raw = scriptText();
+  if (!raw || !sample) { notice("ارفع السكربت من جديد لإعادة محاولة هذا المشهد.", true); return; }
+  btn.disabled = true; btn.textContent = "جارٍ…";
+  const s = current.analysis.scenes.find(x => x.n === n);
+  try { await sceneBatch([s], sliceScenes(raw, current.analysis.scenes), raw, new AbortController().signal); }
+  catch (e) { current.failed[n] = errMsg(e); }
+  renderScenes(); saveHistory(current);
+}
+
+/* copy buttons (delegated) */
+document.addEventListener("click", e => {
+  const b = e.target.closest(".copy"); if (!b) return;
+  copyText(b.dataset.copy, b, "نُسخ: " + b.dataset.copy, true);
+});
+function copyText(t, btn, msg, icon) {
+  const ok = () => { toast(msg); if (icon) { btn.innerHTML = ICON.check; btn.classList.add("done"); setTimeout(() => { btn.innerHTML = ICON.copy; btn.classList.remove("done"); }, 1400); } };
+  const fallback = () => { const ta = document.createElement("textarea"); ta.value = t; ta.style.position = "fixed"; ta.style.opacity = "0"; document.body.appendChild(ta); ta.select(); let s = false; try { s = document.execCommand("copy"); } catch {} ta.remove(); s ? ok() : toast("تعذّر النسخ تلقائياً. حدّد النص وانسخه يدوياً."); };
+  try { navigator.clipboard.writeText(t).then(ok, fallback); } catch { fallback(); }
+}
+let toastT; function toast(m) { const t = $("#toast"); t.textContent = m; t.classList.add("on"); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("on"), 1800); }
+
+/* ================= plain-text output (user's format) ================= */
+function blockText(block, showSfx) {
+  return LIBS.map(l => {
+    const v = block[l.key] || { music: [], sfx: [] };
+    const mus = v.music.length ? v.music.map(x => x.q + (x.hint ? " (" + x.hint + ")" : "")).join(" / ") : "بدون موسيقى";
+    let s = `${l.name} :\n\n* الموسيقى المقترحة : ${mus}`;
+    if (showSfx) s += `\n* الساوند افكت المقترح: ${v.sfx.length ? v.sfx.map(x => x.q + (x.at ? " — " + x.at : "")).join(" / ") : "لا حاجة"}`;
+    return s;
+  }).join("\n\n");
+}
+function plainText(c) {
+  const a = c.analysis, T = TYPES[a.content_type];
+  let out = `${a.title}\nالنوع: ${T.label}${a.summary.genre ? " — " + a.summary.genre : ""}\nالإيقاع: ${a.summary.pacing}\nالمزاج العام: ${a.summary.mood}\nنقطة الذروة: ${a.summary.climax}\n\n`;
+  out += `${T.whole}\n${blockText(a.global, T.sfx)}\n`;
+  if (a.scenes.length) {
+    out += `\n\nالمشاهد:\n`;
+    a.scenes.forEach(s => { const d = c.scenes[s.n]; if (!d) return; out += `\n${sceneName(s.n)}: ${s.title}${d.silence_note ? "\n(" + d.silence_note + ")" : ""}\n${blockText(d, true)}\n`; });
+  }
+  return out.trim();
+}
+
+/* ================= export ================= */
+function loadScript(src) { return new Promise((res, rej) => { if (document.querySelector(`script[src="${src}"]`)) return res(); const s = document.createElement("script"); s.src = src; s.onload = res; s.onerror = rej; document.head.appendChild(s); }); }
+const fileBase = () => (current.analysis.title || "cue-sheet").replace(/[\\/:*?"<>|]+/g, " ").trim().slice(0, 80) || "cue-sheet";
+async function saveFile(filename, data) {
+  try { await downloads.save({ filename, data }); toast("تم حفظ الملف"); }
+  catch (e) { if (e?.code !== "declined") toast("تعذّر حفظ الملف."); }
+}
+function sheetBlock(block, showSfx) {
+  return LIBS.map(l => { const v = block[l.key] || { music: [], sfx: [] };
+    return `<div class="blk"><h3>${l.name}</h3><ul>
+      <li><b>الموسيقى المقترحة:</b> ${v.music.length ? v.music.map(x => `<span class="kw">${esc(x.q)}</span>${x.hint ? " — " + esc(x.hint) : ""}`).join("، ") : "بدون موسيقى"}</li>
+      ${showSfx ? `<li><b>الساوند افكت المقترح:</b> ${v.sfx.length ? v.sfx.map(x => `<span class="kw">${esc(x.q)}</span>${x.at ? " — " + esc(x.at) : ""}`).join("، ") : "لا حاجة"}</li>` : ""}
+    </ul></div>`; }).join("");
+}
+async function exportPdf(ev) {
+  const btn = ev.currentTarget; btn.disabled = true;
+  try {
+    await loadScript("https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js");
+    const c = current, a = c.analysis, T = TYPES[a.content_type], sh = $("#sheet");
+    sh.innerHTML = `<h1>${esc(a.title)}</h1><div class="s-sub">${esc(c.meta.fileName)} · كيو شيت</div>
+      <div class="sumt blk"><div><b>النوع:</b> ${esc(T.label)}${a.summary.genre ? " — " + esc(a.summary.genre) : ""}</div><div><b>الإيقاع:</b> ${esc(a.summary.pacing)}</div><div><b>المزاج العام:</b> ${esc(a.summary.mood)}</div><div><b>نقطة الذروة:</b> ${esc(a.summary.climax)}</div></div>
+      <h2>${T.whole}</h2>${sheetBlock(a.global, T.sfx)}
+      ${a.scenes.filter(s => c.scenes[s.n]).map(s => `<div class="blk"><h2>${sceneName(s.n)}: ${esc(s.title)}</h2>${c.scenes[s.n].silence_note ? `<p>${esc(c.scenes[s.n].silence_note)}</p>` : ""}${sheetBlock(c.scenes[s.n], true)}</div>`).join("")}`;
+    await document.fonts?.ready;
+    const blob = await window.html2pdf().set({ margin: [10, 10, 12, 10], image: { type: "jpeg", quality: .95 }, html2canvas: { scale: 2, backgroundColor: "#ffffff", windowWidth: 860 }, jsPDF: { unit: "mm", format: "a4" }, pagebreak: { mode: ["css", "legacy"], avoid: ".blk" } }).from(sh).outputPdf("blob");
+    sh.innerHTML = "";
+    await saveFile(fileBase() + ".pdf", blob);
+  } catch { toast("تعذّر إنشاء ملف PDF."); }
+  btn.disabled = false;
+}
+async function exportDocx(ev) {
+  const btn = ev.currentTarget; btn.disabled = true;
+  try {
+    await loadScript("https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js");
+    const x = s => esc(s);
+    const run = (t, o = {}) => `<w:r><w:rPr><w:rFonts w:ascii="${o.mono ? "Consolas" : "Arial"}" w:hAnsi="${o.mono ? "Consolas" : "Arial"}" w:cs="Arial"/>${o.b ? "<w:b/><w:bCs/>" : ""}${o.sz ? `<w:sz w:val="${o.sz}"/><w:szCs w:val="${o.sz}"/>` : ""}${o.color ? `<w:color w:val="${o.color}"/>` : ""}${o.ltr ? "" : "<w:rtl/>"}</w:rPr><w:t xml:space="preserve">${x(t)}</w:t></w:r>`;
+    const para = (runs, o = {}) => `<w:p><w:pPr><w:bidi/><w:jc w:val="right"/><w:spacing w:before="${o.before || 0}" w:after="${o.after ?? 80}"/>${o.ind ? '<w:ind w:right="360"/>' : ""}</w:pPr>${runs}</w:p>`;
+    const c = current, a = c.analysis, T = TYPES[a.content_type];
+    const blk = (b, showSfx) => LIBS.map(l => { const v = b[l.key] || { music: [], sfx: [] };
+      let s = para(run(l.name + " :", { b: true, ltr: true, sz: 24 }), { before: 160 });
+      s += para(run("• الموسيقى المقترحة : ", { b: true }) + (v.music.length ? v.music.map((m, i) => (i ? run(" / ") : "") + run(m.q, { mono: true, ltr: true }) + (m.hint ? run(" (" + m.hint + ")", { color: "555555" }) : "")).join("") : run("بدون موسيقى")), { ind: true });
+      if (showSfx) s += para(run("• الساوند افكت المقترح: ", { b: true }) + (v.sfx.length ? v.sfx.map((m, i) => (i ? run(" / ") : "") + run(m.q, { mono: true, ltr: true }) + (m.at ? run(" — " + m.at, { color: "555555" }) : "")).join("") : run("لا حاجة")), { ind: true });
+      return s; }).join("");
+    let body = para(run(a.title, { b: true, sz: 36 }), { after: 120 });
+    body += para(run("النوع: ", { b: true }) + run(T.label + (a.summary.genre ? " — " + a.summary.genre : "")));
+    body += para(run("الإيقاع: ", { b: true }) + run(a.summary.pacing));
+    body += para(run("المزاج العام: ", { b: true }) + run(a.summary.mood));
+    body += para(run("نقطة الذروة: ", { b: true }) + run(a.summary.climax));
+    body += para(run(T.whole, { b: true, sz: 30 }), { before: 320 }) + blk(a.global, T.sfx);
+    if (a.scenes.length) {
+      body += para(run("المشاهد", { b: true, sz: 30 }), { before: 360 });
+      a.scenes.forEach(s => { const d = c.scenes[s.n]; if (!d) return;
+        body += para(run(sceneName(s.n) + ": " + s.title, { b: true, sz: 26 }), { before: 280 });
+        if (d.silence_note) body += para(run(d.silence_note, { color: "555555" }));
+        body += blk(d, true); });
+    }
+    const zip = new JSZip();
+    zip.file("[Content_Types].xml", '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>');
+    zip.file("_rels/.rels", '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>');
+    zip.file("word/document.xml", `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>${body}<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1200" w:right="1200" w:bottom="1200" w:left="1200" w:header="600" w:footer="600" w:gutter="0"/><w:bidi/></w:sectPr></w:body></w:document>`);
+    const blob = await zip.generateAsync({ type: "blob" });
+    await saveFile(fileBase() + ".docx", blob);
+  } catch { toast("تعذّر إنشاء ملف Word."); }
+  btn.disabled = false;
+}
+
+/* ================= history ================= */
+const LS_KEY = "cs-history";
+function histMeta(c) { return { id: c.id, title: c.analysis.title, type: c.analysis.content_type, scenes: c.analysis.scenes.length, date: c.meta.date, fileName: c.meta.fileName }; }
+async function saveHistory(c) {
+  if (!c || c.isSample) return;
+  const rec = { ...histMeta(c), data: JSON.stringify({ meta: c.meta, analysis: c.analysis, scenes: c.scenes, failed: c.failed }) };
+  const i = history.findIndex(h => h.id === c.id);
+  if (i >= 0) history[i] = rec; else history.unshift(rec);
+  renderHistory();
+  if (db) { try { await db.collection("history").doc(c.id).set(rec); } catch { toast("تعذّر حفظ التحليل في السجل."); } }
+  else { try { localStorage.setItem(LS_KEY, JSON.stringify(history.slice(0, 25))); } catch {} }
+}
+function openHistoryItem(id) {
+  const h = history.find(x => x.id === id); if (!h) return;
+  try { const d = JSON.parse(h.data); current = { id: h.id, ...d, failed: d.failed || {} }; renderResults(); toggleDrawer(false); $("#results").scrollIntoView({ behavior: "smooth" }); }
+  catch { toast("تعذّر فتح هذا التحليل."); }
+}
+async function deleteHistory(id) {
+  history = history.filter(h => h.id !== id); renderHistory();
+  if (db) { try { await db.collection("history").doc(id).delete(); } catch {} }
+  else { try { localStorage.setItem(LS_KEY, JSON.stringify(history)); } catch {} }
+}
+function renderHistory() {
+  $("#histCount").textContent = history.length;
+  const list = $("#histList");
+  if (!history.length) { list.innerHTML = '<div class="empty">لا توجد تحليلات بعد. كل سكربت تحلله يُحفظ هنا تلقائياً.</div>'; return; }
+  list.innerHTML = history.map(h => `<div class="h-item" role="button" tabindex="0" data-open="${h.id}">
+      <b>${esc(h.title)}</b>
+      <span class="m">${esc(TYPES[h.type]?.label || "")}${h.scenes ? " · " + h.scenes + " مشهد" : ""} · ${new Date(h.date).toLocaleDateString("ar", { day: "numeric", month: "short" })}</span>
+      <button class="del" type="button" data-del="${h.id}" aria-label="حذف">${ICON.trash}</button>
+    </div>`).join("");
+}
+$("#histList").addEventListener("click", e => {
+  const del = e.target.closest("[data-del]");
+  if (del) {
+    e.stopPropagation();
+    const item = del.closest(".h-item");
+    if (item.querySelector(".h-confirm")) return;
+    item.insertAdjacentHTML("beforeend", `<div class="h-confirm">حذف هذا التحليل نهائياً؟ <button class="yes" type="button">حذف</button><button class="no" type="button">إلغاء</button></div>`);
+    item.querySelector(".yes").onclick = ev => { ev.stopPropagation(); deleteHistory(del.dataset.del); };
+    item.querySelector(".no").onclick = ev => { ev.stopPropagation(); item.querySelector(".h-confirm").remove(); };
+    return;
+  }
+  if (e.target.closest(".h-confirm")) return;
+  const it = e.target.closest("[data-open]"); if (it) openHistoryItem(it.dataset.open);
+});
+$("#histList").addEventListener("keydown", e => { if (e.key === "Enter" && e.target.dataset.open) openHistoryItem(e.target.dataset.open); });
+function toggleDrawer(on) { $("#drawer").classList.toggle("on", on); $("#scrim").classList.toggle("on", on); }
+$("#historyBtn").onclick = () => toggleDrawer(true);
+$("#closeDrawer").onclick = () => toggleDrawer(false);
+$("#scrim").onclick = () => toggleDrawer(false);
+addEventListener("keydown", e => { if (e.key === "Escape") toggleDrawer(false); });
+
+/* ================= sample result (shown until a real analysis) ================= */
+const SAMPLE = {
+  id: "sample", isSample: true,
+  meta: { fileName: "مثال — المحطة الأخيرة.docx", words: 1240, date: Date.now(), forced: "auto" },
+  analysis: {
+    content_type: "film", title: "المحطة الأخيرة",
+    summary: { genre: "دراما عائلية إنسانية", pacing: "هادئ ← ذكريات دافئة ← لقاء متصاعد عاطفياً", mood: "حنين وانتظار يتحول إلى أمل", climax: "المشهد الثالث: وصول القطار ونزول الابنة" },
+    global: {
+      audionetwork: { music: [{ q: "nostalgic piano strings", hint: "ثيم رئيسي حنون، 60–70 BPM" }, { q: "reflective oud and cello", hint: "بديل بلون شرقي خفيف" }], sfx: [{ q: "train station ambience night", hint: "الجو العام للمحطة", at: "طوال مشاهد المحطة" }, { q: "distant train horn", hint: "علامة الانتظار", at: "يتكرر مع كل نظرة للسكة" }] },
+      lensdistortions: { music: [{ q: "emotional ambient piano", hint: "هادئ وسينمائي" }, { q: "hopeful cinematic build", hint: "للنهاية المتصاعدة" }], sfx: [{ q: "Anticipation – Atmospheres", hint: "طبقة انتظار مفعمة بالأمل", at: "تحت لحظات الانتظار الصامتة" }, { q: "Anticipation – Risers", hint: "تصاعد نحو اللقاء", at: "قبل وصول القطار" }] },
+      envato: { music: [{ q: "sad emotional piano", hint: "بسيط بدون إيقاع" }, { q: "cinematic hopeful strings", hint: "للقاء الأخير" }], sfx: [{ q: "rain on platform roof", hint: "مطر ليلي مستمر", at: "مشاهد المحطة ليلاً" }, { q: "old clock ticking", hint: "مرور الوقت", at: "لقطات ساعة المحطة" }, { q: "train arriving station brakes", hint: "دخول القطار", at: "لحظة وصول القطار" }] },
+    },
+    scenes: [{ n: 1, title: "رجل عجوز ينتظر في المحطة", anchor: "" }, { n: 2, title: "ذكرى عرس في القرية", anchor: "" }, { n: 3, title: "وصول القطار واللقاء", anchor: "" }],
+  },
+  scenes: {
+    1: { mood: "وحدة وانتظار", silence_note: "", audionetwork: { music: [{ q: "lonely solo piano", hint: "نوتات متباعدة، بطيء جداً" }], sfx: [{ q: "rain on platform", hint: "مطر متواصل", at: "من أول لقطة" }, { q: "pocket watch opening", hint: "يفتح ساعة جيبه", at: "عندما يُخرج ساعته" }] },
+      lensdistortions: { music: [{ q: "melancholic ambient drone", hint: "خلفية ممتدة" }], sfx: [{ q: "Archetype – Atmospheres", hint: "ثقل الانتظار", at: "تحت اللقطة الواسعة للرصيف" }] },
+      envato: { music: [{ q: "sad minimal piano", hint: "بدون وتريات" }], sfx: [{ q: "wooden bench creak", hint: "يجلس على المقعد", at: "حين يجلس العجوز" }, { q: "flickering fluorescent light buzz", hint: "إضاءة المحطة", at: "لقطة المصباح القديم" }, { q: "distant train horn", hint: "صوت بعيد", at: "حين يرفع رأسه نحو السكة" }] } },
+    2: { mood: "دفء وفرح قديم", silence_note: "", audionetwork: { music: [{ q: "warm nostalgic folk strings", hint: "ذكرى دافئة، 80–90 BPM" }], sfx: [{ q: "village wedding crowd", hint: "فرح بعيد", at: "دخول الذكرى" }, { q: "ululation celebration", hint: "زغاريد", at: "حين تظهر العروس" }] },
+      lensdistortions: { music: [{ q: "uplifting acoustic warm", hint: "بهجة هادئة" }], sfx: [{ q: "Anticipation – Whooshes", hint: "انتقال للذكرى", at: "القطع من المحطة إلى القرية" }] },
+      envato: { music: [{ q: "arabic folk celebration", hint: "طبل ومزمار خفيف" }], sfx: [{ q: "darbuka wedding rhythm", hint: "إيقاع العرس", at: "رقص الدبكة" }, { q: "children laughing outdoor", hint: "أطفال يركضون", at: "الأطفال حول العروسين" }] } },
+    3: { mood: "ترقب ثم انفراج", silence_note: "", audionetwork: { music: [{ q: "emotional orchestral swell", hint: "يتصاعد حتى العناق" }], sfx: [{ q: "steam train arrival", hint: "وصول القطار", at: "القطار يدخل المحطة" }, { q: "train doors opening", hint: "انفتاح الباب", at: "قبل نزول الابنة" }] },
+      lensdistortions: { music: [{ q: "hopeful cinematic piano build", hint: "يبلغ الذروة عند اللقاء" }], sfx: [{ q: "Anticipation – Risers", hint: "تصاعد التوتر", at: "من صفارة القطار حتى نزولها" }, { q: "Anticipation – Moments", hint: "لحظة اللقاء", at: "لحظة التقاء النظرات" }] },
+      envato: { music: [{ q: "emotional reunion strings", hint: "وتريات دافئة" }], sfx: [{ q: "train brakes squeal", hint: "توقف القطار", at: "توقف القطار التام" }, { q: "suitcase drop on concrete", hint: "تسقط الحقيبة", at: "حين تركض نحو أبيها" }, { q: "rain fading out", hint: "المطر يهدأ", at: "لقطة العناق الأخيرة" }] } },
+  },
+  failed: {},
+};
+
+/* ================= boot ================= */
+renderTypes(); paintThemeIcon(); renderHistory();
+current = SAMPLE; renderResults();
+requestAnimationFrame(drawWave);
+
+(async () => {
+  const c = window.claude;
+  if (!c?.use) { notice("افتح هذه الصفحة داخل claude.ai لتفعيل التحليل.", true); loadLocalHistory(); return; }
+  const [s, d, dl] = await Promise.all([c.use("sample"), c.use("db"), c.use("downloads")].map(p => p.catch(() => null)));
+  sample = s; db = d; downloads = dl;
+  if (!sample) notice("التحليل غير متاح في هذا العرض. افتح الصفحة داخل claude.ai.", true);
+  if (current) renderResults();
+  if (db) {
+    db.collection("history").orderBy("date", "desc").limit(40).onSnapshot(snap => {
+      history = snap.docs.map(x => x.data()).filter(Boolean); renderHistory();
+    }, () => loadLocalHistory());
+  } else loadLocalHistory();
+})();
+function loadLocalHistory() { try { history = JSON.parse(localStorage.getItem(LS_KEY) || "[]"); } catch { history = []; } renderHistory(); }
+})();
+</script>
