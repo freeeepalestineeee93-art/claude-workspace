@@ -348,6 +348,8 @@ const ICON = {
   moon: '<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/>',
 };
 
+const DESCRIBE_PROMPT = `Describe the attached image as a precise visual reference for AI image and video generation. Write in English, one dense paragraph of 120–220 words, no preamble. Cover, as relevant: who or what it shows; for each character: apparent age, face shape, eyes, eyebrows, nose, mouth, skin tone, hair (color, length, style), body build and proportions, outfit with exact colors and details, accessories; if it is a character sheet, note the consistent traits across the views; for places: layout, architecture, vegetation, time of day, weather; for objects: shape, material, color, condition. Then the art style: medium (photo, 2D, 3D, anime…), line work, rendering, texture, color palette with named colors, lighting direction and mood. Describe only what is visible; do not invent.`;
+
 /* ====================== state ====================== */
 const S = {
   sample: null, db: null, downloads: null, uid: null, limits: null, ready: false, storeNote: "",
@@ -557,9 +559,9 @@ function ctxBlock(p, out, sceneN) {
 }
 const modelById = id => S.settings.models.find(m => m.id === id);
 function imagesBlock(refs, out, linkFrame, seen = true) {
-  const blind = seen ? "" : "\nNOTE: the images could not be delivered to you. You know them only by their labels above; rely on the labels, refer to each image by its number, and tell the tool what to take from it.";
+  const blind = seen ? "" : "\nNOTE: the images could not be delivered to you. You know them only by their labels and detailed descriptions above; rely on them exactly (identity, costume, colors, style), refer to each image by its number, and tell the tool what to take from it.";
   if (!refs.length) return "ATTACHED IMAGES: none. This is text-only generation: describe identities, places and style fully in words, and keep them identical across units.";
-  const lines = refs.map((r, i) => `${out === "video" ? "@Image" + (i + 1) : "Image " + (i + 1)} — ${r.label || "no label"}`).join("\n");
+  const lines = refs.map((r, i) => `${out === "video" ? "@Image" + (i + 1) : "Image " + (i + 1)} — ${r.label || "no label"}${str(r.desc) ? "\n   Detailed description: " + str(r.desc) : ""}`).join("\n");
   if (out === "video") return `ATTACHED IMAGES (you can see them; the user uploads them to the video tool in exactly this order):\n${lines}\nThey are keyframes and references for style, colors, place and identity, NOT compositions to animate as-is: you decide angles, shot sizes, camera moves, and what happens before and after each keyframe.${linkFrame ? "\n@Image1 is the LINKING FRAME (last frame of the previous clip or shot): the first shot opens exactly on it, then moves into new action." : ""}${blind}`;
   return `ATTACHED REFERENCE IMAGES (you can see them; the user attaches them to the image tool in this order):\n${lines}\nBuild the prompt on them: state explicitly what to take from each image (for example "the woman from Image 1: same face, hair and dress"). References lock identity, costume, place and style; the composition is yours.${blind}`;
 }
@@ -915,6 +917,21 @@ async function suggestStyles() {
   finally { busyEnd(); render(); }
 }
 
+async function imageTest() {
+  const lines = [];
+  if (!S.sample) { S.imgTest = { ok: false, text: "Claude غير متاح بهالعرض. افتح الأداة من claude.ai." }; render(); return; }
+  let lim = null; try { lim = await S.sample.limits(); } catch (e) { lines.push("سؤال الحدود فشل: " + (e?.code || "?")); }
+  if (lim) lines.push(lim.images ? `claude.ai بيقول: الصور مدعومة (حتى ${lim.images.maxCount} صور بالطلب، الأنواع: ${lim.images.mediaTypes.join("، ")})` : "claude.ai بيقول: هالعرض ما بيدعم إرسال الصور.");
+  const c = document.createElement("canvas"); c.width = c.height = 64; const g = c.getContext("2d"); g.fillStyle = "#d22"; g.fillRect(0, 0, 64, 64);
+  const blob = await new Promise(r => c.toBlob(r, "image/png"));
+  const signal = busyStart("يجرّب يبعت صورة صغيرة…");
+  let ok = false;
+  try { const r = await S.sample.json('What single color fills this image? Reply with only {"color":"<english color name>"}', { images: [blob], signal, modelTier: "quick", cache: false }); ok = true; lines.push("التجربة نجحت: Claude شاف الصورة وقال إن لونها " + str(r?.color) + ". الصور شغّالة."); }
+  catch (e) { lines.push("التجربة فشلت: " + (e?.code || "?") + (e?.code === "images_unavailable" ? " (هالعرض ما بيدعم الصور)" : e?.code === "image_rejected" ? " (الصورة انرفضت)" : "")); }
+  finally { busyEnd(); }
+  S.imgTest = { ok, text: lines.join("\n") }; render();
+}
+
 /* ====================== export (Word) ====================== */
 async function exportWord() {
   const p = S.cur; if (!p) return;
@@ -1066,7 +1083,9 @@ function thumbsHTML(selectable) {
     return `<div class="thumb${idx >= 0 ? " sel" : ""}">
       <button type="button" class="pic" ${selectable ? `data-act="toggleref" data-id="${im.id}" aria-pressed="${idx >= 0}" aria-label="اختيار الصورة ${esc(im.label)}"` : "tabindex=\"-1\""}><img src="${im.data}" alt="${esc(im.label)}">${idx >= 0 ? `<span class="num">${idx + 1}</span>` : ""}</button>
       ${selectable ? "" : `<button type="button" class="del" data-act="delimg" data-id="${im.id}" aria-label="حذف الصورة">${ICON.x}</button>`}
-      <input type="text" data-imglabel="${im.id}" value="${esc(im.label)}" dir="auto" aria-label="وصف الصورة" placeholder="شو هي الصورة؟">
+      <input type="text" data-imglabel="${im.id}" value="${esc(im.label)}" dir="auto" aria-label="اسم الصورة" placeholder="شو هي الصورة؟">
+      ${selectable ? `<span class="small ${str(im.desc) ? "" : "muted"}" style="color:${str(im.desc) ? "var(--ok)" : ""}">${str(im.desc) ? "✓ في وصف تفصيلي" : "بدون وصف تفصيلي"}</span>` : `<textarea data-imgdesc="${im.id}" dir="ltr" rows="3" style="min-height:70px;font-size:12px;padding:6px 8px" placeholder="وصف تفصيلي (الصقه هون)" aria-label="وصف تفصيلي للصورة">${esc(im.desc || "")}</textarea>
+      <button class="btn sm" type="button" data-act="copydescprompt">انسخ طلب الوصف</button>`}
     </div>`;
   }).join("");
   return `<div class="thumbs">${cells}<label class="upl" data-drop="${selectable ? "wb" : "lib"}" data-act="upload" data-target="${selectable ? "wb" : "lib"}">${ICON.up}<span>ارفع صور<br><span class="small">أو اسحبها لهون</span></span></label></div>`;
@@ -1149,7 +1168,7 @@ function viewResult(it) {
   const T = S.settings.targets[video ? "video" : "image"];
   return `<div class="result" id="result">
     <div class="rhead"><h2>${esc(it.title)}</h2><span class="badge acc">${video ? "فيديو" : "صور"}</span><span class="badge">${esc(m?.name || "")}</span>${video ? `<span class="badge mono">${it.input.duration} ث</span>` : ""}<span class="badge mono">${esc(it.input.aspect)}</span></div>
-    ${it.imgFallback ? `<div class="notice warn">المخرج ما قدر يشوف الصور (claude.ai رفض إرسالها)، فاشتغل على الوصف المكتوب تحت كل صورة. كل ما كان الوصف أدق، كانت النتيجة أدق.</div>` : ""}
+    ${it.imgFallback ? `<div class="notice warn">المخرج ما قدر يشوف الصور (${it.imgFallback === "image_rejected" ? "claude.ai رفض وحدة من الصور" : "claude.ai قال إن هالعرض ما بيدعم إرسال الصور"} · <span class="mono">${esc(it.imgFallback)}</span>)، فاشتغل على اسم ووصف كل صورة. لنتيجة دقيقة: روح على «الهوية»، واكتب وصف تفصيلي لكل صورة بزر «انسخ طلب الوصف».</div>` : ""}
     ${pl.question_ar ? `<div class="notice warn q-banner"><b>سؤال من المخرج:</b> ${esc(pl.question_ar)} <span class="small">جاوبه بملاحظة على الإخراج تحت.</span></div>` : ""}
     <div class="panel summary"><p><b>الفكرة:</b> ${esc(pl.approach_ar)}</p><p>${esc(pl.summary_ar)}</p></div>
     ${it.units.map(u => unitHTML(it, u, T)).join("")}
@@ -1227,6 +1246,9 @@ function viewSettings() {
         <p class="muted small" style="margin:0">كل برومبت بيطلع بنسختين: وحدة أطول من الحد ووحدة أقصر منه.</p></div>
       <div class="panel card"><h3>عمق تفكير المخرج</h3>${seg("tier", st.tier, [["complex", "أعلى جودة"], ["default", "متوازن وأسرع"]])}<p class="muted small" style="margin:0">«أعلى جودة» بياخد وقت أطول وبيصرف من حدود اشتراكك أكتر.</p></div>
     </div>
+    <div class="panel card"><h3>فحص إرسال الصور لـ Claude</h3><p class="muted small" style="margin:0">بيسأل claude.ai إذا بيقدر يبعت صور من هالصفحة، وبيجرّب يبعت صورة صغيرة. بيصرف شي بسيط جداً من استخدامك.</p>
+      <div class="row"><button class="btn" type="button" data-act="imgtest" ${isBusy() ? "disabled" : ""}>افحص</button></div>
+      ${S.imgTest ? `<div class="notice ${S.imgTest.ok ? "" : "warn"}" style="white-space:pre-line">${esc(S.imgTest.text)}</div>` : ""}</div>
     <div><button class="btn" type="button" data-act="resetmodels">رجّع الأدوات للإعدادات الأصلية</button></div>
   </div>`;
 }
@@ -1293,6 +1315,8 @@ document.addEventListener("click", async ev => {
       break;
     }
     case "revise": reviseUnit(+d.n); break;
+    case "copydescprompt": try { await navigator.clipboard.writeText(DESCRIBE_PROMPT); toast("انسخ الطلب. الصقه بمحادثة Claude عادية مع الصورة، ورجّع الجواب لهون"); } catch { toast("ما قدرت أنسخ تلقائياً"); } break;
+    case "imgtest": imageTest(); break;
     case "retry": retryUnit(+d.n); break;
     case "custom": customLimit(+d.n); break;
     case "isugg": { const it = S.item; it.sugg[d.i] = it.sugg[d.i] === d.v ? undefined : d.v; render(); break; }
@@ -1326,6 +1350,10 @@ document.addEventListener("input", ev => {
   if (t.id === "b-audience") { p.bible.audience = t.value; persistProject(); return; }
   if (t.id === "b-extra") { p.bible.extra = t.value; persistProject(); return; }
   if (t.dataset.char) { const c = p.bible.characters.find(x => x.id === t.dataset.char); if (c) { c[t.dataset.k] = t.value; persistProject(); } return; }
+  if (t.dataset.imgdesc) {
+    const im = S.images.find(i => i.id === t.dataset.imgdesc); if (!im) return; im.desc = t.value;
+    saveSoon("img" + im.id, () => save(P.imgs(p.id) + "/" + im.id, im).catch(() => {})); return;
+  }
   if (t.dataset.imglabel) {
     const im = S.images.find(i => i.id === t.dataset.imglabel); if (!im) return; im.label = t.value;
     saveSoon("img" + im.id, () => save(P.imgs(p.id) + "/" + im.id, im).catch(() => {})); return;
