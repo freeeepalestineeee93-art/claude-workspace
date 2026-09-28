@@ -60,6 +60,8 @@ a.pill:hover{border-color:var(--yellow)}
 .clear{background:none;border:0;color:var(--muted);cursor:pointer;padding:4px;font-size:18px;line-height:1}
 .chips{display:flex;gap:8px;overflow-x:auto;padding-block:10px;scrollbar-width:none}
 .chips::-webkit-scrollbar{display:none}
+.chips.more{-webkit-mask-image:linear-gradient(to left,#000 82%,transparent);mask-image:linear-gradient(to left,#000 82%,transparent)}
+@media (min-width:700px){.chips{flex-wrap:wrap;overflow:visible}.chips.more{-webkit-mask-image:none;mask-image:none}}
 .chip{flex:none;display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);cursor:pointer;font-size:14px;font-weight:500;transition:background .15s,color .15s,border-color .15s}
 .chip small{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
 .chip[aria-current="true"]{background:var(--yellow);border-color:var(--yellow);color:var(--on-yellow)}
@@ -225,6 +227,9 @@ function hl(name, q){
 }
 
 chips.innerHTML = CATS.map(c => `<button class="chip" type="button" data-slug="${c.slug}">${esc(c.name)} <small>${c.items.length}</small></button>`).join("");
+function fade(){ chips.classList.toggle("more", chips.scrollWidth - chips.clientWidth - Math.abs(chips.scrollLeft) > 4); }
+chips.addEventListener("scroll", fade, {passive:true});
+addEventListener("resize", fade);
 chips.addEventListener("click", e => {
   const b = e.target.closest(".chip"); if (!b) return;
   const s = document.getElementById(b.dataset.slug);
@@ -297,6 +302,7 @@ function status(){
 }
 status();
 render("");
+fade();
 </script>
 </body>
 </html>
