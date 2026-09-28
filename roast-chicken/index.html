@@ -1,0 +1,581 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="icon.png">
+<link rel="apple-touch-icon" href="icon.png">
+<title>Roast chicken</title>
+<meta name="description" content="Roast chicken menu · منيو روست تشكن">
+<meta name="theme-color" content="#141717">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@600;700;800&family=Kaushan+Script&family=Readex+Pro:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  color-scheme: dark;
+  --bg:#141615;
+  --bg-2:#191d1d;
+  --card:#1e2323;
+  --card-2:#262c2c;
+  --line:#2f3636;
+  --green:#7ac23a;
+  --green-hi:#96dc52;
+  --green-ink:#10200a;
+  --red:#e2261c;
+  --red-hi:#ff4436;
+  --white:#ffffff;
+  --text:#f3f6ef;
+  --muted:#9fa8a0;
+  --wa:#25d366;
+  --display:"Baloo Bhaijaan 2","Readex Pro",system-ui,sans-serif;
+  --script:"Kaushan Script","Brush Script MT",cursive;
+  --body:"Readex Pro","Segoe UI",Tahoma,system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before{animation:none!important;transition:none!important}}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--body);font-size:15px;line-height:1.6;-webkit-tap-highlight-color:transparent;overflow-x:hidden}
+img{max-width:100%}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+.wrap{max-width:1100px;margin-inline:auto;padding-inline:16px}
+
+/* ---------- Hero ---------- */
+.hero{position:relative;padding-block:14px 0;overflow:hidden;
+  background:radial-gradient(60% 55% at 50% 38%,rgba(122,194,58,.22),transparent 70%),
+             radial-gradient(40% 30% at 80% 10%,rgba(226,38,28,.12),transparent 70%),var(--bg)}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;position:relative;z-index:2}
+.hi{font-family:var(--display);font-weight:700;color:var(--muted);font-size:14px;letter-spacing:.2px}
+.lang{display:inline-flex;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:3px;gap:2px}
+.lang button{border:0;background:none;color:var(--muted);padding:6px 14px;border-radius:999px;font-size:13px;font-weight:600}
+.lang button[aria-pressed="true"]{background:var(--green);color:var(--green-ink)}
+.badge{position:relative;width:min(320px,82vw);aspect-ratio:1;margin:14px auto 0}
+.ring{position:absolute;inset:0;width:100%;height:100%;animation:spin 38s linear infinite}
+.ring text{font-family:var(--display);font-weight:800;font-size:14px;fill:var(--green)}
+.ring .dot{fill:var(--red)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.logo{position:absolute;inset:15%;width:70%;height:70%;border-radius:50%;object-fit:cover;box-shadow:0 0 0 6px var(--bg),0 18px 50px rgba(0,0,0,.55)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+h1{margin:0;font-weight:400}
+.w-roast{display:block;font-family:var(--script);color:var(--green);font-size:clamp(46px,12vw,72px);line-height:1.05;transform:rotate(-4deg)}
+.w-chicken{display:block;font-family:var(--display);font-weight:800;color:var(--white);font-size:clamp(24px,6vw,34px);letter-spacing:1px;margin-top:-4px}
+.tag{margin:16px auto 0;padding-inline:16px;font-size:15px;text-align:center;color:var(--muted);font-size:14px;max-width:34ch;text-wrap:balance}
+.meta{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:14px}
+.pill{display:inline-flex;align-items:center;gap:7px;padding:7px 14px;border-radius:999px;background:var(--card);border:1px solid var(--line);color:var(--text);font-size:13px;font-weight:500;text-decoration:none;white-space:nowrap}
+.pill svg{width:15px;height:15px;flex:none}
+.pdot{width:8px;height:8px;border-radius:50%;background:var(--muted)}
+.is-open .pdot{background:var(--green);box-shadow:0 0 0 3px rgba(122,194,58,.25)}
+.is-closed .pdot{background:var(--red)}
+
+/* ribbon */
+.ribbon{position:relative;margin-top:30px;height:78px}
+.band{position:absolute;inset-inline:-20px;top:22px;height:42px;display:flex;align-items:center;overflow:hidden;white-space:nowrap}
+.band.g{background:var(--green);color:var(--green-ink);transform:rotate(-2.6deg);top:26px;z-index:2;box-shadow:0 8px 24px rgba(0,0,0,.35)}
+.band.r{background:var(--red);color:#fff;transform:rotate(3.2deg);top:10px}
+.track{display:inline-flex;gap:26px;padding-inline:13px;font-family:var(--display);font-weight:800;font-size:19px;animation:slide 26s linear infinite}
+.band.r .track{animation-direction:reverse;animation-duration:32s;font-size:16px}
+.track span{display:inline-flex;align-items:center;gap:26px}
+.track i{width:9px;height:9px;border-radius:50%;background:var(--red);display:inline-block}
+.band.r .track i{background:#fff}
+@keyframes slide{to{transform:translateX(-50%)}}
+[dir="rtl"] .track{animation-name:slide-rtl}
+@keyframes slide-rtl{to{transform:translateX(50%)}}
+
+/* ---------- Sticky nav ---------- */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:rgba(20,23,23,.94);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line);margin-top:18px}
+.search{display:flex;align-items:center;gap:8px;margin-top:10px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding-inline:12px}
+.search:focus-within{border-color:var(--green)}
+.search svg{width:18px;height:18px;color:var(--muted);flex:none}
+.search input{flex:1;min-width:0;background:none;border:0;outline:0;padding-block:10px;font-size:15px}
+.search input::placeholder{color:var(--muted)}
+.clear{background:none;border:0;color:var(--muted);padding:4px;font-size:20px;line-height:1}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding-block:10px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tabs.more{-webkit-mask-image:linear-gradient(to var(--fade),#000 84%,transparent);mask-image:linear-gradient(to var(--fade),#000 84%,transparent)}
+.tab{flex:none;display:inline-flex;align-items:center;gap:7px;padding:7px 14px;border-radius:999px;border:1px solid var(--line);background:var(--card);font-size:14px;font-weight:600;transition:background .15s,color .15s}
+.tab svg{width:17px;height:17px;color:var(--green)}
+.tab[aria-current="true"]{background:var(--green);border-color:var(--green);color:var(--green-ink)}
+.tab[aria-current="true"] svg{color:var(--green-ink)}
+@media (min-width:820px){.tabs{flex-wrap:wrap;justify-content:center}.tabs.more{-webkit-mask-image:none;mask-image:none}}
+
+/* ---------- Boards ---------- */
+main{padding-block:10px 130px}
+.boards{columns:1;column-gap:18px}
+@media (min-width:900px){.boards{columns:2}}
+.board{break-inside:avoid;margin-top:18px;background:var(--card);border:1px solid var(--line);border-radius:22px;overflow:hidden;position:relative}
+.bhead{display:flex;align-items:center;gap:12px;padding:16px 18px 12px;border-bottom:1px dashed var(--line);background:linear-gradient(180deg,rgba(122,194,58,.08),transparent)}
+.ico{width:48px;height:48px;border-radius:50%;background:var(--green);color:var(--green-ink);display:grid;place-items:center;flex:none;box-shadow:inset 0 0 0 3px var(--bg),0 0 0 2px var(--green)}
+.ico svg{width:26px;height:26px}
+.btitle{flex:1;min-width:0}
+h2{margin:0;font-family:var(--display);font-weight:800;font-size:25px;line-height:1.15;color:var(--white)}
+h2::after{content:"";display:block;width:34px;height:4px;border-radius:4px;background:var(--red);margin-top:5px}
+.balt{font-size:12px;color:var(--muted);font-weight:500}
+.cnt{font-size:12px;color:var(--green);font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.rows{list-style:none;margin:0;padding:4px 18px 8px}
+.row{display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px;padding-block:13px;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.thumb{width:62px;height:62px;border-radius:14px;object-fit:cover;flex:none;border:0;padding:0;background:var(--card-2);overflow:hidden}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.nm{flex:1 1 150px;min-width:0}
+.nm b{display:block;font-weight:600;font-size:16px;line-height:1.4}
+.nm small{display:block;color:var(--muted);font-size:12.5px;line-height:1.35}
+.opts{display:flex;flex-wrap:wrap;gap:6px;margin-inline-start:auto}
+.opt{position:relative;display:inline-flex;align-items:center;gap:8px;border:1.5px solid var(--green);background:transparent;color:var(--text);border-radius:12px;padding:5px 6px 5px 11px;min-height:40px;transition:background .15s,transform .1s}
+[dir="rtl"] .opt{padding:5px 11px 5px 6px}
+.opt:active{transform:scale(.95)}
+.opt .ol{font-size:11.5px;color:var(--muted);font-weight:600;line-height:1}
+.opt .op{font-weight:700;font-size:15px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.opt .op small{font-size:11px;font-weight:600;margin-inline-start:2px}
+.opt .plus{width:26px;height:26px;border-radius:8px;background:var(--green);color:var(--green-ink);display:grid;place-items:center;font-weight:800;font-size:17px;line-height:1}
+.opt .lp{display:flex;flex-direction:column;align-items:flex-start;gap:3px}
+.opt.on{background:var(--green);color:var(--green-ink)}
+.opt.on .ol{color:var(--green-ink);opacity:.75}
+.opt.on .plus{background:var(--green-ink);color:var(--green)}
+.qty{position:absolute;top:-8px;inset-inline-end:-8px;min-width:22px;height:22px;border-radius:999px;background:var(--red);color:#fff;font-size:12px;font-weight:700;display:grid;place-items:center;padding-inline:6px;box-shadow:0 0 0 2px var(--card)}
+.empty{padding:56px 0;text-align:center;color:var(--muted)}
+mark{background:rgba(122,194,58,.22);color:var(--green-hi);border-radius:3px}
+
+/* ---------- Cart ---------- */
+.cartbar{position:fixed;inset-inline:0;bottom:0;z-index:30;padding:10px 16px calc(12px + env(safe-area-inset-bottom,0px));pointer-events:none}
+.cartbar button{pointer-events:auto;width:100%;max-width:560px;margin-inline:auto;display:flex;align-items:center;gap:12px;border:0;border-radius:18px;background:var(--green);color:var(--green-ink);padding:12px 16px;font-weight:800;font-size:16px;box-shadow:0 12px 34px rgba(0,0,0,.55);animation:rise .25s ease-out}
+@keyframes rise{from{transform:translateY(20px);opacity:.4}to{transform:none;opacity:1}}
+.cartbar .n{background:var(--red);color:#fff;border-radius:999px;min-width:28px;height:28px;display:grid;place-items:center;font-size:14px;padding-inline:8px}
+.cartbar .l{flex:1;text-align:start}
+.cartbar .s{font-variant-numeric:tabular-nums}
+.toast{position:fixed;left:50%;bottom:92px;transform:translate(-50%,10px);z-index:35;background:var(--white);color:var(--green-ink);font-weight:700;border-radius:999px;padding:8px 16px;font-size:14px;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+.scrim{position:fixed;inset:0;z-index:40;background:rgba(0,0,0,.66);display:flex;align-items:flex-end;justify-content:center;opacity:0;transition:opacity .2s}
+.scrim.show{opacity:1}
+.sheet{position:relative;width:100%;max-width:560px;background:var(--bg-2);border:1px solid var(--line);border-bottom:0;border-radius:26px 26px 0 0;max-height:92vh;overflow:auto;transform:translateY(28px);transition:transform .22s;padding-bottom:calc(18px + env(safe-area-inset-bottom,0px))}
+.scrim.show .sheet{transform:none}
+@media (min-width:640px){.scrim{align-items:center}.sheet{border-radius:26px;border-bottom:1px solid var(--line);padding-bottom:18px}}
+.x{width:38px;height:38px;border-radius:50%;border:0;background:var(--card-2);color:var(--text);font-size:20px;line-height:1;flex:none}
+.big{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;background:var(--card-2)}
+.x.float{position:absolute;top:12px;inset-inline-end:12px;background:rgba(0,0,0,.6);color:#fff}
+.pad{padding:16px 20px 0;display:grid;gap:12px}
+.sheet h3{margin:0;font-family:var(--display);font-weight:800;font-size:26px;line-height:1.2}
+.shead{padding:18px 20px 6px;display:flex;align-items:center;gap:10px}
+.shead h3{flex:1}
+.link{background:none;border:0;color:var(--muted);font-size:13px;text-decoration:underline;padding:4px}
+.lines{list-style:none;margin:0;padding:0 20px}
+.line{display:flex;align-items:center;gap:12px;padding-block:12px;border-bottom:1px solid var(--line)}
+.line .ln{flex:1;min-width:0;font-weight:600;font-size:14.5px;line-height:1.4}
+.line .ln small{display:block;color:var(--muted);font-weight:500;font-size:12.5px;font-variant-numeric:tabular-nums}
+.step{display:inline-flex;align-items:center;background:var(--card-2);border:1px solid var(--line);border-radius:999px;height:36px;flex:none}
+.step button{width:34px;height:34px;border:0;background:none;color:var(--green);font-size:20px;font-weight:800;line-height:1}
+.step b{min-width:20px;text-align:center;font-variant-numeric:tabular-nums}
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:4px;gap:4px}
+.seg button{border:0;background:none;border-radius:10px;padding:9px 6px;font-weight:700;font-size:14px;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--green);color:var(--green-ink)}
+.field{display:grid;gap:6px}
+.field label{font-size:13px;color:var(--muted);font-weight:600}
+.field input,.field textarea{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px 12px;font-size:15px;outline:0;width:100%;resize:vertical}
+.field input:focus,.field textarea:focus{border-color:var(--green)}
+.field.bad input,.field.bad textarea{border-color:var(--red)}
+.total{display:flex;justify-content:space-between;align-items:baseline;font-weight:800;font-size:18px}
+.total span:last-child{color:var(--green);font-size:24px;font-variant-numeric:tabular-nums}
+.btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;border:0;border-radius:14px;padding:14px 16px;font-weight:800;font-size:16px}
+.btn-wa{background:var(--wa);color:#fff}
+.btn-wa svg{width:22px;height:22px}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.note{font-size:12.5px;color:var(--muted);text-align:center;margin:0}
+.warn{background:rgba(226,38,28,.14);color:#ff8f86;border-radius:12px;padding:10px 12px;font-size:13px}
+
+/* ---------- Footer ---------- */
+footer{position:relative;background:var(--bg-2);border-top:1px solid var(--line);padding-block:34px 140px;color:var(--muted);font-size:14px;overflow:hidden}
+footer::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;background:linear-gradient(90deg,var(--green) 0 70%,var(--red) 70% 85%,var(--white) 85%)}
+.fgrid{display:grid;gap:22px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));align-items:start}
+.fbrand{display:flex;align-items:center;gap:12px}
+.fbrand img{width:64px;height:64px;border-radius:50%}
+.fbrand b{font-family:var(--script);color:var(--green);font-size:28px;font-weight:400;line-height:1}
+.fbrand span{display:block;color:var(--white);font-family:var(--display);font-weight:800;font-size:16px;letter-spacing:.5px}
+footer h4{margin:0 0 6px;font-family:var(--display);font-weight:800;color:var(--white);font-size:17px}
+footer p{margin:0}
+.links{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.fnote{margin-top:24px;font-size:12px;text-align:center}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap top">
+    <span class="hi" id="t-hi"></span>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-lang="ar" aria-pressed="false">العربية</button>
+      <button type="button" data-lang="tr" aria-pressed="false">Türkçe</button>
+    </div>
+  </div>
+  <div class="badge">
+    <svg class="ring" viewBox="0 0 300 300" aria-hidden="true" direction="ltr" style="direction:ltr">
+      <defs><path id="circ" d="M150,150 m-134,0 a134,134 0 1,1 268,0 a134,134 0 1,1 -268,0"/></defs>
+      <text direction="ltr"><textPath href="#circ" startOffset="0" textLength="836" lengthAdjust="spacing">ROAST CHICKEN ● BROASTED ● DÖNER ● BURGER ● ROAST CHICKEN ● BROASTED ● DÖNER ● BURGER ●</textPath></text>
+    </svg>
+    <img class="logo" src="logo.webp" alt="Roast chicken">
+  </div>
+  <h1 class="sr">Roast chicken</h1>
+  <p class="tag" id="t-tag"></p>
+  <div class="wrap meta" id="meta">
+    <span class="pill" id="status" hidden><span class="pdot"></span><span id="status-t"></span></span>
+    <a class="pill" id="addr-pill" hidden target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg><span id="addr-t"></span></a>
+  </div>
+  <div class="ribbon" aria-hidden="true">
+    <div class="band r"><div class="track" id="rib2"></div></div>
+    <div class="band g"><div class="track" id="rib1"></div></div>
+  </div>
+</header>
+
+<div class="bar" id="bar">
+  <div class="wrap">
+    <label class="search" for="q">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="q" type="search" autocomplete="off">
+      <button class="clear" id="clear" type="button" hidden>×</button>
+    </label>
+    <nav class="tabs" id="tabs"></nav>
+  </div>
+</div>
+
+<main class="wrap"><div class="boards" id="menu"></div></main>
+
+<footer>
+  <div class="wrap">
+    <div class="fgrid">
+      <div class="fbrand"><img src="logo.webp" alt=""><div><b>Roast</b><span>chicken</span></div></div>
+      <div id="f-hours" hidden><h4 id="t-hours-h"></h4><p id="t-hours"></p></div>
+      <div id="f-addr" hidden><h4 id="t-addr-h"></h4><p id="f-addr-t"></p><div class="links"><a class="pill" id="f-map" hidden target="_blank" rel="noopener"></a></div></div>
+      <div id="f-contact" hidden><h4 id="t-contact-h"></h4><p id="f-contact-t"></p></div>
+      <div id="f-social" hidden><h4 id="t-follow"></h4><div class="links" id="f-social-l"></div></div>
+    </div>
+    <p class="fnote" id="t-prices"></p>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status"></div>
+<div class="cartbar" id="cartbar" hidden><button type="button" id="open-cart"><span class="n" id="cb-n">0</span><span class="l" id="cb-l"></span><span class="s" id="cb-s"></span></button></div>
+
+<div class="scrim" id="img-scrim" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="v-name">
+    <button class="x float" type="button" data-close aria-label="×">×</button>
+    <img class="big" id="v-img" alt="">
+    <div class="pad"><h3 id="v-name"></h3><div class="opts" id="v-opts" style="margin-inline-start:0"></div></div>
+  </div>
+</div>
+
+<div class="scrim" id="cart-scrim" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="c-title">
+    <div class="shead"><h3 id="c-title"></h3><button class="link" type="button" id="c-clear"></button><button class="x" type="button" data-close aria-label="×">×</button></div>
+    <ul class="lines" id="c-lines"></ul>
+    <div class="pad">
+      <div class="seg" id="c-type" role="group"></div>
+      <div class="field" id="f-table"><label for="in-table" id="l-table"></label><input id="in-table" inputmode="numeric"></div>
+      <div class="field" id="f-name"><label for="in-name" id="l-name"></label><input id="in-name" autocomplete="name"></div>
+      <div class="field" id="f-adr"><label for="in-addr" id="l-addr"></label><textarea id="in-addr" rows="2" autocomplete="street-address"></textarea></div>
+      <div class="field"><label for="in-note" id="l-note"></label><textarea id="in-note" rows="2"></textarea></div>
+      <div class="total"><span id="t-total"></span><span id="c-sum"></span></div>
+      <div class="warn" id="c-nowa" hidden></div>
+      <button class="btn btn-wa" type="button" id="c-send"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3c-.3.3-1 1-1 2.3s1 2.7 1.2 2.9c.1.2 2 3.1 4.9 4.3 1.8.8 2.5.8 3.4.7.6-.1 1.5-.6 1.8-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3z"/></svg><span id="c-send-t"></span></button>
+      <p class="note" id="c-hint"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============ Config ============ */
+const SHEET_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRurGIDPInqqN5he3ZkjccqKPhRMLcJs-WqJ5IkUupUlPaDOCQqAQFDckkMGhULIooF9HhcfuCenZrK/pub?gid=323920361&single=true&output=csv";
+const ROWS = [["فروج", "Tavuk", "فروج بروستد", "Broasted Tavuk", "كامل", 600, ""], ["فروج", "Tavuk", "فروج بروستد", "Broasted Tavuk", "نصف", 300, ""], ["فروج", "Tavuk", "فروج مشوي", "Piliç Çevirme", "كامل", 400, ""], ["فروج", "Tavuk", "فروج مشوي", "Piliç Çevirme", "نصف", 225, ""], ["فروج", "Tavuk", "نصف فروج مشوي مع رز مندي", "Mandi Pilavlı Yarım Piliç Çevirme", "", 300, ""], ["سندويش شاورما", "Döner Dürüm", "سندويش شاورما", "Tavuk Döner Dürüm", "عادي", 120, ""], ["سندويش شاورما", "Döner Dürüm", "سندويش شاورما", "Tavuk Döner Dürüm", "دبل", 140, ""], ["سندويش شاورما", "Döner Dürüm", "سندويش شاورما إكسترا فطر وجبنة", "Mantarlı Kaşarlı Döner Dürüm", "", 170, ""], ["سندويش شاورما", "Döner Dürüm", "أصابع شاورما شامية", "Şam Usulü Parmak Döner", "", 80, ""], ["وجبات شاورما", "Döner Menüler", "شاورما عربي", "Arap Döner", "عادي", 225, ""], ["وجبات شاورما", "Döner Menüler", "شاورما عربي", "Arap Döner", "دبل", 350, ""], ["وجبات شاورما", "Döner Menüler", "شاورما عربي إكسترا فطر وجبنة", "Mantarlı Kaşarlı Arap Döner", "عادي", 275, ""], ["وجبات شاورما", "Döner Menüler", "شاورما عربي إكسترا فطر وجبنة", "Mantarlı Kaşarlı Arap Döner", "دبل", 450, ""], ["وجبات شاورما", "Döner Menüler", "شاورما إيطالي", "İtalyan Döner", "عادي", 300, ""], ["وجبات شاورما", "Döner Menüler", "شاورما إيطالي", "İtalyan Döner", "دبل", 500, ""], ["وجبات شاورما", "Döner Menüler", "شاورما بانيه", "Pane Döner", "عادي", 250, ""], ["وجبات شاورما", "Döner Menüler", "شاورما بانيه", "Pane Döner", "دبل", 400, ""], ["وجبات شاورما", "Döner Menüler", "وجبة شاورما ورز", "Pilavlı Döner Menü", "", 250, ""], ["وجبات شاورما", "Döner Menüler", "وجبة فرط 200 غرام", "Porsiyon Döner Menü (200 g)", "", 225, ""], ["شاورما فرط", "Kilo Döner", "شاورما فرط", "Döner", "1 كيلو", 750, ""], ["شاورما فرط", "Kilo Döner", "شاورما فرط", "Döner", "نصف كيلو", 375, ""], ["سندويش غربي", "Batı Dürümler", "سندويش سبايسي", "Spicy Dürüm", "عادي", 150, ""], ["سندويش غربي", "Batı Dürümler", "سندويش سبايسي", "Spicy Dürüm", "دبل", 170, ""], ["سندويش غربي", "Batı Dürümler", "سندويش كريسبي", "Crispy Dürüm", "عادي", 150, ""], ["سندويش غربي", "Batı Dürümler", "سندويش كريسبي", "Crispy Dürüm", "دبل", 170, ""], ["سندويش غربي", "Batı Dürümler", "سندويش نكيت", "Nugget Dürüm", "عادي", 150, ""], ["سندويش غربي", "Batı Dürümler", "سندويش نكيت", "Nugget Dürüm", "دبل", 170, ""], ["سندويش غربي", "Batı Dürümler", "سندويش مكسيكانو", "Mexicano Dürüm", "عادي", 170, ""], ["سندويش غربي", "Batı Dürümler", "سندويش مكسيكانو", "Mexicano Dürüm", "دبل", 200, ""], ["سندويش غربي", "Batı Dürümler", "سندويش بطاطا", "Patates Dürüm", "عادي", 80, ""], ["سندويش غربي", "Batı Dürümler", "سندويش بطاطا", "Patates Dürüm", "دبل", 100, ""], ["سندويش غربي", "Batı Dürümler", "سندويش سكالوب", "Escalope Dürüm", "", 180, ""], ["سندويش غربي", "Batı Dürümler", "سندويش شيش طاووق", "Şiş Tavuk Dürüm", "", 150, ""], ["سندويش غربي", "Batı Dürümler", "سندويش فاهيتا", "Fajita Dürüm", "", 200, ""], ["وجبات غربي", "Batı Menüleri", "وجبة سبايسي", "Spicy Menü", "عادي", 250, ""], ["وجبات غربي", "Batı Menüleri", "وجبة سبايسي", "Spicy Menü", "دبل", 400, ""], ["وجبات غربي", "Batı Menüleri", "وجبة كريسبي", "Crispy Menü", "عادي", 250, ""], ["وجبات غربي", "Batı Menüleri", "وجبة كريسبي", "Crispy Menü", "دبل", 400, ""], ["وجبات غربي", "Batı Menüleri", "وجبة نكيت", "Nugget Menü", "عادي", 250, ""], ["وجبات غربي", "Batı Menüleri", "وجبة نكيت", "Nugget Menü", "دبل", 400, ""], ["وجبات غربي", "Batı Menüleri", "وجبة سكالوب", "Escalope Menü", "عادي", 300, ""], ["وجبات غربي", "Batı Menüleri", "وجبة سكالوب", "Escalope Menü", "دبل", 500, ""], ["وجبات غربي", "Batı Menüleri", "وجبة مكسيكانو", "Mexicano Menü", "", 250, ""], ["وجبات غربي", "Batı Menüleri", "وجبة شيش طاووق", "Şiş Tavuk Menü", "", 250, ""], ["وجبات غربي", "Batı Menüleri", "وجبة فاهيتا جبنة", "Kaşarlı Fajita Menü", "", 300, ""], ["وجبات برغر", "Burger Menüler", "همبرغر لحم", "Et Burger", "عادي", 200, ""], ["وجبات برغر", "Burger Menüler", "همبرغر لحم", "Et Burger", "دبل", 300, ""], ["وجبات برغر", "Burger Menüler", "همبرغر لحم غنم", "Kuzu Burger", "عادي", 250, ""], ["وجبات برغر", "Burger Menüler", "همبرغر لحم غنم", "Kuzu Burger", "دبل", 400, ""], ["وجبات برغر", "Burger Menüler", "همبرغر كريسبي", "Crispy Burger", "عادي", 200, ""], ["وجبات برغر", "Burger Menüler", "همبرغر كريسبي", "Crispy Burger", "دبل", 300, ""], ["وجبات برغر", "Burger Menüler", "همبرغر سكالوب", "Escalope Burger", "عادي", 200, ""], ["وجبات برغر", "Burger Menüler", "همبرغر سكالوب", "Escalope Burger", "دبل", 300, ""], ["مقبلات", "Mezeler", "صحن بطاطا", "Patates Kızartması", "كبير", 160, ""], ["مقبلات", "Mezeler", "صحن بطاطا", "Patates Kızartması", "وسط", 120, ""], ["مقبلات", "Mezeler", "صحن بطاطا", "Patates Kızartması", "عادي", 60, ""], ["مقبلات", "Mezeler", "صحن رز", "Pilav", "كبير", 100, ""], ["مقبلات", "Mezeler", "صحن رز", "Pilav", "صغير", 40, ""], ["مقبلات", "Mezeler", "حمص", "Humus", "", 50, ""], ["مقبلات", "Mezeler", "متبل", "Mutebel", "", 50, ""], ["مقبلات", "Mezeler", "كريم توم", "Sarımsak Sosu", "1 كيلو", 160, ""], ["مقبلات", "Mezeler", "صوص حار", "Acı Sos", "1 كيلو", 160, ""], ["مشروبات", "İçecekler", "بيبسي", "Pepsi", "330 مل", 50, ""], ["مشروبات", "İçecekler", "بيبسي", "Pepsi", "1 لتر", 70, ""], ["مشروبات", "İçecekler", "بيبسي", "Pepsi", "2.5 لتر", 100, ""], ["مشروبات", "İçecekler", "فانتا", "Fanta", "330 مل", 50, ""], ["مشروبات", "İçecekler", "فانتا", "Fanta", "1 لتر", 70, ""], ["مشروبات", "İçecekler", "فانتا", "Fanta", "2.5 لتر", 100, ""], ["مشروبات", "İçecekler", "عيران كبير", "Büyük Ayran", "", 25, ""]];   // [القسم, القسم بالتركي, الصنف, الصنف بالتركي, الخيار, السعر, الصورة]
+const CUR = "₺";
+const DEFAULTS = {wa:"", phone:"", open:"", close:"", delivery:true, address:"", map:"", instagram:"", facebook:""};
+
+const T = {
+  ar:{dir:"rtl", hi:"صحتين وعافية", tag:"فروج مشوي وبروستد، شاورما، برغر ووجبات غربية",
+      ribbon:["فروج مشوي","بروستد","شاورما","برغر","وجبات غربي","سندويش"], ribbon2:["Afiyet olsun","Roast chicken","Afiyet olsun","Roast chicken"],
+      search:"ابحث… شاورما، بروستد، برغر", n:k=>`${k} صنف`, none:q=>`ما في نتائج لـ «${q}». جرّب كلمة ثانية.`,
+      open:c=>`مفتوح الآن · يسكّر ${c}`, closed:o=>`مسكّر حالياً · يفتح ${o}`, added:n=>`انضاف: ${n}`,
+      bar:"عرض الطلب", cart:"طلبك", clear:"إفراغ", types:{table:"بالصالة",pickup:"استلام",delivery:"توصيل"},
+      table:"رقم الطاولة", nameL:"الاسم", addr:"عنوان التوصيل", note:"ملاحظات (اختياري)", total:"المجموع",
+      send:"أرسل الطلب عبر واتساب", hint:"رح ينفتح واتساب ورسالة الطلب جاهزة، بس اكبس إرسال.",
+      nowa:"رقم واتساب المطعم لسا ما انضاف، فما فينا نبعت الطلب حالياً.", need:"عبّي الخانات المطلوبة", empty:"الطلب فاضي",
+      hoursH:"أوقات الدوام", hours:(o,c)=>`كل يوم من ${o} حتى ${c}`, addrH:"العنوان", map:"افتح على الخريطة",
+      contactH:"تواصل معنا", phone:"هاتف", wa:"واتساب", follow:"تابعونا", prices:"الأسعار بالليرة التركية وقد تتغير دون إشعار مسبق.",
+      msgHead:"طلب جديد - Roast chicken", msgType:"نوع الطلب", msgTable:"طاولة", msgName:"الاسم", msgAddr:"العنوان", msgNote:"ملاحظات", msgTotal:"المجموع"},
+  tr:{dir:"ltr", hi:"Afiyet olsun", tag:"Piliç çevirme ve broasted, döner, burger ve batı menüleri",
+      ribbon:["Piliç Çevirme","Broasted","Döner","Burger","Batı Menüleri","Dürüm"], ribbon2:["صحتين وعافية","Roast chicken","صحتين وعافية","Roast chicken"],
+      search:"Ara… döner, broasted, burger", n:k=>`${k} ürün`, none:q=>`“${q}” için sonuç yok.`,
+      open:c=>`Şu an açık · ${c}'de kapanır`, closed:o=>`Şu an kapalı · ${o}'da açılır`, added:n=>`Eklendi: ${n}`,
+      bar:"Siparişi gör", cart:"Siparişiniz", clear:"Temizle", types:{table:"Masada",pickup:"Gel al",delivery:"Paket servis"},
+      table:"Masa numarası", nameL:"Adınız", addr:"Teslimat adresi", note:"Not (isteğe bağlı)", total:"Toplam",
+      send:"Siparişi WhatsApp ile gönder", hint:"WhatsApp açılacak ve mesaj hazır olacak. Sadece gönder'e basın.",
+      nowa:"Restoranın WhatsApp numarası henüz eklenmedi, şu an sipariş gönderilemiyor.", need:"Gerekli alanları doldurun", empty:"Sipariş boş",
+      hoursH:"Çalışma saatleri", hours:(o,c)=>`Her gün ${o} – ${c}`, addrH:"Adres", map:"Haritada aç",
+      contactH:"İletişim", phone:"Telefon", wa:"WhatsApp", follow:"Bizi takip edin", prices:"Fiyatlar Türk Lirası cinsindendir ve önceden haber verilmeksizin değişebilir.",
+      msgHead:"Yeni sipariş - Roast chicken", msgType:"Sipariş türü", msgTable:"Masa", msgName:"İsim", msgAddr:"Adres", msgNote:"Not", msgTotal:"Toplam"}
+};
+const OPT_TR = {"عادي":"Normal","دبل":"Duble","كامل":"Bütün","نصف":"Yarım","كبير":"Büyük","وسط":"Orta","صغير":"Küçük","نصف كيلو":"500 g"};
+const optTr = o => OPT_TR[o] || o.replace(/مل/g,"ml").replace(/لتر|ليتر/g,"L").replace(/كيلو/g,"kg").replace(/غرام|غ/g,"g");
+
+const ICONS = {
+  chicken:'<path d="M15.5 3.5a5 5 0 0 1 5 5c0 3.6-3.9 6.5-7.5 6.5l-3.2 3.2a1.8 1.8 0 1 1-2.5 2.5 1.8 1.8 0 1 1-2.5-2.5L7 15C7 11.5 9.9 3.5 15.5 3.5z"/>',
+  doner:'<path d="M12 1.5v21"/><path d="M8 5h8l-1.3 12H9.3z"/><path d="M8.6 9h6.8M9 13h6"/>',
+  wrap:'<path d="M5 15.5 15.5 5a3.2 3.2 0 0 1 4.5 4.5L9.5 20a3.2 3.2 0 0 1-4.5-4.5z"/><path d="M9.5 11l4 4M12.5 8l4 4"/>',
+  burger:'<path d="M4 10.5C4 6.4 7.6 4 12 4s8 2.4 8 6.5z"/><path d="M3 14h18"/><path d="M4.5 17h15a2.5 2.5 0 0 1-2.5 3H7a2.5 2.5 0 0 1-2.5-3z"/>',
+  meal:'<path d="M5 9h14l-1.6 11H6.6z"/><path d="M8.5 9 7.5 3.5M12 9V3M15.5 9l1-5.5"/>',
+  sides:'<path d="M3 11h18a9 9 0 0 1-18 0z"/><path d="M8 7.5c0-1.2 1.2-1.2 1.2-2.5M12 7.5c0-1.2 1.2-1.2 1.2-2.5M16 7.5c0-1.2 1.2-1.2 1.2-2.5"/>',
+  drink:'<path d="M6 7h12l-1.5 14h-9z"/><path d="M10 7l1.5-4.5H15"/><path d="M6.5 11.5h11"/>'
+};
+function iconFor(name){
+  const k = /فروج|دجاج/.test(name) ? "chicken" : /برغر|همبرغر|برجر/.test(name) ? "burger" : /سندويش|ساندويش/.test(name) && !/شاورما/.test(name) ? "wrap"
+          : /شاورما/.test(name) ? "doner" : /غربي|وجبات/.test(name) ? "meal" : /مشروب/.test(name) ? "drink" : "sides";
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[k]}</svg>`;
+}
+
+/* ============ State ============ */
+const $ = s => document.querySelector(s);
+const store = {get(k,d){try{const v=localStorage.getItem("roast:"+k);return v==null?d:JSON.parse(v);}catch(e){return d;}},
+               set(k,v){try{localStorage.setItem("roast:"+k,JSON.stringify(v));}catch(e){}}};
+let S = {...DEFAULTS};
+let lang = (location.hash==="#tr"||location.hash==="#ar") ? location.hash.slice(1)
+         : store.get("lang", (navigator.language||"").toLowerCase().startsWith("tr") ? "tr" : "ar");
+let cart = store.get("cart", {}), orderType = store.get("type","table");
+let CATS = [], OPT = {};
+const L = () => T[lang];
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const money = p => `${Number(p).toLocaleString("en-US")} ${CUR}`;
+const nm = it => lang==="tr" && it.t ? it.t : it.n;
+const alt = it => lang==="tr" ? it.n : (it.t||"");
+const cn = c => lang==="tr" && c.tr ? c.tr : c.name;
+const ol = o => o ? (lang==="tr" ? optTr(o) : o) : "";
+const norm = s => String(s).toLocaleLowerCase("tr").replace(/[ًٌٍَُِّْـ]/g,"").replace(/[أإآ]/g,"ا").replace(/ة/g,"ه").replace(/ى/g,"ي")
+  .replace(/ı/g,"i").replace(/ş/g,"s").replace(/ğ/g,"g").replace(/ü/g,"u").replace(/ö/g,"o").replace(/ç/g,"c");
+function hash(s){ let h = 5381; for (const ch of s) h = ((h<<5)+h + ch.codePointAt(0)) >>> 0; return h.toString(36); }
+function driveImg(u){
+  u = String(u||"").trim(); if (!u) return "";
+  const m = u.match(/\/d\/([\w-]{20,})/) || u.match(/[?&]id=([\w-]{20,})/);
+  return m ? `https://lh3.googleusercontent.com/d/${m[1]}=w800` : (/^https?:\/\//.test(u) ? u : "");
+}
+function imgFail(el){ const m = el.src.match(/\/d\/([\w-]{20,})/);
+  if (m && !el.dataset.tried){ el.dataset.tried = 1; el.src = `https://drive.google.com/thumbnail?id=${m[1]}&sz=w800`; return; }
+  const box = el.closest(".thumb"); if (box) box.remove(); else el.remove(); }
+
+function build(rows){
+  const cats = [], cmap = {}; OPT = {};
+  rows.forEach(r => {
+    const [c, ct, n, nt, o, p, img] = r;
+    if (!cmap[c]){ cmap[c] = {name:c, tr:ct||"", slug:"c"+cats.length, items:[], imap:{}}; cats.push(cmap[c]); }
+    const cat = cmap[c]; if (!cat.tr && ct) cat.tr = ct;
+    let it = cat.imap[n];
+    if (!it){ it = cat.imap[n] = {n, t:nt||"", img:driveImg(img), opts:[], cat}; cat.items.push(it); }
+    if (!it.t && nt) it.t = nt; if (!it.img && img) it.img = driveImg(img);
+    const id = hash(c+"|"+n+"|"+(o||""));
+    const op = {id, o:o||"", p:+p, it}; it.opts.push(op); OPT[id] = op;
+  });
+  for (const k in cart) if (!OPT[k]) delete cart[k];
+  store.set("cart", cart);
+  return cats;
+}
+
+/* ============ Render ============ */
+const menu = $("#menu"), tabs = $("#tabs");
+function applyLang(){
+  const t = L(), d = document.documentElement;
+  d.lang = lang; d.dir = t.dir; document.body.style.direction = t.dir;
+  d.style.setProperty("--fade", t.dir==="rtl" ? "left" : "right");
+  document.querySelectorAll(".lang button").forEach(b => b.setAttribute("aria-pressed", b.dataset.lang===lang));
+  $("#t-hi").textContent = t.hi; $("#t-tag").textContent = t.tag; $("#q").placeholder = t.search;
+  const rib = (arr, n) => { const one = arr.map(w => `<span>${esc(w)}<i></i></span>`).join(""); return one.repeat(n); };
+  $("#rib1").innerHTML = rib(t.ribbon, 4); $("#rib2").innerHTML = rib(t.ribbon2, 6);
+  // info from settings
+  $("#t-hours-h").textContent = t.hoursH; $("#t-addr-h").textContent = t.addrH; $("#t-contact-h").textContent = t.contactH;
+  $("#t-follow").textContent = t.follow; $("#t-prices").textContent = t.prices;
+  $("#f-hours").hidden = !(S.open && S.close); $("#t-hours").textContent = t.hours(S.open, S.close);
+  const mapHref = S.map || (S.address ? "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(S.address) : "");
+  $("#f-addr").hidden = !(S.address || S.map); $("#f-addr-t").textContent = S.address;
+  $("#f-map").hidden = !mapHref; $("#f-map").href = mapHref || "#"; $("#f-map").textContent = t.map;
+  $("#addr-pill").hidden = !(S.address && mapHref); $("#addr-pill").href = mapHref || "#"; $("#addr-t").textContent = S.address;
+  const cl = []; if (S.phone) cl.push(`${t.phone}: <span dir="ltr">${esc(S.phone)}</span>`); if (S.wa) cl.push(`${t.wa}: <span dir="ltr">${esc(S.wa)}</span>`);
+  $("#f-contact").hidden = !cl.length; $("#f-contact-t").innerHTML = cl.join("<br>");
+  const so = []; const url = (v, base) => /^https?:/.test(v) ? v : base + v.replace(/^@/,"");
+  if (S.instagram) so.push(`<a class="pill" target="_blank" rel="noopener" href="${esc(url(S.instagram,"https://instagram.com/"))}">Instagram</a>`);
+  if (S.facebook) so.push(`<a class="pill" target="_blank" rel="noopener" href="${esc(url(S.facebook,"https://facebook.com/"))}">Facebook</a>`);
+  $("#f-social").hidden = !so.length; $("#f-social-l").innerHTML = so.join("");
+  status(); drawTabs(); render($("#q").value); drawCart();
+}
+function drawTabs(){
+  tabs.innerHTML = CATS.map(c => `<button class="tab" type="button" data-slug="${c.slug}">${iconFor(c.name)}${esc(cn(c))}</button>`).join("");
+  fade();
+}
+function hl(s, q){ if (!q) return esc(s); const i = s.toLocaleLowerCase("tr").indexOf(q.toLocaleLowerCase("tr"));
+  return i < 0 ? esc(s) : esc(s.slice(0,i)) + "<mark>" + esc(s.slice(i,i+q.length)) + "</mark>" + esc(s.slice(i+q.length)); }
+function optBtn(op){
+  const q = cart[op.id]||0, lab = ol(op.o);
+  return `<button class="opt${q?" on":""}" type="button" data-add="${op.id}" aria-label="${esc(nm(op.it)+(lab?" "+lab:"")+" "+money(op.p))}">
+    <span class="lp">${lab?`<span class="ol">${esc(lab)}</span>`:""}<span class="op">${Number(op.p).toLocaleString("en-US")}<small>${CUR}</small></span></span>
+    <span class="plus">+</span>${q?`<span class="qty">${q}</span>`:""}</button>`;
+}
+function render(q){
+  const raw = (q||"").trim(), nq = norm(raw);
+  let html = "";
+  for (const c of CATS){
+    const items = nq ? c.items.filter(i => norm(i.n).includes(nq) || norm(i.t).includes(nq) || norm(c.name).includes(nq) || norm(c.tr).includes(nq)) : c.items;
+    if (!items.length) continue;
+    const other = lang==="tr" ? c.name : c.tr;
+    html += `<section class="board" id="${c.slug}" data-cat="${c.slug}">
+      <div class="bhead"><span class="ico">${iconFor(c.name)}</span>
+        <div class="btitle"><h2>${esc(cn(c))}</h2>${other?`<div class="balt">${esc(other)}</div>`:""}</div>
+        <span class="cnt">${L().n(items.length)}</span></div>
+      <ul class="rows">${items.map(it => `<li class="row">
+        ${it.img?`<button class="thumb" type="button" data-view="${it.opts[0].id}"><img src="${esc(it.img)}" alt="" loading="lazy" onerror="imgFail(this)"></button>`:""}
+        <div class="nm"><b>${hl(nm(it), raw)}</b>${alt(it)?`<small>${esc(alt(it))}</small>`:""}</div>
+        <div class="opts">${it.opts.map(optBtn).join("")}</div></li>`).join("")}</ul></section>`;
+  }
+  menu.innerHTML = html || `<div class="empty">${esc(L().none(raw))}</div>`;
+  tabs.querySelectorAll(".tab").forEach(b => b.hidden = !!nq && !menu.querySelector(`[data-cat="${b.dataset.slug}"]`));
+  observe();
+}
+function refreshOpt(id){
+  const op = OPT[id];
+  document.querySelectorAll(`[data-add="${id}"]`).forEach(b => b.outerHTML = optBtn(op));
+}
+
+/* ============ Nav ============ */
+let io, lock = 0;
+function go(slug){ const s = document.getElementById(slug); if (!s) return; setActive(slug); lock = Date.now();
+  const y = s.getBoundingClientRect().top + scrollY - $("#bar").offsetHeight - 8;
+  scrollTo({top:y, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"}); }
+function setActive(slug){ tabs.querySelectorAll(".tab").forEach(b => { const on = b.dataset.slug===slug; b.setAttribute("aria-current", on);
+  if (on){ const r = b.getBoundingClientRect(), pr = tabs.getBoundingClientRect();
+    if (r.left < pr.left || r.right > pr.right) tabs.scrollBy({left: r.left - pr.left - (pr.width - r.width)/2, behavior:"smooth"}); } }); }
+function observe(){ if (io) io.disconnect(); const secs = [...menu.querySelectorAll(".board")]; if (secs[0]) setActive(secs[0].dataset.cat);
+  if (!("IntersectionObserver" in window)) return;
+  io = new IntersectionObserver(es => { if (Date.now()-lock < 800) return;
+    const v = es.filter(e => e.isIntersecting).sort((a,b) => a.boundingClientRect.top - b.boundingClientRect.top);
+    if (v[0]) setActive(v[0].target.dataset.cat); }, {rootMargin:"-140px 0px -55% 0px"});
+  secs.forEach(s => io.observe(s)); }
+function fade(){ tabs.classList.toggle("more", tabs.scrollWidth - tabs.clientWidth - Math.abs(tabs.scrollLeft) > 4); }
+tabs.addEventListener("scroll", fade, {passive:true}); addEventListener("resize", fade);
+
+/* ============ Cart ============ */
+let toastT;
+function toast(msg){ const t = $("#toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("show"), 1400); }
+function setQty(id, n){ if (n > 0) cart[id] = Math.min(n, 99); else delete cart[id]; store.set("cart", cart); refreshOpt(id); drawCart(); }
+const count = () => Object.values(cart).reduce((a,b) => a+b, 0);
+const sum = () => Object.entries(cart).reduce((a,[id,n]) => a + (OPT[id] ? OPT[id].p*n : 0), 0);
+function lineName(op){ return nm(op.it) + (op.o ? ` (${ol(op.o)})` : ""); }
+function drawCart(){
+  const t = L(), n = count();
+  $("#cartbar").hidden = !n; $("#cb-n").textContent = n; $("#cb-l").textContent = t.bar; $("#cb-s").textContent = money(sum());
+  if ($("#cart-scrim").hidden) return;
+  $("#c-title").textContent = t.cart; $("#c-clear").textContent = t.clear;
+  $("#c-lines").innerHTML = n ? Object.entries(cart).map(([id,q]) => { const op = OPT[id]; return `<li class="line">
+      <div class="ln">${esc(lineName(op))}<small>${money(op.p)} × ${q} = ${money(op.p*q)}</small></div>
+      <span class="step"><button type="button" data-dec="${id}" aria-label="−">−</button><b>${q}</b><button type="button" data-inc="${id}" aria-label="+">+</button></span></li>`; }).join("")
+    : `<li class="empty">${t.empty}</li>`;
+  const types = ["table","pickup"].concat(S.delivery ? ["delivery"] : []);
+  if (!types.includes(orderType)) orderType = "table";
+  $("#c-type").innerHTML = types.map(k => `<button type="button" data-type="${k}" aria-pressed="${k===orderType}">${t.types[k]}</button>`).join("");
+  $("#f-table").hidden = orderType !== "table"; $("#f-name").hidden = orderType === "table"; $("#f-adr").hidden = orderType !== "delivery";
+  $("#l-table").textContent = t.table; $("#l-name").textContent = t.nameL; $("#l-addr").textContent = t.addr; $("#l-note").textContent = t.note;
+  $("#t-total").textContent = t.total; $("#c-sum").textContent = money(sum());
+  $("#c-send-t").textContent = t.send; $("#c-hint").textContent = t.hint;
+  $("#c-nowa").hidden = !!S.wa; $("#c-nowa").textContent = t.nowa; $("#c-send").disabled = !n || !S.wa;
+}
+document.addEventListener("click", e => {
+  const tab = e.target.closest(".tab"); if (tab) return go(tab.dataset.slug);
+  const add = e.target.closest("[data-add]");
+  if (add){ const id = add.dataset.add; setQty(id, (cart[id]||0)+1); toast(L().added(lineName(OPT[id]))); if (!$("#img-scrim").hidden) drawView(); return; }
+  const inc = e.target.closest("[data-inc]"), dec = e.target.closest("[data-dec]");
+  if (inc){ const id = inc.dataset.inc; return setQty(id, (cart[id]||0)+1); }
+  if (dec){ const id = dec.dataset.dec; return setQty(id, (cart[id]||0)-1); }
+  const ty = e.target.closest("[data-type]"); if (ty){ orderType = ty.dataset.type; store.set("type", orderType); return drawCart(); }
+  const v = e.target.closest("[data-view]"); if (v){ viewIt = OPT[v.dataset.view].it; drawView(); openSheet("#img-scrim"); }
+});
+$("#c-clear").addEventListener("click", () => { const ids = Object.keys(cart); cart = {}; store.set("cart", cart); ids.forEach(refreshOpt); drawCart(); });
+$("#open-cart").addEventListener("click", () => { openSheet("#cart-scrim"); drawCart(); });
+["in-table","in-name","in-addr","in-note"].forEach(id => { const el = document.getElementById(id);
+  el.value = store.get("f:"+id, ""); el.addEventListener("input", () => { store.set("f:"+id, el.value); el.parentElement.classList.remove("bad"); }); });
+$("#c-send").addEventListener("click", () => {
+  const t = L(), need = {table:["in-table"], pickup:["in-name"], delivery:["in-name","in-addr"]}[orderType];
+  let ok = true; need.forEach(id => { const el = document.getElementById(id); if (!el.value.trim()){ el.parentElement.classList.add("bad"); ok = false; } });
+  if (!ok){ $("#c-hint").textContent = t.need; return; }
+  const v = id => document.getElementById(id).value.trim();
+  const lines = [`*${t.msgHead}*`, ""];
+  Object.entries(cart).forEach(([id,q]) => { const op = OPT[id];
+    const base = lang==="tr" && op.it.t ? `${op.it.t} (${op.it.n})` : op.it.n;
+    lines.push(`${q} × ${base}${op.o ? " - " + (lang==="tr" ? `${optTr(op.o)} (${op.o})` : op.o) : ""} = ${money(op.p*q)}`); });
+  lines.push("", `*${t.msgTotal}: ${money(sum())}*`, `${t.msgType}: ${t.types[orderType]}`);
+  if (orderType==="table") lines.push(`${t.msgTable}: ${v("in-table")}`); else lines.push(`${t.msgName}: ${v("in-name")}`);
+  if (orderType==="delivery") lines.push(`${t.msgAddr}: ${v("in-addr")}`);
+  if (v("in-note")) lines.push(`${t.msgNote}: ${v("in-note")}`);
+  const a = document.createElement("a");
+  a.href = `https://wa.me/${S.wa.replace(/\D/g,"")}?text=${encodeURIComponent(lines.join("\n"))}`; a.target = "_blank"; a.rel = "noopener";
+  document.body.appendChild(a); a.click(); a.remove();
+});
+
+/* ============ Sheets ============ */
+let viewIt = null, lastFocus = null;
+function drawView(){ if (!viewIt) return; $("#v-img").src = viewIt.img; $("#v-img").alt = nm(viewIt); $("#v-name").textContent = nm(viewIt);
+  $("#v-opts").innerHTML = viewIt.opts.map(optBtn).join(""); }
+function openSheet(sel){ const s = $(sel); lastFocus = document.activeElement; s.hidden = false; requestAnimationFrame(() => s.classList.add("show"));
+  const x = s.querySelector("[data-close]"); if (x) x.focus(); }
+function closeSheet(s){ s.classList.remove("show"); setTimeout(() => { s.hidden = true; }, 200); if (lastFocus && lastFocus.isConnected) lastFocus.focus({preventScroll:true}); }
+document.querySelectorAll(".scrim").forEach(s => s.addEventListener("click", e => { if (e.target === s || e.target.closest("[data-close]")) closeSheet(s); }));
+document.addEventListener("keydown", e => { if (e.key === "Escape") document.querySelectorAll(".scrim:not([hidden])").forEach(closeSheet); });
+
+/* ============ Search / language ============ */
+const qi = $("#q"), clr = $("#clear");
+qi.addEventListener("input", () => { clr.hidden = !qi.value; render(qi.value); });
+clr.addEventListener("click", () => { qi.value = ""; clr.hidden = true; render(""); qi.focus(); });
+document.querySelectorAll(".lang button").forEach(b => b.addEventListener("click", () => { lang = b.dataset.lang; store.set("lang", lang); applyLang(); }));
+
+/* ============ Hours ============ */
+function hm(s){ const m = String(s||"").match(/(\d{1,2})[:.](\d{2})/); return m ? (+m[1])*60 + (+m[2]) : null; }
+function status(){
+  const el = $("#status"), t = L(), o = hm(S.open), c = hm(S.close);
+  el.classList.remove("is-open","is-closed"); el.hidden = o == null || c == null; if (el.hidden) return;
+  let now; try { const p = new Intl.DateTimeFormat("en-GB",{timeZone:"Europe/Istanbul",hour:"2-digit",minute:"2-digit",hourCycle:"h23"}).formatToParts(new Date());
+    now = (+p.find(x=>x.type==="hour").value)*60 + (+p.find(x=>x.type==="minute").value); } catch(e){ el.hidden = true; return; }
+  const open = o < c ? (now >= o && now < c) : (now >= o || now < c);
+  el.classList.add(open ? "is-open" : "is-closed"); $("#status-t").textContent = open ? t.open(S.close) : t.closed(S.open);
+}
+
+/* ============ Google Sheets ============ */
+function parseCSV(text){ const rows = []; let row = [], f = "", q = false;
+  for (let i = 0; i < text.length; i++){ const ch = text[i];
+    if (q){ if (ch === '"'){ if (text[i+1] === '"'){ f += '"'; i++; } else q = false; } else f += ch; }
+    else if (ch === '"') q = true; else if (ch === ","){ row.push(f); f = ""; }
+    else if (ch === "\n"){ row.push(f); rows.push(row); row = []; f = ""; } else if (ch !== "\r") f += ch; }
+  if (f || row.length){ row.push(f); rows.push(row); } return rows; }
+function fromSheet(rows){
+  const head = rows.shift().map(h => h.trim()), col = n => head.indexOf(n), cell = (r,i) => i >= 0 ? String(r[i]||"").trim() : "";
+  const I = {c:col("القسم"), n:col("الصنف"), o:col("الخيار"), p:col("السعر"), a:col("متوفر"), ct:col("القسم بالتركي"), nt:col("الصنف بالتركي"), im:col("الصورة"), k:col("الإعداد"), v:col("القيمة")};
+  if (I.c < 0 || I.n < 0 || I.p < 0 || I.o < 0) throw new Error("columns");
+  const set = {}; if (I.k >= 0 && I.v >= 0) rows.forEach(r => { const k = cell(r,I.k); if (k) set[k] = cell(r,I.v); });
+  const out = [];
+  rows.forEach(r => { const c = cell(r,I.c), n = cell(r,I.n), p = parseFloat(cell(r,I.p).replace(/[^\d.]/g,""));
+    if (!c || !n || isNaN(p)) return; if (/^(لا|no|hayır|0)$/i.test(cell(r,I.a))) return;
+    out.push([c, cell(r,I.ct), n, cell(r,I.nt), cell(r,I.o), p, cell(r,I.im)]); });
+  if (!out.length) throw new Error("empty");
+  return {rows:out, set};
+}
+function applySettings(s){
+  const yes = v => /^(نعم|yes|evet|1)$/i.test(v||"");
+  const map = {"واتساب":"wa","هاتف":"phone","يفتح":"open","يسكّر":"close","يسكر":"close","العنوان":"address","رابط الخريطة":"map","إنستغرام":"instagram","فيسبوك":"facebook"};
+  for (const k in s){ if (map[k]) S[map[k]] = s[k]; }
+  if (s["التوصيل"] !== undefined) S.delivery = yes(s["التوصيل"]);
+}
+
+/* ============ Start ============ */
+CATS = build(ROWS); applyLang();
+if (SHEET_CSV){
+  fetch(SHEET_CSV + (SHEET_CSV.includes("?") ? "&" : "?") + "t=" + Date.now(), {cache:"no-store"})
+    .then(r => { if (!r.ok) throw new Error(r.status); return r.text(); })
+    .then(txt => { const d = fromSheet(parseCSV(txt)); applySettings(d.set); CATS = build(d.rows); applyLang(); })
+    .catch(() => {});
+}
+</script>
+</body>
+</html>
