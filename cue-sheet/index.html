@@ -182,6 +182,23 @@ button{cursor:pointer}
 .lib-head a svg{width:13px;height:13px}
 .group{padding:12px 14px 14px;display:flex;flex-direction:column;gap:8px}
 .group + .group{border-top:1px dashed var(--line)}
+.lib-foot{margin-top:auto;border-top:1px solid var(--line);padding:8px 14px;display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.lib-foot .ed{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:4px 11px;font-size:12.5px;font-weight:500;color:var(--ink-2)}
+.lib-foot .ed:hover:not(:disabled){border-color:var(--music);color:var(--music)}
+.lib-foot .ed:disabled{opacity:.5;cursor:not-allowed}
+.lib-foot .ed svg{width:14px;height:14px}
+.lib-foot .undo{border:0;background:none;font-size:12.5px;color:var(--ink-3);text-decoration:underline;text-underline-offset:3px;padding:4px 2px}
+.lib-foot .undo:hover{color:var(--ink)}
+.lib-foot .last-note{flex-basis:100%;font-size:12px;color:var(--ink-3);line-height:1.5}
+.edit-box{display:flex;flex-direction:column;gap:8px;flex-basis:100%}
+.edit-box textarea{width:100%;min-height:62px;border-radius:10px;border:1px solid var(--line);background:var(--surface-2);padding:8px 10px;resize:vertical;font-size:13.5px;line-height:1.6}
+.edit-box textarea:focus{outline:0;border-color:var(--music);background:var(--surface)}
+.edit-box .row{display:flex;gap:8px}
+.edit-box .apply{border:0;background:var(--accent);color:var(--accent-ink);border-radius:8px;padding:5px 14px;font-size:13px;font-weight:600}
+.edit-box .cancel{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:5px 12px;font-size:13px;color:var(--ink-2)}
+.edited-tag{font-size:11px;font-weight:600;color:var(--music);background:var(--music-soft);border-radius:5px;padding:1px 7px}
+.lib.busy .group{opacity:.4;transition:opacity .2s}
+.lib.busy .lib-foot{pointer-events:none}
 .g-label{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600}
 .g-label::before{content:"";width:7px;height:7px;border-radius:2px;background:currentColor}
 .g-label.music{color:var(--music)}
@@ -430,6 +447,7 @@ kbd{font-family:var(--f-mono);font-size:12px;border:1px solid var(--line-strong)
           <li><div><b>اضغط «ابحث»</b> وانتظر. التحليل العام يأخذ عادة دقيقة. في الأفلام تظهر المشاهد تباعاً، وقد يأخذ الفيلم الطويل عدة دقائق. زر «إيقاف» يحتفظ بما اكتمل.</div></li>
           <li><div><b>راجع الملخص:</b> تحقق أن النوع والمزاج صحيحان. إذا أخطأ في النوع، صححه من القائمة في خانة «النوع» واضغط «أعد التحليل».</div></li>
           <li><div><b>لم تعجبك النتيجة؟</b> تحت الملخص مباشرة خانة «عدّل النتائج». اكتب ما تريد تغييره واضغط «أعد التحليل بالملاحظة». يحتاج ذلك أن يكون السكربت ما زال في الصفحة.</div></li>
+          <li><div><b>تعديل بطاقة واحدة:</b> أسفل كل بطاقة (audionetwork أو lensdistortions أو envato) زر «تعديل». اكتب ما تريده لهذه البطاقة فقط، مثل «أريد الموسيقى بطابع أجمل»، واضغط «حدّث». تتغير تلك البطاقة وحدها، ويمكنك الضغط على «رجوع للسابق» إذا لم يعجبك التعديل.</div></li>
           <li><div><b>انسخ وابحث:</b> اضغط زر النسخ بجانب أي كلمة بحث، ثم «فتح الموقع» والصقها في خانة البحث هناك.</div></li>
           <li><div><b>احفظ النتيجة:</b> «نسخ الكل» ينسخ النتيجة كاملة كنص، و«تصدير PDF» و«تصدير Word» يحفظانها كملف. وكل تحليل يُحفظ تلقائياً في «السجل».</div></li>
         </ol>
@@ -910,13 +928,17 @@ function itemHTML(it, kind, lib, idx) {
     ${kind === "sfx" && it.at ? `<span class="at">${esc(it.at)}</span>` : ""}
   </div>`;
 }
-function libsHTML(block, showSfx) {
-  return `<div class="libs">${LIBS.map(l => {
+const ICON_EDIT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/></svg>';
+function libsHTML(block, showSfx, scope) {
+  return `<div class="libs">${LIBS.map(l => libCardHTML(block, showSfx, scope, l)).join("")}</div>`;
+}
+function libCardHTML(block, showSfx, scope, l) {
     const v = block[l.key] || { music: [], sfx: [] };
     const firstQ = (v.music[0] || v.sfx[0] || {}).q;
     const href = firstQ ? linkFor(l.key, v.music[0] ? "music" : "sfx", firstQ) : l.home;
-    return `<article class="lib">
-      <header class="lib-head"><span class="sw" style="background:${l.color}"></span><b>${l.name}</b>
+    const ek = scope + ":" + l.key, ed = current?.edits?.[ek];
+    return `<article class="lib" data-scope="${scope}" data-lib="${l.key}">
+      <header class="lib-head"><span class="sw" style="background:${l.color}"></span><b>${l.name}</b>${ed ? '<span class="edited-tag">معدّلة</span>' : ""}
         <a href="${esc(href)}" target="_blank" rel="noopener">فتح الموقع ${ICON.ext}</a></header>
       <div class="group"><div class="g-label music">الموسيقى المقترحة</div>
         ${v.music.length ? v.music.map((it, i) => itemHTML(it, "music", l.key, i)).join("") : '<div class="empty-note">بدون موسيقى لهذا الجزء.</div>'}
@@ -924,8 +946,12 @@ function libsHTML(block, showSfx) {
       ${showSfx ? `<div class="group"><div class="g-label sfx">الساوند افكت المقترح</div>
         ${v.sfx.length ? v.sfx.map((it, i) => itemHTML(it, "sfx", l.key, i)).join("") : '<div class="empty-note">لا حاجة لمؤثرات من هذه المكتبة.</div>'}
       </div>` : ""}
+      <footer class="lib-foot">
+        <button type="button" class="ed" data-act="edit" ${current?.isSample ? 'disabled title="يعمل بعد تحليل سكربتك"' : ""}>${ICON_EDIT} تعديل</button>
+        ${ed?.prev ? '<button type="button" class="undo" data-act="undo">رجوع للسابق</button>' : ""}
+        ${ed?.note ? `<span class="last-note">آخر تعديل: ${esc(ed.note)}</span>` : ""}
+      </footer>
     </article>`;
-  }).join("")}</div>`;
 }
 
 function renderResults() {
@@ -958,7 +984,7 @@ function renderResults() {
     </div>
     <section>
       <div class="sec-title"><h2>${T.whole}</h2><span class="rule"></span>${T.sfx ? "" : '<span class="tag">محتوى خبري: موسيقى فقط بدون مؤثرات</span>'}</div>
-      ${libsHTML(a.global, T.sfx)}
+      ${libsHTML(a.global, T.sfx, "g")}
     </section>
     ${a.scenes.length ? `<section>
       <div class="sec-title"><h2>المشاهد</h2><span class="rule"></span><span class="tag">${a.scenes.length.toLocaleString("ar")} مشاهد</span></div>
@@ -989,7 +1015,7 @@ function renderScenes() {
   box.innerHTML = current.analysis.scenes.map(s => {
     const d = current.scenes[s.n], f = current.failed[s.n];
     const head = `<div class="scene-head"><span class="scene-no">${sceneName(s.n)}<span class="n">#${s.n}</span></span><span class="scene-title">${esc(s.title)}</span>${d?.mood ? `<span class="mood">${esc(d.mood)}</span>` : ""}</div>`;
-    if (d) return `<article class="scene" id="s${s.n}">${head}${d.silence_note ? `<div class="silence">${esc(d.silence_note)}</div>` : ""}${libsHTML(d, true)}</article>`;
+    if (d) return `<article class="scene" id="s${s.n}">${head}${d.silence_note ? `<div class="silence">${esc(d.silence_note)}</div>` : ""}${libsHTML(d, true, "s" + s.n)}</article>`;
     if (f) return `<article class="scene pending failed" id="s${s.n}"><span>${sceneName(s.n)}: ${esc(f)}</span><button class="retry" type="button" data-retry="${s.n}">أعد المحاولة</button></article>`;
     return `<article class="scene pending" id="s${s.n}"><span class="spin"></span>${sceneName(s.n)} — ${esc(s.title)} · ${runCtl ? "قيد التحضير…" : "لم يكتمل"}</article>`;
   }).join("");
@@ -1004,6 +1030,105 @@ async function retryScene(n, btn) {
   catch (e) { current.failed[n] = errMsg(e); }
   renderScenes(); saveHistory(current);
 }
+
+/* ================= per-card edits ================= */
+function blockFor(scope) { return scope === "g" ? current.analysis.global : current.scenes[Number(scope.slice(1))]; }
+function showSfxFor(scope) { return scope === "g" ? TYPES[current.analysis.content_type].sfx : true; }
+function replaceCard(scope, libKey) {
+  const old = document.querySelector(`.lib[data-scope="${scope}"][data-lib="${libKey}"]`); if (!old) return;
+  const l = LIBS.find(x => x.key === libKey);
+  old.outerHTML = libCardHTML(blockFor(scope), showSfxFor(scope), scope, l);
+}
+function cardPrompt(scope, libKey, note) {
+  const a = current.analysis, isG = scope === "g", n = isG ? 0 : Number(scope.slice(1));
+  const sc = isG ? null : a.scenes.find(x => x.n === n);
+  const cur = blockFor(scope)[libKey] || { music: [], sfx: [] };
+  const raw = scriptText();
+  let ctx = "";
+  if (isG) {
+    ctx = raw ? "SCRIPT (may be condensed):\n<<<\n" + condense(raw, 26000).text + "\n>>>" : "Scenes: " + a.scenes.map(x => x.n + ". " + x.title).join(" | ");
+  } else {
+    const texts = raw ? sliceScenes(raw, a.scenes) : null;
+    const t = texts?.[n];
+    ctx = `SCENE ${n} — ${sc?.title || ""}\nScene mood: ${blockFor(scope)?.mood || ""}\n` + (t ? "<<<\n" + condense(t, 20000).text + "\n>>>" : "(scene text not available — rely on the title, mood and the piece's summary)");
+  }
+  const sfxRule = isG
+    ? (TYPES[a.content_type].sfx ? "sfx: 3–5 items, each with \"at\"." : "sfx MUST be [] (news content).")
+    : "sfx: 2–5 items, each with a precise \"at\".";
+  const musRule = isG ? "music: exactly 2 items (main + alternative)." : "music: exactly 1 item (or [] only if the note asks for silence).";
+  return `You are a senior music supervisor and sound designer. Revise ONE suggestion card for the library "${libKey}" only.
+
+PIECE: ${a.content_type} — ${a.title}
+genre: ${a.summary.genre} | pacing: ${a.summary.pacing} | mood: ${a.summary.mood} | climax: ${a.summary.climax}${current.meta.notes ? "\nUser's general notes for the whole piece: " + current.meta.notes : ""}
+SCOPE: ${isG ? "the whole piece (global recommendations)" : "one scene"}
+
+${ctx}
+
+CURRENT CARD (${libKey}):
+${JSON.stringify(cur)}
+
+USER'S REVISION NOTE — mandatory, it overrides your previous choices:
+"""
+${note}
+"""
+
+Rules: change what the note asks for. If the note is only about music, return the sfx unchanged (identical items), and vice versa. Make the revised items clearly better matched to the note and the ${isG ? "piece" : "scene"}, not near-duplicates of the current ones. ${musRule} ${sfxRule}
+
+${ITEM_RULES}
+
+${LIB_RULES}
+
+${ACCURACY}
+
+Reply with ONLY this JSON: {"music":[{"q":"","hint":""}],"sfx":[{"q":"","hint":"","at":""}]}`;
+}
+async function applyCardEdit(card, note) {
+  const scope = card.dataset.scope, libKey = card.dataset.lib;
+  if (!sample) { toast("التعديل يعمل فقط داخل claude.ai."); return; }
+  card.classList.add("busy");
+  const btn = card.querySelector(".apply"); if (btn) { btn.disabled = true; btn.textContent = "جارٍ التحديث…"; }
+  try {
+    const res = await sample.json(cardPrompt(scope, libKey, note), { cache: false });
+    const next = cleanLibs({ [libKey]: res }, showSfxFor(scope))[libKey];
+    if (!next.music.length && !next.sfx.length) throw { code: "empty_completion" };
+    const block = blockFor(scope);
+    const prev = block[libKey];
+    block[libKey] = next;
+    current.edits = current.edits || {};
+    current.edits[scope + ":" + libKey] = { note, prev };
+    replaceCard(scope, libKey);
+    toast("تم تحديث " + libKey);
+    saveHistory(current);
+  } catch (e) {
+    card.classList.remove("busy");
+    if (btn) { btn.disabled = false; btn.textContent = "حدّث"; }
+    toast(errMsg(e));
+  }
+}
+$("#results").addEventListener("click", e => {
+  const b = e.target.closest("[data-act]"); if (!b) return;
+  const card = b.closest(".lib"); if (!card || !current) return;
+  const scope = card.dataset.scope, libKey = card.dataset.lib, foot = card.querySelector(".lib-foot");
+  if (b.dataset.act === "edit") {
+    if (foot.querySelector(".edit-box")) { foot.querySelector("textarea").focus(); return; }
+    foot.insertAdjacentHTML("afterbegin", `<div class="edit-box"><textarea aria-label="ملاحظة التعديل لـ ${libKey}" placeholder="مثال: الموسيقى غير مناسبة، أريدها بطابع أجمل وأوسع…"></textarea><div class="row"><button type="button" class="apply" data-act="apply">حدّث</button><button type="button" class="cancel" data-act="cancel">إلغاء</button></div></div>`);
+    b.hidden = true;
+    foot.querySelector("textarea").focus();
+  } else if (b.dataset.act === "cancel") {
+    foot.querySelector(".edit-box")?.remove(); foot.querySelector('[data-act="edit"]').hidden = false;
+  } else if (b.dataset.act === "apply") {
+    const note = foot.querySelector("textarea").value.trim();
+    if (!note) { foot.querySelector("textarea").focus(); toast("اكتب ما تريد تعديله أولاً."); return; }
+    applyCardEdit(card, note);
+  } else if (b.dataset.act === "undo") {
+    const k = scope + ":" + libKey, ed = current.edits?.[k]; if (!ed?.prev) return;
+    blockFor(scope)[libKey] = ed.prev;
+    delete current.edits[k];
+    replaceCard(scope, libKey);
+    toast("أُعيد الاقتراح السابق");
+    saveHistory(current);
+  }
+});
 
 /* copy buttons (delegated) */
 document.addEventListener("click", e => {
@@ -1109,7 +1234,7 @@ const LS_KEY = "cs-history";
 function histMeta(c) { return { id: c.id, title: c.analysis.title, type: c.analysis.content_type, scenes: c.analysis.scenes.length, date: c.meta.date, fileName: c.meta.fileName }; }
 async function saveHistory(c) {
   if (!c || c.isSample) return;
-  const rec = { ...histMeta(c), data: JSON.stringify({ meta: c.meta, analysis: c.analysis, scenes: c.scenes, failed: c.failed }) };
+  const rec = { ...histMeta(c), data: JSON.stringify({ meta: c.meta, analysis: c.analysis, scenes: c.scenes, failed: c.failed, edits: c.edits || {} }) };
   const i = history.findIndex(h => h.id === c.id);
   if (i >= 0) history[i] = rec; else history.unshift(rec);
   renderHistory();
