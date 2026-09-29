@@ -78,10 +78,19 @@ button{cursor:pointer}
 .file-chip span{font-size:12.5px;color:var(--ink-3)}
 .file-chip .x{margin-inline-start:auto;border:0;background:none;color:var(--ink-3);padding:6px;border-radius:8px}
 .file-chip .x:hover{color:var(--danger)}
-.paste-toggle{margin-top:10px;background:none;border:0;color:var(--ink-3);font-size:13px;text-decoration:underline;text-underline-offset:3px;position:relative;z-index:1}
-.paste-box{display:none;margin-top:12px}
-.paste-box.open{display:block}
-.paste-box textarea{width:100%;min-height:150px;border-radius:12px;border:1px solid var(--line);background:var(--surface);padding:12px;resize:vertical;line-height:1.7}
+.mode{display:inline-flex;gap:4px;padding:4px;margin-bottom:12px;border-radius:12px;background:var(--surface);border:1px solid var(--line)}
+.mode button{display:inline-flex;align-items:center;gap:7px;border:0;background:none;border-radius:9px;padding:7px 14px;font-size:14px;font-weight:500;color:var(--ink-3)}
+.mode button svg{width:16px;height:16px}
+.mode button:hover{color:var(--ink)}
+.mode button[aria-selected="true"]{background:var(--music-soft);color:var(--music);font-weight:600}
+.write{display:flex;flex-direction:column;min-height:260px;border:1.5px solid var(--line-strong);border-radius:16px;background:var(--surface);overflow:hidden;transition:border-color .15s}
+.write:focus-within{border-color:var(--music)}
+.write textarea{flex:1;width:100%;min-height:260px;border:0;outline:0;background:transparent;padding:18px 20px;resize:vertical;line-height:1.8;font-size:15px}
+.write textarea::placeholder{color:var(--ink-3)}
+.write-foot{display:flex;align-items:center;gap:12px;padding:8px 14px;border-top:1px solid var(--line);background:var(--surface-2);font-size:12.5px;color:var(--ink-3)}
+.write-foot .sp{flex:1}
+.write-foot button{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:3px 10px;font-size:12.5px;color:var(--ink-2)}
+.write-foot button:hover{color:var(--danger);border-color:var(--danger)}
 
 .controls{padding:22px;display:flex;flex-direction:column;gap:18px}
 .label{font-size:12.5px;font-weight:600;color:var(--ink-3);letter-spacing:.2px;margin-bottom:8px;display:block}
@@ -296,7 +305,7 @@ kbd{font-family:var(--f-mono);font-size:12px;border:1px solid var(--line-strong)
 
 <main class="wrap">
   <section class="quick" id="quick" aria-label="البدء السريع">
-    <div class="qs"><span class="qn">١</span><div><b>ارفع السكربت</b><span>اسحب ملف Word أو PDF إلى المربع، أو الصق النص.</span></div></div>
+    <div class="qs"><span class="qn">١</span><div><b>ارفع السكربت</b><span>اسحب ملف Word أو PDF، أو اختر «كتابة أو لصق النص» واكتبه بنفسك.</span></div></div>
     <div class="qs"><span class="qn">٢</span><div><b>اضغط «ابحث»</b><span>اترك النوع «تلقائي» أو حدده بنفسك إذا كنت متأكداً.</span></div></div>
     <div class="qs"><span class="qn">٣</span><div><b>انسخ كلمة البحث</b><span>الصقها في بحث الموقع واستمع للنتائج واختر.</span></div></div>
     <div class="qa"><button type="button" class="full" id="quickFull">الدليل الكامل والشروط</button><button type="button" class="hide" id="quickHide">إخفاء</button></div>
@@ -304,6 +313,10 @@ kbd{font-family:var(--f-mono);font-size:12px;border:1px solid var(--line-strong)
 
   <section class="intake">
     <div>
+      <div class="mode" role="tablist" aria-label="طريقة إدخال السكربت">
+        <button type="button" role="tab" id="modeFile" aria-selected="true" aria-controls="drop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4"/><path d="m6 10 6-6 6 6"/><path d="M4 20h16"/></svg>رفع ملف</button>
+        <button type="button" role="tab" id="modeText" aria-selected="false" aria-controls="writeBox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/></svg>كتابة أو لصق النص</button>
+      </div>
       <label class="drop" id="drop" for="fileInput">
         <canvas id="wave" aria-hidden="true"></canvas>
         <div class="idle" style="display:flex;flex-direction:column;align-items:center;gap:10px;position:relative;z-index:1">
@@ -319,8 +332,10 @@ kbd{font-family:var(--f-mono);font-size:12px;border:1px solid var(--line-strong)
         </div>
         <input type="file" id="fileInput" accept=".docx,.pdf,.txt" hidden>
       </label>
-      <button class="paste-toggle" id="pasteToggle" type="button">أو الصق نص السكربت مباشرة</button>
-      <div class="paste-box" id="pasteBox"><textarea id="pasteText" placeholder="الصق نص السكربت هنا…"></textarea></div>
+      <div class="write" id="writeBox" hidden>
+        <textarea id="pasteText" aria-label="نص السكربت" placeholder="اكتب نص السكربت هنا أو الصقه…&#10;&#10;مثال:&#10;المشهد 1 – خارجي – محطة قطار – ليل&#10;مطر خفيف. رجل مسنّ يجلس وحيداً على مقعد خشبي وينظر إلى ساعته…"></textarea>
+        <div class="write-foot"><span id="writeCount">0 كلمة</span><span class="sp"></span><button type="button" id="clearText">مسح النص</button></div>
+      </div>
     </div>
 
     <div class="panel controls">
@@ -380,7 +395,7 @@ kbd{font-family:var(--f-mono);font-size:12px;border:1px solid var(--line-strong)
       <section class="g-sec">
         <h3>خطوات الاستخدام</h3>
         <ol class="g-steps">
-          <li><div><b>ارفع السكربت:</b> اسحب الملف وأفلته في المربع الكبير، أو اضغط عليه لاختياره. يمكنك أيضاً الضغط على «أو الصق نص السكربت مباشرة».</div></li>
+          <li><div><b>ارفع السكربت:</b> اسحب الملف وأفلته في المربع الكبير، أو اضغط عليه لاختياره. أو اختر تبويب «كتابة أو لصق النص» فوق المربع، واكتب السكربت أو الصقه يدوياً بدون ملف.</div></li>
           <li><div><b>حدد النوع (اختياري):</b> اترك «تلقائي» ليكتشف النوع بنفسه. اختر نوعاً فقط إذا كنت متأكداً، مثلاً «فيديو جراف» لسكربت مقسّم إلى فريمات خبرية.</div></li>
           <li><div><b>اضغط «ابحث»</b> وانتظر. التحليل العام يأخذ عادة دقيقة. في الأفلام تظهر المشاهد تباعاً، وقد يأخذ الفيلم الطويل عدة دقائق. زر «إيقاف» يحتفظ بما اكتمل.</div></li>
           <li><div><b>راجع الملخص:</b> تحقق أن النوع والمزاج صحيحان. إذا أخطأ في النوع، صححه من القائمة في خانة «النوع» واضغط «أعد التحليل».</div></li>
@@ -554,11 +569,24 @@ const drop = $("#drop");
 drop.addEventListener("drop", ev => { const f = ev.dataTransfer?.files?.[0]; if (f) loadFile(f); });
 $("#fileInput").addEventListener("change", ev => { const f = ev.target.files[0]; if (f) loadFile(f); ev.target.value = ""; });
 $("#clearFile").addEventListener("click", ev => { ev.preventDefault(); ev.stopPropagation(); source = { text: "", name: "", ext: "" }; drop.classList.remove("has-file"); updateGo(); });
-$("#pasteToggle").onclick = () => { $("#pasteBox").classList.toggle("open"); if ($("#pasteBox").classList.contains("open")) $("#pasteText").focus(); };
-$("#pasteText").addEventListener("input", updateGo);
+let inputMode = "file";
+function setMode(m) {
+  inputMode = m;
+  $("#modeFile").setAttribute("aria-selected", m === "file");
+  $("#modeText").setAttribute("aria-selected", m === "text");
+  $("#drop").hidden = m !== "file";
+  $("#writeBox").hidden = m !== "text";
+  if (m === "text") $("#pasteText").focus(); else drawWave();
+  notice(""); updateGo();
+}
+$("#modeFile").onclick = () => setMode("file");
+$("#modeText").onclick = () => setMode("text");
+function updateWriteCount() { $("#writeCount").textContent = wordCount($("#pasteText").value).toLocaleString("ar") + " كلمة"; }
+$("#pasteText").addEventListener("input", () => { updateWriteCount(); updateGo(); });
+$("#clearText").onclick = () => { $("#pasteText").value = ""; updateWriteCount(); updateGo(); $("#pasteText").focus(); };
 
 function notice(msg, err) { const n = $("#notice"); n.hidden = !msg; n.textContent = msg || ""; n.classList.toggle("err", !!err); }
-function scriptText() { return source.text || $("#pasteText").value.trim(); }
+function scriptText() { return inputMode === "text" ? $("#pasteText").value.trim() : source.text; }
 function updateGo() { $("#goBtn").disabled = !scriptText() || !!runCtl; }
 const wordCount = t => (t.match(/\S+/g) || []).length;
 
@@ -584,7 +612,7 @@ async function loadFile(file) {
   } catch (e) {
     source = { text: "", name: "", ext: "" };
     drop.classList.remove("has-file");
-    notice(ext === "pdf" ? "تعذّر استخراج النص من ملف PDF. إذا كان صورة ممسوحة ضوئياً فلن يُقرأ؛ جرّب نسخة Word أو الصق النص." : "تعذّر قراءة الملف. تأكد أنه غير تالف أو الصق النص مباشرة.", true);
+    notice(ext === "pdf" ? "تعذّر استخراج النص من ملف PDF. إذا كان صورة ممسوحة ضوئياً فلن يُقرأ؛ جرّب نسخة Word، أو انسخ النص إلى تبويب «كتابة أو لصق النص»." : "تعذّر قراءة الملف. تأكد أنه غير تالف، أو انسخ النص إلى تبويب «كتابة أو لصق النص».", true);
   }
   updateGo();
 }
@@ -748,18 +776,18 @@ async function run(typeChoice) {
   ["read","analyze","scenes"].forEach(s => setStep(s, null)); $("#sceneProg").textContent = "";
   setStep("read", "done"); setStep("analyze", "active"); setBar(.08, "يقرأ Claude السكربت ويحدد نوعه وإيقاعه… قد يستغرق ذلك دقيقة أو أكثر للسكربتات الطويلة.");
 
-  const fixed = stage1Prompt("", typeChoice, source.name);
+  const fixed = stage1Prompt("", typeChoice, inputMode === "text" ? "" : source.name);
   const { text: body, condensed } = condense(raw, MAX_BYTES - bytes(fixed) - 200);
   let analysis;
   try {
-    analysis = await sample.json(stage1Prompt(body, typeChoice, source.name), { signal, modelTier: "complex" });
+    analysis = await sample.json(stage1Prompt(body, typeChoice, inputMode === "text" ? "" : source.name), { signal, modelTier: "complex" });
   } catch (e) {
     finishRun(); if (e.code !== "cancelled") notice(errMsg(e), true); return;
   }
   analysis = cleanAnalysis(analysis, typeChoice);
   current = {
     id: "a" + Date.now().toString(36),
-    meta: { fileName: source.name || "نص ملصوق", words: wordCount(raw), date: Date.now(), condensed, forced: typeChoice },
+    meta: { fileName: inputMode === "text" ? "نص مكتوب يدوياً" : source.name, words: wordCount(raw), date: Date.now(), condensed, forced: typeChoice },
     analysis, scenes: {}, failed: {},
   };
   setStep("analyze", "done");
