@@ -297,6 +297,13 @@ dialog.sheet::backdrop{background:rgb(10 12 18 / .5)}
 .hist input[type=datetime-local]{border:1px solid var(--line);background:var(--surface-2);border-radius:7px;padding:3px 7px;font-family:var(--f-mono);font-size:.78rem;min-width:0}
 .hist textarea{border:1px solid var(--line);background:var(--surface-2);border-radius:8px;padding:6px 8px;font-size:.85rem;min-height:40px;resize:vertical;width:100%}
 .hist .x{width:26px;height:26px}
+.calbox{display:grid;gap:10px;background:var(--surface-2);border-radius:var(--r);padding:12px}
+.seg2{display:flex;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:3px;gap:3px}
+.seg2 button{flex:1;border:0;background:none;border-radius:8px;padding:6px 8px;font-weight:600;font-size:.84rem;color:var(--muted)}
+.seg2 button.on{background:var(--fg);color:var(--bg)}
+.calrow{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.calrow input{width:100%;border:1px solid var(--line-2);background:var(--surface);border-radius:9px;padding:7px 9px;min-width:0}
+.calgo{justify-content:center;text-decoration:none}
 .timebox{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--surface-2);border-radius:var(--r);padding:10px 12px}
 .timebox .big{font-family:var(--f-mono);font-size:1.3rem;font-weight:700}
 .timebox .of{color:var(--muted);font-size:.85rem}
@@ -725,6 +732,7 @@ function viewPlatforms(){
 /* ---------- sheet (details / new) ---------- */
 const dlg=$("sheet");
 function openSheet(id,opts={}){
+  calMode=null;
   sheet={id:id||null, draft:id?null:{title:"",platform:$("q-platform").value||"",kind:$("q-kind").value||"video",date:state.day,end:state.day,due:"",dueTime:"",priority:2,est:120,remind:"",link:"",notes:"",initStatus:"received",receivedAt:Date.now()}, focusNote:!!opts.focusNote};
   renderSheet();
   if(!dlg.open){ dlg.showModal?dlg.showModal():dlg.setAttribute("open",""); }
@@ -779,6 +787,7 @@ function renderSheet(){
           <span class="hint" id="perDay">${span(t)>1?`يعني تقريباً ${tc((+t.est||0)/span(t))} باليوم على ${span(t)} أيام`:"&nbsp;"}</span></div>
         ${isNew?"":`<div class="timebox"><span class="big" data-live="${t.id}">${running?tcSec(spentMin(t)*60):tc(spentMin(t))}</span><span class="of">شغل فعلي من ${tc(+t.est||0)}</span>
           ${statusOf(t)!=="delivered"&&!readOnly?`<button class="btn small ${running?"primary":""}" data-act="timer" data-id="${t.id}">${running?I.pause+"إيقاف":I.play+"ابدأ المؤقّت"}</button>`:""}</div>`}</div>
+      ${isNew||statusOf(t)==="delivered"?"":calBlock(t)}
       <div class="block"><h4>الملفات والملاحظات</h4>
         <div class="field"><label for="d-link">رابط الملفات</label><div style="display:flex;gap:6px"><input id="d-link" type="url" dir="ltr" placeholder="https://drive.google.com/…" value="${esc(t.link||"")}" ${dis}>${t.link?`<a class="btn small" href="${esc(t.link)}" target="_blank" rel="noopener">فتح ${I.link}</a>`:""}</div></div>
         <div class="field"><label for="d-notes">ملاحظات / البريف</label><textarea id="d-notes" placeholder="تفاصيل الطلب، المقاسات، الموسيقى، الشعار…" ${dis}>${esc(t.notes||"")}</textarea></div></div>
@@ -789,6 +798,39 @@ function renderSheet(){
       :`${readOnly?"":pendingDelete.has(t.id)?`<button class="confirm" data-act="del" data-id="${t.id}">اضغط مرة ثانية للتأكيد</button>`:`<button class="btn small danger" data-act="del" data-id="${t.id}">${I.trash}حذف العمل</button>`}<span class="hint">التعديلات بتنحفظ تلقائياً</span><button class="btn" data-act="close">تم</button>`}</div>`;
   autoGrow($("d-title"));
 }
+const PLANNER_URL="https://claude.ai/artifact/8rGC6vD9wdyiP2z8Qs1DeQ";
+let calMode=null;
+function calDefaults(t,mode){
+  if(mode==="due") return {d:t.due,tm:t.dueTime||"12:00"};
+  const tk=todayKey(); return {d:(t.date<=tk&&tk<=t.end)?tk:(t.date>tk?t.date:tk),tm:t.remind||"10:00"};
+}
+function calBlock(t){
+  const mode=calMode&&(calMode!=="due"||t.due)?calMode:(t.due?"due":"work");
+  const v=calDefaults(t,mode);
+  return `<div class="block"><h4>أضف للتقويم</h4><div class="calbox">
+    <div class="seg2" role="group" aria-label="نوع الموعد"><button type="button" class="${mode==="due"?"on":""}" data-cal="due" ${t.due?"":"disabled title=\"حدّد موعد التسليم أولاً\""}>موعد التسليم</button><button type="button" class="${mode==="work"?"on":""}" data-cal="work">تذكير بالشغل</button></div>
+    <div class="calrow"><input type="date" id="cal-d" value="${v.d}" aria-label="تاريخ الموعد"><input type="time" id="cal-t" value="${v.tm}" aria-label="ساعة الموعد"></div>
+    <a class="btn primary calgo" id="cal-go" target="_blank" rel="noopener" href="${calUrl(t,mode,v.d,v.tm)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M8 3v4M16 3v4M3.5 10h17M12 13v5M9.5 15.5h5"/></svg>أضف لتقويم Google</a>
+    <span class="hint">بيفتح Google Calendar والموعد جاهز، بس اضغط «حفظ». التنبيه بيرن حسب إعداد التنبيه الافتراضي بتقويمك.</span>
+  </div></div>`;
+}
+function calUrl(t,mode,d,tm){
+  if(!d) return "#";
+  const start=new Date(d+"T"+(tm||"10:00")); if(isNaN(start)) return "#";
+  const end=new Date(start.getTime()+30*6e4);
+  const z=x=>x.toISOString().replace(/[-:]/g,"").replace(/\.\d{3}/,"");
+  const title=(mode==="due"?"تسليم: ":"شغل: ")+t.title;
+  const details=[`المنصة: ${pName(t)} · ${KINDS[t.kind].name}`,`الحالة: ${stName(statusOf(t),t.kind)}`,t.due?`موعد التسليم: ${t.due}${t.dueTime?" "+t.dueTime:""}`:"",t.notes?`ملاحظات: ${t.notes}`:"",t.link?`الملفات: ${t.link}`:"",`تايملاين: ${PLANNER_URL}`].filter(Boolean).join("\n");
+  return "https://calendar.google.com/calendar/render?"+"action=TEMPLATE&dates="+z(start)+"/"+z(end)+"&"+new URLSearchParams({text:title,details}).toString();
+}
+function refreshCal(){
+  const t=state.tasks[sheet.id], a=$("cal-go"); if(!t||!a) return;
+  const mode=dlg.querySelector("[data-cal].on")?.dataset.cal||"work";
+  a.href=calUrl(t,mode,$("cal-d").value,$("cal-t").value);
+}
+dlg.addEventListener("input",e=>{ if(e.target.id==="cal-d"||e.target.id==="cal-t") refreshCal(); });
+dlg.addEventListener("click",e=>{ const b=e.target.closest("[data-cal]"); if(!b||b.disabled) return; calMode=b.dataset.cal; const t=state.tasks[sheet.id]; if(!t) return;
+  dlg.querySelectorAll("[data-cal]").forEach(x=>x.classList.toggle("on",x===b)); const v=calDefaults(t,calMode); $("cal-d").value=v.d||""; $("cal-t").value=v.tm; refreshCal(); });
 function autoGrow(el){ if(!el) return; el.style.height="auto"; el.style.height=el.scrollHeight+"px"; }
 dlg.addEventListener("input",e=>{ if(e.target.id==="d-title") autoGrow(e.target); });
 dlg.addEventListener("click",e=>{ if(e.target===dlg) dlg.close();
@@ -822,7 +864,7 @@ dlg.addEventListener("change",e=>{
   if(f==="end"&&v<t.date){ patch.end=t.date; }
   if(f==="date"&&!v) return;
   patchTask(id,patch);
-  if(["platform","kind","date","end","est","link"].includes(f)) renderSheet(); else updatePerDay(state.tasks[id]);
+  if(["platform","kind","date","end","est","link","due","dueTime","remind"].includes(f)) renderSheet(); else updatePerDay(state.tasks[id]);
 });
 function updatePerDay(t){ const el=$("perDay"); if(!el) return; const n=diffDays(t.end,t.date)+1; el.innerHTML=n>1?`يعني تقريباً ${tc((+t.est||0)/n)} باليوم على ${n} أيام`:"&nbsp;"; }
 function createFromDraft(){
