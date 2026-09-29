@@ -951,11 +951,11 @@ function renderResults() {
       <div class="sum"><span class="k">المزاج العام</span><span class="v">${esc(a.summary.mood) || "—"}</span></div>
       <div class="sum"><span class="k">نقطة الذروة</span><span class="v">${esc(a.summary.climax) || "—"}</span></div>
     </div>
-    ${current.isSample ? "" : `<div class="refine">
-      <div class="rl"><b>عدّل النتائج</b><span>اكتب ما لم يعجبك أو ما تريده، وأعد التحليل.</span></div>
+    <div class="refine">
+      <div class="rl"><b>عدّل النتائج</b><span>${current.isSample ? "يعمل بعد تحليل سكربتك: اكتب ما لم يعجبك وأعد التحليل." : "اكتب ما لم يعجبك أو ما تريده، وأعد التحليل."}</span></div>
       <textarea id="refineNotes" aria-label="ملاحظات التعديل" placeholder="مثال: الموسيقى ضعيفة، أريدها أقوى بطابع التريلر…">${esc(m.notes || "")}</textarea>
       <button class="go-sm" type="button" id="refineBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.3-5.7L20 8"/><path d="M20 3v5h-5"/></svg>أعد التحليل بالملاحظة</button>
-    </div>`}
+    </div>
     <section>
       <div class="sec-title"><h2>${T.whole}</h2><span class="rule"></span>${T.sfx ? "" : '<span class="tag">محتوى خبري: موسيقى فقط بدون مؤثرات</span>'}</div>
       ${libsHTML(a.global, T.sfx)}
@@ -971,7 +971,8 @@ function renderResults() {
   rr.onclick = () => { if (!scriptText()) { notice("ارفع السكربت من جديد لإعادة تحليله بالنوع المصحّح.", true); window.scrollTo({ top: 0, behavior: "smooth" }); return; } forcedType = sel.value; renderTypes(); run(sel.value); };
   const rb = $("#refineBtn");
   if (rb) {
-    rb.disabled = !!runCtl;
+    rb.disabled = !!runCtl || !!current.isSample;
+    if (current.isSample) $("#refineNotes").disabled = true;
     rb.onclick = () => {
       if (!scriptText()) { notice("السكربت غير موجود في الصفحة الآن. ارفعه أو الصقه من جديد ثم اضغط «أعد التحليل بالملاحظة».", true); window.scrollTo({ top: 0, behavior: "smooth" }); return; }
       $("#notes").value = $("#refineNotes").value.trim();
