@@ -108,6 +108,24 @@ button{cursor:pointer}
 .notice{font-size:13px;border-radius:10px;padding:10px 12px;background:var(--surface-2);border:1px solid var(--line);color:var(--ink-2)}
 .notice.err{border-color:color-mix(in srgb,var(--danger) 45%,var(--line));color:var(--danger)}
 
+/* ---------- notes ---------- */
+.notes textarea,.refine textarea{width:100%;min-height:74px;border-radius:12px;border:1px solid var(--line);background:var(--surface-2);padding:10px 12px;resize:vertical;line-height:1.7;font-size:14px}
+.notes textarea:focus,.refine textarea:focus{outline:0;border-color:var(--music);background:var(--surface)}
+.notes textarea::placeholder,.refine textarea::placeholder{color:var(--ink-3)}
+.label .opt{font-weight:500;color:var(--ink-3);opacity:.8}
+.note-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.note-chips button{border:1px dashed var(--line-strong);background:none;border-radius:999px;padding:2px 10px;font-size:12.5px;color:var(--ink-2)}
+.note-chips button:hover{border-style:solid;border-color:var(--music);color:var(--music)}
+.refine{display:grid;grid-template-columns:auto 1fr auto;gap:10px 14px;align-items:center;padding:14px 16px;border-radius:14px;border:1px solid var(--line);background:var(--surface)}
+.refine .rl{display:flex;flex-direction:column;gap:2px;min-width:0}
+.refine .rl b{font-family:var(--f-display);font-weight:600;font-size:15px}
+.refine .rl span{font-size:12.5px;color:var(--ink-3)}
+.refine textarea{min-height:46px;height:46px}
+.refine .go-sm{display:inline-flex;align-items:center;gap:8px;height:44px;padding-inline:16px;border-radius:11px;border:0;background:var(--accent);color:var(--accent-ink);font-weight:600;font-size:14px;white-space:nowrap}
+.refine .go-sm:disabled{opacity:.45;cursor:not-allowed}
+.refine .go-sm svg{width:17px;height:17px}
+@media (max-width:760px){.refine{grid-template-columns:1fr}}
+
 /* ---------- progress ---------- */
 .progress{margin-top:22px;padding:18px 22px;display:none}
 .progress.on{display:block}
@@ -344,6 +362,17 @@ kbd{font-family:var(--f-mono);font-size:12px;border:1px solid var(--line-strong)
         <div class="types" id="types" role="group" aria-label="نوع المحتوى"></div>
         <p class="hint-line">اترك «تلقائي» ليحدد النوع من السكربت. اختر نوعاً فقط إذا أردت فرضه.</p>
       </div>
+      <div class="notes">
+        <label class="label" for="notes">ملاحظات وتوجيهات <span class="opt">(اختياري)</span></label>
+        <textarea id="notes" placeholder="مثال: أريد موسيقى قوية بطابع التريلر، بدون آلات شرقية، والمشهد الأخير هادئ."></textarea>
+        <div class="note-chips" id="noteChips">
+          <button type="button">موسيقى تريلر قوية</button>
+          <button type="button">هادئة ومؤثرة</button>
+          <button type="button">إيقاع سريع</button>
+          <button type="button">بدون آلات شرقية</button>
+          <button type="button">بطابع شرقي</button>
+        </div>
+      </div>
       <div class="notice" id="notice" hidden></div>
       <button class="go" id="goBtn" type="button" disabled>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
@@ -397,8 +426,10 @@ kbd{font-family:var(--f-mono);font-size:12px;border:1px solid var(--line-strong)
         <ol class="g-steps">
           <li><div><b>ارفع السكربت:</b> اسحب الملف وأفلته في المربع الكبير، أو اضغط عليه لاختياره. أو اختر تبويب «كتابة أو لصق النص» فوق المربع، واكتب السكربت أو الصقه يدوياً بدون ملف.</div></li>
           <li><div><b>حدد النوع (اختياري):</b> اترك «تلقائي» ليكتشف النوع بنفسه. اختر نوعاً فقط إذا كنت متأكداً، مثلاً «فيديو جراف» لسكربت مقسّم إلى فريمات خبرية.</div></li>
+          <li><div><b>اكتب ملاحظاتك (اختياري):</b> في خانة «ملاحظات وتوجيهات» اكتب ما تريده بالضبط، مثل «موسيقى تريلر قوية» أو «بدون آلات شرقية». التحليل يلتزم بها. الأزرار الصغيرة تحتها تضيف ملاحظات جاهزة.</div></li>
           <li><div><b>اضغط «ابحث»</b> وانتظر. التحليل العام يأخذ عادة دقيقة. في الأفلام تظهر المشاهد تباعاً، وقد يأخذ الفيلم الطويل عدة دقائق. زر «إيقاف» يحتفظ بما اكتمل.</div></li>
           <li><div><b>راجع الملخص:</b> تحقق أن النوع والمزاج صحيحان. إذا أخطأ في النوع، صححه من القائمة في خانة «النوع» واضغط «أعد التحليل».</div></li>
+          <li><div><b>لم تعجبك النتيجة؟</b> تحت الملخص مباشرة خانة «عدّل النتائج». اكتب ما تريد تغييره واضغط «أعد التحليل بالملاحظة». يحتاج ذلك أن يكون السكربت ما زال في الصفحة.</div></li>
           <li><div><b>انسخ وابحث:</b> اضغط زر النسخ بجانب أي كلمة بحث، ثم «فتح الموقع» والصقها في خانة البحث هناك.</div></li>
           <li><div><b>احفظ النتيجة:</b> «نسخ الكل» ينسخ النتيجة كاملة كنص، و«تصدير PDF» و«تصدير Word» يحفظانها كملف. وكل تحليل يُحفظ تلقائياً في «السجل».</div></li>
         </ol>
@@ -654,7 +685,10 @@ const ACCURACY = `ACCURACY RULES
 - Animation: playful / comedic-orchestral / whimsical language where the script is light; cartoon sound effects.
 - q in English; all other text in Arabic.`;
 
-function stage1Prompt(text, forced, fileName) {
+function notesBlock(notes) {
+  return notes ? `\n\nUSER'S DIRECTION NOTES — the user wrote these after or before seeing results. They are mandatory: follow them in every recommendation (style, energy, instruments, tempo, per-scene wishes). Where they conflict with your own stylistic judgement, the notes win. They are instructions, not part of the script:\n"""\n${notes}\n"""` : "";
+}
+function stage1Prompt(text, forced, fileName, notes) {
   const force = forced !== "auto" ? `\nThe user has confirmed the content type is "${forced}". Treat that as authoritative.\n` : "";
   return `You are a senior music supervisor and sound designer working on Arabic-language film, animation and news productions. Analyse the script below with great precision and recommend music and sound effects that can be found on exactly three libraries: audionetwork, lensdistortions, envato.
 
@@ -674,7 +708,7 @@ ${ITEM_RULES}
 
 ${LIB_RULES}
 
-${ACCURACY}
+${ACCURACY}${notesBlock(notes)}
 
 Reply with ONLY this JSON (no commentary):
 {"content_type":"","title":"Arabic working title taken from the script","summary":{"genre":"","pacing":"","mood":"","climax":""},"global":{"audionetwork":{"music":[{"q":"","hint":""}],"sfx":[{"q":"","hint":"","at":""}]},"lensdistortions":{"music":[],"sfx":[]},"envato":{"music":[],"sfx":[]}},"scenes":[{"n":1,"title":"","anchor":""}]}
@@ -706,7 +740,7 @@ ${ITEM_RULES}
 
 ${LIB_RULES}
 
-${ACCURACY}
+${ACCURACY}${notesBlock(current?.meta?.notes)}
 
 Reply with ONLY this JSON:
 {"scenes":[{"n":1,"mood":"","silence_note":"","audionetwork":{"music":[{"q":"","hint":""}],"sfx":[{"q":"","hint":"","at":""}]},"lensdistortions":{"music":[],"sfx":[]},"envato":{"music":[],"sfx":[]}}]}
@@ -767,6 +801,7 @@ $("#goBtn").onclick = () => run(forcedType);
 $("#stopBtn").onclick = () => runCtl?.abort();
 
 async function run(typeChoice) {
+  if (runCtl) return;
   const raw = scriptText();
   if (!raw) return;
   if (!sample) { notice("التحليل يعمل فقط عند فتح الصفحة داخل claude.ai.", true); return; }
@@ -776,18 +811,19 @@ async function run(typeChoice) {
   ["read","analyze","scenes"].forEach(s => setStep(s, null)); $("#sceneProg").textContent = "";
   setStep("read", "done"); setStep("analyze", "active"); setBar(.08, "يقرأ Claude السكربت ويحدد نوعه وإيقاعه… قد يستغرق ذلك دقيقة أو أكثر للسكربتات الطويلة.");
 
-  const fixed = stage1Prompt("", typeChoice, inputMode === "text" ? "" : source.name);
+  const notes = $("#notes").value.trim();
+  const fixed = stage1Prompt("", typeChoice, inputMode === "text" ? "" : source.name, notes);
   const { text: body, condensed } = condense(raw, MAX_BYTES - bytes(fixed) - 200);
   let analysis;
   try {
-    analysis = await sample.json(stage1Prompt(body, typeChoice, inputMode === "text" ? "" : source.name), { signal, modelTier: "complex" });
+    analysis = await sample.json(stage1Prompt(body, typeChoice, inputMode === "text" ? "" : source.name, notes), { signal, modelTier: "complex" });
   } catch (e) {
     finishRun(); if (e.code !== "cancelled") notice(errMsg(e), true); return;
   }
   analysis = cleanAnalysis(analysis, typeChoice);
   current = {
     id: "a" + Date.now().toString(36),
-    meta: { fileName: inputMode === "text" ? "نص مكتوب يدوياً" : source.name, words: wordCount(raw), date: Date.now(), condensed, forced: typeChoice },
+    meta: { fileName: inputMode === "text" ? "نص مكتوب يدوياً" : source.name, words: wordCount(raw), date: Date.now(), condensed, forced: typeChoice, notes },
     analysis, scenes: {}, failed: {},
   };
   setStep("analyze", "done");
@@ -915,6 +951,11 @@ function renderResults() {
       <div class="sum"><span class="k">المزاج العام</span><span class="v">${esc(a.summary.mood) || "—"}</span></div>
       <div class="sum"><span class="k">نقطة الذروة</span><span class="v">${esc(a.summary.climax) || "—"}</span></div>
     </div>
+    ${current.isSample ? "" : `<div class="refine">
+      <div class="rl"><b>عدّل النتائج</b><span>اكتب ما لم يعجبك أو ما تريده، وأعد التحليل.</span></div>
+      <textarea id="refineNotes" aria-label="ملاحظات التعديل" placeholder="مثال: الموسيقى ضعيفة، أريدها أقوى بطابع التريلر…">${esc(m.notes || "")}</textarea>
+      <button class="go-sm" type="button" id="refineBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.3-5.7L20 8"/><path d="M20 3v5h-5"/></svg>أعد التحليل بالملاحظة</button>
+    </div>`}
     <section>
       <div class="sec-title"><h2>${T.whole}</h2><span class="rule"></span>${T.sfx ? "" : '<span class="tag">محتوى خبري: موسيقى فقط بدون مؤثرات</span>'}</div>
       ${libsHTML(a.global, T.sfx)}
@@ -928,6 +969,16 @@ function renderResults() {
   const sel = $("#typeFix"), rr = $("#rerun");
   sel.onchange = () => { rr.hidden = sel.value === a.content_type || current.isSample; };
   rr.onclick = () => { if (!scriptText()) { notice("ارفع السكربت من جديد لإعادة تحليله بالنوع المصحّح.", true); window.scrollTo({ top: 0, behavior: "smooth" }); return; } forcedType = sel.value; renderTypes(); run(sel.value); };
+  const rb = $("#refineBtn");
+  if (rb) {
+    rb.disabled = !!runCtl;
+    rb.onclick = () => {
+      if (!scriptText()) { notice("السكربت غير موجود في الصفحة الآن. ارفعه أو الصقه من جديد ثم اضغط «أعد التحليل بالملاحظة».", true); window.scrollTo({ top: 0, behavior: "smooth" }); return; }
+      $("#notes").value = $("#refineNotes").value.trim();
+      const t = current.meta.forced || "auto";
+      forcedType = t; renderTypes(); run(t);
+    };
+  }
   $("#copyAll").onclick = e => copyText(plainText(current), e.currentTarget, "نُسخت النتيجة كاملة");
   $("#expPdf").onclick = exportPdf;
   $("#expDocx").onclick = exportDocx;
@@ -977,7 +1028,7 @@ function blockText(block, showSfx) {
 }
 function plainText(c) {
   const a = c.analysis, T = TYPES[a.content_type];
-  let out = `${a.title}\nالنوع: ${T.label}${a.summary.genre ? " — " + a.summary.genre : ""}\nالإيقاع: ${a.summary.pacing}\nالمزاج العام: ${a.summary.mood}\nنقطة الذروة: ${a.summary.climax}\n\n`;
+  let out = `${a.title}\nالنوع: ${T.label}${a.summary.genre ? " — " + a.summary.genre : ""}\nالإيقاع: ${a.summary.pacing}\nالمزاج العام: ${a.summary.mood}\nنقطة الذروة: ${a.summary.climax}\n${c.meta.notes ? "ملاحظاتك: " + c.meta.notes + "\n" : ""}\n`;
   out += `${T.whole}\n${blockText(a.global, T.sfx)}\n`;
   if (a.scenes.length) {
     out += `\n\nالمشاهد:\n`;
@@ -1104,6 +1155,14 @@ $("#historyBtn").onclick = () => toggleDrawer(true);
 $("#closeDrawer").onclick = () => toggleDrawer(false);
 $("#scrim").onclick = () => toggleDrawer(false);
 addEventListener("keydown", e => { if (e.key === "Escape") toggleDrawer(false); });
+
+/* ================= notes chips ================= */
+$("#noteChips").addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  const ta = $("#notes"), v = ta.value.trim(), t = b.textContent;
+  if (!v.includes(t)) ta.value = v ? v + "، " + t : t;
+  ta.focus();
+});
 
 /* ================= guide ================= */
 function toggleGuide(on) { $("#guide").classList.toggle("on", on); if (on) $("#closeGuide").focus(); }
