@@ -1355,14 +1355,14 @@ requestAnimationFrame(drawWave);
 async function checkImages() {
   const el = $("#imgCheck");
   if (!sample) { el.innerHTML = '<b style="color:var(--danger)">✗ غير متاح:</b> التحليل نفسه غير مفعّل في هذا العرض. افتح الصفحة داخل claude.ai.'; return; }
-  let l = null; try { l = await sample.limits(); } catch {}
+  let l = null, why = ""; try { l = await sample.limits(); } catch (e) { why = e?.code || "error"; }
   const im = l?.images;
   if (im) {
     const mb = Math.round(im.maxInputBytes / 1048576);
     const types = (im.mediaTypes || []).map(t => t.replace("image/", "").toUpperCase()).join("، ");
     el.innerHTML = `<b style="color:var(--sfx)">✓ إرسال الصور مفعّل:</b> حتى ${im.maxCount} صورة في المرة الواحدة، وحجم الصورة حتى ${mb} ميغابايت. الصيغ: ${esc(types)}.`;
   } else {
-    el.innerHTML = '<b style="color:var(--danger)">✗ إرسال الصور غير متاح</b> بهذا الحساب أو الجهاز. التحليل بالنص يعمل بشكل طبيعي.';
+    el.innerHTML = '<b style="color:var(--danger)">✗ إرسال الصور غير متاح</b> بهذا الحساب أو الجهاز. التحليل بالنص يعمل بشكل طبيعي.' + (why ? ` <span style="color:var(--ink-3);font-size:12px">(${esc(why)})</span>` : "");
   }
 }
 function loadLocalHistory() { try { history = JSON.parse(localStorage.getItem(LS_KEY) || "[]"); } catch { history = []; } renderHistory(); }
