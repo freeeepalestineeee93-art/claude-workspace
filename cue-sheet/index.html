@@ -498,6 +498,11 @@ kbd{font-family:var(--f-mono);font-size:12px;border:1px solid var(--line-strong)
         </ul>
       </section>
 
+      <section class="g-sec">
+        <h3>فحص إرسال الصور</h3>
+        <p id="imgCheck" style="margin:0">جارٍ الفحص…</p>
+      </section>
+
       <section class="g-sec" style="font-size:13px;color:var(--ink-3)">تصميم: <b style="color:var(--ink-2);font-family:var(--f-display)">سلمان الأبرش</b></section>
     </div>
   </div>
@@ -1335,10 +1340,11 @@ requestAnimationFrame(drawWave);
 
 (async () => {
   const c = window.claude;
-  if (!c?.use) { notice("افتح هذه الصفحة داخل claude.ai لتفعيل التحليل.", true); loadLocalHistory(); return; }
+  if (!c?.use) { notice("افتح هذه الصفحة داخل claude.ai لتفعيل التحليل.", true); loadLocalHistory(); checkImages(); return; }
   const [s, d, dl] = await Promise.all([c.use("sample"), c.use("db"), c.use("downloads")].map(p => p.catch(() => null)));
   sample = s; db = d; downloads = dl;
   if (!sample) notice("التحليل غير متاح في هذا العرض. افتح الصفحة داخل claude.ai.", true);
+  checkImages();
   if (current) renderResults();
   if (db) {
     db.collection("history").orderBy("date", "desc").limit(40).onSnapshot(snap => {
@@ -1346,6 +1352,19 @@ requestAnimationFrame(drawWave);
     }, () => loadLocalHistory());
   } else loadLocalHistory();
 })();
+async function checkImages() {
+  const el = $("#imgCheck");
+  if (!sample) { el.innerHTML = '<b style="color:var(--danger)">✗ غير متاح:</b> التحليل نفسه غير مفعّل في هذا العرض. افتح الصفحة داخل claude.ai.'; return; }
+  let l = null; try { l = await sample.limits(); } catch {}
+  const im = l?.images;
+  if (im) {
+    const mb = Math.round(im.maxInputBytes / 1048576);
+    const types = (im.mediaTypes || []).map(t => t.replace("image/", "").toUpperCase()).join("، ");
+    el.innerHTML = `<b style="color:var(--sfx)">✓ إرسال الصور مفعّل:</b> حتى ${im.maxCount} صورة في المرة الواحدة، وحجم الصورة حتى ${mb} ميغابايت. الصيغ: ${esc(types)}.`;
+  } else {
+    el.innerHTML = '<b style="color:var(--danger)">✗ إرسال الصور غير متاح</b> بهذا الحساب أو الجهاز. التحليل بالنص يعمل بشكل طبيعي.';
+  }
+}
 function loadLocalHistory() { try { history = JSON.parse(localStorage.getItem(LS_KEY) || "[]"); } catch { history = []; } renderHistory(); }
 })();
 </script>
