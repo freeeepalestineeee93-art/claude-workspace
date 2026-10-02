@@ -1,7 +1,7 @@
 <title>تايملاين أعمالي</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Reem+Kufi:wght@500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Alexandria:wght@500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap">
 <style>
 /* Layout: editor's workspace. Sidebar (views + platforms) | main column: day header, today's track
    (clips sized by time, playhead at progress), then the active view. Task details open in a side sheet. */
@@ -12,7 +12,7 @@
   --danger:#C1333C; --danger-soft:#FBE4E5; --ok:#1D8757; --ok-soft:#DFF3E8; --warn:#9C6710; --warn-soft:#F9EDD6;
   --s-received:#4B67D1; --s-working:#B45F00; --s-review:#7650D4; --s-revision:#C93A5B; --s-approved:#0C8583; --s-delivered:#1D8757;
   --shadow:0 1px 2px rgb(20 24 40 / .05), 0 10px 30px -16px rgb(20 24 40 / .22);
-  --f-display:"Reem Kufi","IBM Plex Sans Arabic",system-ui,sans-serif;
+  --f-display:"Alexandria","IBM Plex Sans Arabic",system-ui,sans-serif;
   --f-body:"IBM Plex Sans Arabic",system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;
   --f-mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
   --r:14px; --r-sm:9px;
@@ -55,7 +55,7 @@ button:disabled{cursor:default;opacity:.45}
 .brand svg{width:36px;height:36px;flex:none}
 .themebtn{margin-inline-start:auto;border:1px solid var(--line)!important;background:var(--surface)!important}
 .themebtn svg{width:18px!important;height:18px!important}
-.brand b{font-family:var(--f-display);font-size:1.5rem;font-weight:700;line-height:1}
+.brand b{font-family:var(--f-display);font-size:1.55rem;font-weight:800;line-height:1.1;letter-spacing:-.01em}
 .brand small{display:block;color:var(--muted);font-size:.76rem;margin-top:3px}
 .newbtn{width:100%;justify-content:center;padding:11px 14px;font-size:.95rem}
 .nav{display:grid;gap:2px}
@@ -93,7 +93,7 @@ button:disabled{cursor:default;opacity:.45}
 
 /* ---------- day header ---------- */
 .dayhead{display:flex;flex-wrap:wrap;gap:14px 20px;align-items:flex-end;justify-content:space-between}
-.dayname{font-family:var(--f-display);font-size:clamp(1.6rem,3.6vw,2.3rem);font-weight:700;line-height:1.15;margin:0;text-wrap:balance}
+.dayname{font-family:var(--f-display);font-size:clamp(1.6rem,3.6vw,2.4rem);font-weight:700;line-height:1.3;letter-spacing:-.01em;margin:0;text-wrap:balance}
 .daysub{color:var(--muted);margin-top:4px;font-size:.95rem}
 .tag{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:6px;padding:1px 9px;font-weight:700;font-size:.8rem;margin-inline-end:8px}
 .datenav{display:flex;align-items:center;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:4px}
@@ -235,6 +235,31 @@ button:disabled{cursor:default;opacity:.45}
 .legend span{display:inline-flex;align-items:center;gap:6px}
 .legend i{width:8px;height:8px;border-radius:50%;background:var(--sc)}
 
+/* ---------- all works ---------- */
+.archbar{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:8px}
+.archbar input,.archbar select{border:0;background:var(--surface-2);border-radius:9px;padding:9px 11px;min-width:0}
+.fchips{display:flex;gap:6px;flex-wrap:wrap}
+.fchip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 13px;font-size:.86rem;font-weight:600;color:var(--muted);display:inline-flex;gap:7px;align-items:center}
+.fchip .n{font-family:var(--f-mono);font-size:.74rem;background:var(--surface-3);border-radius:6px;padding:0 6px}
+.fchip:hover{color:var(--fg);border-color:var(--line-2)}
+.fchip.on{background:var(--fg);border-color:var(--fg);color:var(--bg)}
+.fchip.on .n{background:rgb(127 127 127 / .3);color:inherit}
+.fchip.hot .n{background:var(--danger);color:var(--surface)}
+.month{font-size:.82rem;font-weight:700;color:var(--muted);padding:6px 2px 0;display:flex;gap:8px;align-items:center}
+.month .n{font-family:var(--f-mono);font-size:.72rem;color:var(--faint)}
+.arows{display:grid;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.arow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 14px;padding:12px 14px;border-top:1px solid var(--line);cursor:pointer;align-items:center}
+.arow:first-child{border-top:0}
+.arow:hover{background:var(--surface-2)}
+.arow.late{box-shadow:inset -3px 0 0 var(--danger)}
+.arow .ttl{font-size:.97rem}
+.arow .side2{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.age{font-size:.78rem;font-weight:600;color:var(--muted);white-space:nowrap}
+.age.warn{color:var(--warn)} .age.danger{color:var(--danger)}
+.nav button .n.red{background:var(--danger);color:#fff}
+.nav button .n.red:not([hidden]) + .n{margin-inline-start:4px}
+@media (max-width:720px){ .archbar{grid-template-columns:1fr 1fr} .archbar input{grid-column:1/-1} .arow{grid-template-columns:1fr} .arow .side2{flex-direction:row;justify-content:space-between;align-items:center;flex-wrap:wrap} }
+
 /* ---------- platforms ---------- */
 .pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px}
 .pcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px;display:grid;gap:12px}
@@ -255,7 +280,7 @@ button:disabled{cursor:default;opacity:.45}
 .hint{font-size:.76rem;color:var(--faint)}
 
 /* ---------- sheet (task details) ---------- */
-dialog.sheet{margin:0;margin-inline-start:auto;height:100%;max-height:100%;width:min(540px,100vw);border:0;border-inline-start:1px solid var(--line);border-radius:0;background:var(--surface);color:var(--fg);padding:0;box-shadow:-20px 0 60px -20px rgb(0 0 0 / .35)}
+dialog.sheet{margin:0;margin-inline-start:auto;height:100%;max-height:100%;width:min(540px,100vw);max-width:100vw;border:0;border-inline-start:1px solid var(--line);border-radius:0;background:var(--surface);color:var(--fg);padding:0;box-shadow:-20px 0 60px -20px rgb(0 0 0 / .35)}
 dialog.sheet[open]{animation:slide .22s ease}
 @keyframes slide{from{transform:translateX(-24px);opacity:.4}to{transform:none;opacity:1}}
 dialog.sheet::backdrop{background:rgb(10 12 18 / .5)}
@@ -263,7 +288,7 @@ dialog.sheet::backdrop{background:rgb(10 12 18 / .5)}
 .shhead{padding:14px 18px 12px;border-bottom:1px solid var(--line);display:grid;gap:10px;padding-top:calc(14px + env(safe-area-inset-top,0px))}
 .shtop{display:flex;align-items:center;gap:8px;justify-content:space-between}
 .shtop .k{font-size:.8rem;color:var(--muted);font-weight:600}
-.shtitle{width:100%;border:1px solid transparent;background:transparent;border-radius:9px;padding:4px 8px;margin-inline:-8px;font-family:var(--f-display);font-size:1.35rem;font-weight:700;line-height:1.35;resize:none;min-height:0}
+.shtitle{width:100%;border:1px solid transparent;background:transparent;border-radius:9px;padding:4px 8px;margin-inline:-8px;font-family:var(--f-display);font-size:1.25rem;font-weight:600;line-height:1.35;resize:none;min-height:0}
 .shtitle:hover,.shtitle:focus{border-color:var(--line-2);background:var(--surface-2)}
 .shbody{flex:1;overflow-y:auto;padding:16px 18px 24px;display:grid;gap:20px;align-content:start}
 .shfoot{padding:12px 18px calc(12px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap}
@@ -351,8 +376,9 @@ dialog.sheet::backdrop{background:rgb(10 12 18 / .5)}
     </div>
     <button class="btn primary newbtn" id="newTask"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>عمل جديد</button>
     <nav class="nav" id="nav" aria-label="الأقسام">
-      <button data-tab="day"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M8 3v4M16 3v4M3.5 10h17"/></svg>يومي<span class="n" id="n-day">0</span></button>
+      <button data-tab="day"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M8 3v4M16 3v4M3.5 10h17"/></svg>يومي<span class="n red" id="n-late" hidden title="أعمال متأخّرة">0</span><span class="n" id="n-day">0</span></button>
       <button data-tab="board"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3.5" y="4" width="5" height="16" rx="1.5"/><rect x="10" y="4" width="5" height="10" rx="1.5"/><rect x="16.5" y="4" width="4" height="13" rx="1.5"/></svg>مراحل الأعمال<span class="n" id="n-board">0</span></button>
+      <button data-tab="all"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4" width="17" height="5" rx="1.5"/><path d="M5 9v9.5a1.5 1.5 0 0 0 1.5 1.5h11a1.5 1.5 0 0 0 1.5-1.5V9M10 13h4"/></svg>كل الأعمال<span class="n" id="n-all">0</span></button>
       <button data-tab="week"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h9M8 12h12M4 18h7"/></svg>جدول الأسبوع</button>
       <button data-tab="platforms"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>المنصات والإحصائيات</button>
     </nav>
@@ -393,6 +419,12 @@ dialog.sheet::backdrop{background:rgb(10 12 18 / .5)}
         <option value="1">يوم واحد</option><option value="2">يومين</option><option value="3">3 أيام</option><option value="4">4 أيام</option><option value="5">5 أيام</option><option value="7">أسبوع</option><option value="14">أسبوعين</option>
       </select>
       <button class="btn primary" type="submit">أضف</button>
+    </form>
+
+    <form class="archbar" id="archbar" autocomplete="off" hidden>
+      <input id="a-q" type="search" placeholder="دوّر باسم العمل أو الملاحظات أو المنصة…" aria-label="بحث">
+      <select id="a-sort" aria-label="الترتيب"><option value="old">الأقدم استلاماً أولاً</option><option value="new">الأحدث استلاماً أولاً</option><option value="due">حسب موعد التسليم</option></select>
+      <button class="btn" type="button" id="a-csv" hidden>تصدير Excel (CSV)</button>
     </form>
 
     <main id="view" class="section"></main>
@@ -439,7 +471,7 @@ const fmtShort = new Intl.DateTimeFormat(LOC,{day:"numeric",month:"short"});
 const fmtDT = new Intl.DateTimeFormat(LOC,{weekday:"short",day:"numeric",month:"short",hour:"2-digit",minute:"2-digit",hour12:false});
 
 /* ---------- state ---------- */
-const state = { tasks:{}, platforms:{}, settings:{capacity:360}, day:todayKey(), tab:"day", filter:"all" };
+const state = { tasks:{}, platforms:{}, settings:{capacity:360,staleDays:3}, day:todayKey(), tab:"day", filter:"all", arch:{f:"open",sort:"old",q:""} };
 let db=null, readOnly=false;
 const writeQ={}, pendingDelete=new Set(), remindedKeys=new Set();
 let sheet = {id:null, draft:null, focusNote:false};
@@ -487,6 +519,10 @@ function pName(t){ const p=state.platforms[t.platform]; return p?p.name:"بدو�
 function allTasks(){ return Object.values(state.tasks); }
 function passFilter(t){ return state.filter==="all"||t.platform===state.filter; }
 function isLate(t){ return ACT.has(statusOf(t)) && t.end<todayKey(); }
+function isOverdue(t){ return statusOf(t)!=="delivered" && (isLate(t) || (!!t.due && t.due<todayKey())); }
+function lastAt(t){ return t.log[t.log.length-1].at; }
+function waitDays(t){ return Math.floor((Date.now()-lastAt(t))/864e5); }
+function ageDays(t){ return Math.floor((Date.now()-receivedAt(t))/864e5); }
 function sortTasks(a,b){
   return ((b.priority||2)-(a.priority||2)) || ((a.due||"9999")<(b.due||"9999")?-1:(a.due||"9999")>(b.due||"9999")?1:0) || (a.date<b.date?-1:a.date>b.date?1:0) || (receivedAt(a)-receivedAt(b));
 }
@@ -570,13 +606,16 @@ function render(){
   renderHeader(); renderStats(); renderSample(); renderAlerts(); renderTrack(); renderSide();
   const isDay=state.tab==="day";
   $("quick").hidden=!isDay||readOnly; $("trackbox").hidden=!isDay; $("stats").hidden=!isDay;
+  $("archbar").hidden=state.tab!=="all";
+  document.querySelector(".datenav").hidden=!(isDay||state.tab==="week");
   const v=$("view");
-  v.innerHTML = isDay?viewDay(): state.tab==="board"?viewBoard(): state.tab==="week"?viewWeek(): viewPlatforms();
+  v.innerHTML = isDay?viewDay(): state.tab==="board"?viewBoard(): state.tab==="week"?viewWeek(): state.tab==="all"?viewAll(): viewPlatforms();
   tickLive();
 }
 function renderHeader(){
   if(state.tab==="board"){ $("dayName").textContent="مراحل الأعمال"; $("daySub").textContent="كل شغلك الحالي مرتّب حسب المرحلة. اضغط على أي عمل لتفتح تفاصيله وسجلّه."; }
   else if(state.tab==="week"){ const ws=weekStart(state.day); $("dayName").textContent="جدول الأسبوع"; $("daySub").textContent=`${fmtLong.format(parseKey(ws))} – ${fmtLong.format(parseKey(addDays(ws,6)))}`; }
+  else if(state.tab==="all"){ $("dayName").textContent="كل الأعمال"; $("daySub").textContent="سجلّ كامل لشغلك، القديم والجديد. ما في شي بيضيع من هون."; }
   else if(state.tab==="platforms"){ $("dayName").textContent="المنصات والإحصائيات"; $("daySub").textContent="أداء كل منصة، ومتوسط مدة التسليم وعدد التعديلات."; }
   else{
     const d=parseKey(state.day), L=dayLists(state.day);
@@ -611,7 +650,11 @@ function renderAlerts(){
   const tk=todayKey(), out=[], all=allTasks().filter(t=>statusOf(t)!=="delivered");
   const names=arr=>arr.slice(0,3).map(t=>`<button class="linkish" data-act="open" data-id="${t.id}">${esc(t.title)}</button>`).join("، ")+(arr.length>3?` و${arr.length-3} غيرها`:"");
   const late=all.filter(t=>t.due&&t.due<tk), today=all.filter(t=>t.due===tk), tom=all.filter(t=>t.due===addDays(tk,1));
+  const overdue=allTasks().filter(isOverdue);
+  if(state.day!==tk&&overdue.length) out.push(`<div class="alert danger"><span class="ic">!</span><span class="txt">عندك ${overdue.length===1?"عمل متأخّر":overdue.length===2?"عملين متأخّرين":overdue.length+" أعمال متأخّرة"} ما تسلّمت.</span><button class="btn small" data-act="goto" data-id="${tk}">روح لليوم</button><button class="btn small" data-act="arch-late">شوفها كلها</button></div>`);
   if(late.length) out.push(`<div class="alert danger"><span class="ic">!</span><span class="txt">فات موعد التسليم: ${names(late)}</span></div>`);
+  const sd=+state.settings.staleDays||3, stale=all.filter(t=>statusOf(t)==="review"&&waitDays(t)>=sd).sort((a,b)=>waitDays(b)-waitDays(a));
+  if(stale.length) out.push(`<div class="alert warn"><span class="ic">✉</span><span class="txt">ناطر رد من ${sd} أيام أو أكتر، تابع مع العميل: ${stale.slice(0,3).map(t=>`<button class="linkish" data-act="open" data-id="${t.id}">${esc(t.title)}</button> <span class="mono">(${waitDays(t)} يوم)</span>`).join("، ")}${stale.length>3?` و${stale.length-3} غيرها`:""}</span></div>`);
   if(today.length) out.push(`<div class="alert warn"><span class="ic">◷</span><span class="txt">لازم تتسلّم اليوم: ${names(today)}</span></div>`);
   if(tom.length) out.push(`<div class="alert info"><span class="ic">→</span><span class="txt">تسليم بكرة: ${names(tom)}</span></div>`);
   const now=new Date(), hm=String(now.getHours()).padStart(2,"0")+":"+String(now.getMinutes()).padStart(2,"0");
@@ -641,6 +684,8 @@ function renderSide(){
   const L=dayLists(state.day);
   $("n-day").textContent=L.work.length+L.late.length;
   $("n-board").textContent=allTasks().filter(t=>statusOf(t)!=="delivered").length;
+  $("n-all").textContent=allTasks().length;
+  const lc=allTasks().filter(isOverdue).length; $("n-late").hidden=!lc; $("n-late").textContent=lc;
   const ps=sortedPlatforms();
   if(state.filter!=="all"&&!state.platforms[state.filter]) state.filter="all";
   const cnt=id=>allTasks().filter(t=>statusOf(t)!=="delivered"&&(id==="all"||t.platform===id)).length;
@@ -713,6 +758,53 @@ function viewWeek(){
     <div class="ganttwrap"><div class="gantt" style="grid-template-rows:auto repeat(${Math.max(1,ts.length)},auto) 12px">${cols}${heads}${bars||`<div class="gempty" style="grid-row:2">ما في شغل مخطّط بهالأسبوع.</div>`}</div></div>
     <p class="hint" style="margin:0">كل شريط بيمتد على أيام شغل العمل. الشريط تحت اسم اليوم بيبيّن ضغط اليوم مقارنة بطاقتك (${tc(cap)})، والأحمر يعني محمّل زيادة. اضغط على اليوم لتفتح شغله.</p>`;
 }
+const AF=[["open","غير مسلّم"],["late","متأخّر"],["review","بانتظار الاعتماد"],["revision","قيد التعديل"],["delivered","مسلّم"],["all","الكل"]];
+const fmtMonth=new Intl.DateTimeFormat(LOC,{month:"long",year:"numeric"});
+function archMatch(t,f){ const s=statusOf(t); return f==="all"?true:f==="open"?s!=="delivered":f==="late"?isOverdue(t):s===f; }
+function archData(){
+  const q=state.arch.q.trim().toLowerCase();
+  const base=allTasks().filter(passFilter).filter(t=>!q||(t.title+" "+(t.notes||"")+" "+pName(t)+" "+KINDS[t.kind].name).toLowerCase().includes(q));
+  const counts=Object.fromEntries(AF.map(([k])=>[k,base.filter(t=>archMatch(t,k)).length]));
+  const list=base.filter(t=>archMatch(t,state.arch.f)), so=state.arch.sort;
+  list.sort((a,b)=> so==="new"?receivedAt(b)-receivedAt(a) : so==="due"?((a.due||"9999")<(b.due||"9999")?-1:(a.due||"9999")>(b.due||"9999")?1:receivedAt(a)-receivedAt(b)) : receivedAt(a)-receivedAt(b));
+  return {list,counts};
+}
+function ageHtml(t){
+  const s=statusOf(t);
+  if(s==="delivered") return `<span class="age">تسلّم ${fmtDT.format(deliveredAt(t))} · خلص بـ ${human(deliveredAt(t)-receivedAt(t))}</span>`;
+  if(s==="review"){ const d=waitDays(t); return `<span class="age ${d>=(+state.settings.staleDays||3)?"warn":""}">ناطر رد ${d?"من "+d+" يوم":"من اليوم"}</span>`; }
+  const d=ageDays(t); return `<span class="age ${d>=14?"danger":d>=7?"warn":""}">${d?"صرلو "+d+" يوم مفتوح":"استلمته اليوم"}</span>`;
+}
+function arow(t){
+  const s=statusOf(t), tk=todayKey(), rv=revisions(t);
+  const inToday=t.date<=tk&&tk<=t.end;
+  const acts=readOnly?"":[ ACT.has(s)&&!inToday?`<button class="btn small" data-act="to-today" data-id="${t.id}">اشتغل عليه اليوم</button>`:"",
+    ...NEXT[s].slice(0,1).map(([to,l])=>`<button class="btn small sbtn solid" data-s="${to}" data-act="status" data-id="${t.id}" data-to="${to}">${l}</button>`)].join("");
+  return `<div class="arow ${isOverdue(t)?"late":""}" data-act="open" data-id="${t.id}" data-s="${s}">
+    <div style="min-width:0;display:grid;gap:4px"><span class="pf"><span class="dot" style="--c:${colorOf(t)}"></span><b>${esc(pName(t))}</b> · ${KINDS[t.kind].name} · <span class="hint">استلام ${fmtDT.format(receivedAt(t))}</span></span>
+      <div class="ttl">${esc(t.title)}</div>
+      <div class="crow">${dueBadge(t)}${isLate(t)?`<span class="badge danger">متأخّر عن خطة الشغل</span>`:""}${rv?`<span class="badge rev">تعديل ×${rv}</span>`:""}${span(t)>1?`<span class="badge">${span(t)} أيام شغل</span>`:""}</div></div>
+    <div class="side2"><span class="spill">${esc(stName(s,t.kind))}</span>${ageHtml(t)}${acts?`<div class="crow">${acts}</div>`:""}</div></div>`;
+}
+function viewAll(){
+  const {list,counts}=archData();
+  const chips=`<div class="fchips">${AF.map(([k,l])=>`<button class="fchip ${state.arch.f===k?"on":""} ${k==="late"&&counts.late?"hot":""}" data-act="arch-f" data-id="${k}">${l}<span class="n">${counts[k]}</span></button>`).join("")}</div>`;
+  if(!list.length) return chips+`<div class="empty"><b>${state.arch.q?"ما لقيت شي بهالبحث":state.arch.f==="late"?"ما في ولا عمل متأخّر 👏":"ما في أعمال هون"}</b>${state.arch.q?"جرّب كلمة تانية أو غيّر الفلتر.":"جرّب فلتر تاني من فوق."}</div>`;
+  const groups=new Map();
+  for(const t of list){ const k= state.arch.sort==="due" ? (t.due?fmtMonth.format(parseKey(t.due)):"بدون موعد تسليم") : fmtMonth.format(new Date(receivedAt(t))); if(!groups.has(k)) groups.set(k,[]); groups.get(k).push(t); }
+  return chips+[...groups].map(([k,ts])=>`<div class="month">${state.arch.sort==="due"&&k!=="بدون موعد تسليم"?"تسليم ":""}${esc(k)}<span class="n">${ts.length}</span></div><div class="arows">${ts.map(arow).join("")}</div>`).join("");
+}
+function csvCell(v){ v=String(v??""); return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v; }
+async function exportCsv(){
+  if(!dl) return;
+  const fd=ms=>ms?toLocalInput(ms).replace("T"," "):"";
+  const rows=[["العمل","المنصة","النوع","الحالة","الاستلام","التسليم","موعد التسليم المطلوب","بداية الشغل","نهاية الشغل","عدد التعديلات","الوقت الفعلي (ساعات)","ملاحظات"]];
+  for(const t of archData().list) rows.push([t.title,pName(t),KINDS[t.kind].name,stName(statusOf(t),t.kind),fd(receivedAt(t)),fd(deliveredAt(t)),(t.due||"")+(t.dueTime?" "+t.dueTime:""),t.date,t.end,revisions(t),(spentMin(t)/60).toFixed(1),t.notes||""]);
+  const csv="\ufeff"+rows.map(r=>r.map(csvCell).join(",")).join("\r\n");
+  try{ await dl.save({filename:`تايملاين-${todayKey()}.csv`,data:csv}); toast("انحفظ الملف"); }
+  catch(e){ if(e&&e.code!=="declined") toast("ما زبط التصدير هالمرة. جرّب كمان شوي."); }
+}
+
 function viewPlatforms(){
   const ps=sortedPlatforms(), ts=allTasks(), month=todayKey().slice(0,7);
   const cards=ps.map(([id,p])=>{
@@ -729,7 +821,8 @@ function viewPlatforms(){
       ${readOnly?"":`<div class="swatches">${COLORS.map(c=>`<button class="sw ${c===p.color?"on":""}" style="--c:${c}" data-act="pcolor" data-id="${id}" data-c="${c}" aria-label="لون"></button>`).join("")}</div>`}</div>`;}).join("");
   return `${readOnly?"":`<form class="quick" id="pform" style="grid-template-columns:minmax(0,1fr) auto"><input id="p-new" placeholder="أضف منصة أو عميل جديد…" aria-label="اسم المنصة"><button class="btn primary" type="submit">أضف منصة</button></form>`}
     ${ps.length?`<div class="pgrid">${cards}</div>`:`<div class="empty"><b>ما في منصات بعد</b>أضف المنصات اللي بتشتغل معها، وكل وحدة بتاخد لون خاص.</div>`}
-    <div class="settings"><label for="s-cap">ساعات شغلك باليوم</label><input type="number" id="s-cap" min="1" max="16" step="0.5" value="${(+state.settings.capacity||360)/60}" ${readOnly?"disabled":""}><span class="hint">منها بينحسب «حدّ اليوم» على التايملاين وتنبيه الضغط بجدول الأسبوع.</span></div>`;
+    <div class="settings"><label for="s-cap">ساعات شغلك باليوم</label><input type="number" id="s-cap" min="1" max="16" step="0.5" value="${(+state.settings.capacity||360)/60}" ${readOnly?"disabled":""}><span class="hint">منها بينحسب «حدّ اليوم» على التايملاين وتنبيه الضغط بجدول الأسبوع.</span></div>
+    <div class="settings"><label for="s-stale">نبّهني إذا العمل ناطر اعتماد أكتر من (أيام)</label><input type="number" id="s-stale" min="1" max="30" step="1" value="${+state.settings.staleDays||3}" ${readOnly?"disabled":""}><span class="hint">بيطلعلك تنبيه «تابع مع العميل» بصفحة يومي.</span></div>`;
 }
 
 /* ---------- sheet (details / new) ---------- */
@@ -798,7 +891,7 @@ function renderSheet(){
     </div>
     <div class="shfoot">${isNew
       ?`<button class="btn ghost" data-act="close">إلغاء</button><button class="btn primary" data-act="create">إضافة العمل</button>`
-      :`${readOnly?"":pendingDelete.has(t.id)?`<button class="confirm" data-act="del" data-id="${t.id}">اضغط مرة ثانية للتأكيد</button>`:`<button class="btn small danger" data-act="del" data-id="${t.id}">${I.trash}حذف العمل</button>`}<span class="hint">التعديلات بتنحفظ تلقائياً</span><button class="btn" data-act="close">تم</button>`}</div>`;
+      :`${readOnly?"":pendingDelete.has(t.id)?`<button class="confirm" data-act="del" data-id="${t.id}">اضغط مرة ثانية للتأكيد</button>`:`<button class="btn small danger" data-act="del" data-id="${t.id}">${I.trash}حذف العمل</button>`}${readOnly?"":`<button class="btn small" data-act="dup" data-id="${t.id}" title="عمل جديد بنفس المنصة والنوع والملاحظات، مفيد للحلقات المتكررة">نسخة جديدة</button>`}<span class="hint">بتنحفظ تلقائياً</span><button class="btn" data-act="close">تم</button>`}</div>`;
   autoGrow($("d-title"));
 }
 const PLANNER_URL="https://claude.ai/artifact/8rGC6vD9wdyiP2z8Qs1DeQ";
@@ -908,7 +1001,7 @@ document.addEventListener("click",e=>{
   if(e.target.closest("a")) return;
   const act=b.dataset.act, id=b.dataset.id;
   if(act!=="open") e.stopPropagation();
-  const safe=["open","filter","goto","week","close"];
+  const safe=["open","filter","goto","week","close","arch-f","arch-late"];
   if(readOnly&&!safe.includes(act)) return;
   switch(act){
     case "open": if(b.tagName!=="ARTICLE"||!e.target.closest("button")) openSheet(id); break;
@@ -922,6 +1015,12 @@ document.addEventListener("click",e=>{
       else { pendingDelete.add(id); renderSheet(); setTimeout(()=>{ if(pendingDelete.delete(id)&&sheet.id===id) renderSheet(); },4000); }
       break;
     case "filter": state.filter=id; render(); break;
+    case "arch-f": state.arch.f=id; render(); break;
+    case "arch-late": state.tab="all"; state.arch.f="late"; saveTab(); render(); break;
+    case "to-today": { const t=state.tasks[id], tk=todayKey(); if(!t) break; patchTask(id, t.date>tk?{date:tk}:{end:tk}); toast(`«${t.title}» صار ضمن شغل اليوم`); break; }
+    case "dup": { const t=state.tasks[id]; if(!t) break; const nid=uid(), tk=todayKey(), now=Date.now();
+      write("tasks",nid,{title:t.title,platform:t.platform,kind:t.kind,date:tk,end:addDays(tk,span(t)-1),due:"",dueTime:"",priority:t.priority||2,est:t.est||0,spent:0,timerStart:null,remind:t.remind||"",link:"",notes:t.notes||"",log:[{s:"received",at:now}],createdAt:now});
+      openSheet(nid); toast("انعملت نسخة جديدة. عدّل الاسم والمواعيد."); setTimeout(()=>{ const el=$("d-title"); if(el){ el.focus(); el.select(); } },80); break; }
     case "goto": state.day=id; state.tab="day"; saveTab(); render(); break;
     case "week": state.day= +id===0?todayKey():addDays(state.day,+id); render(); break;
     case "carry-today": { const tk=todayKey(); const ls=allTasks().filter(isLate); ls.forEach(t=>patchTask(t.id,{end:tk})); toast(`انمدّت ${ls.length} لليوم`); break; }
@@ -936,6 +1035,7 @@ document.addEventListener("click",e=>{
 document.addEventListener("change",e=>{
   const el=e.target; if(dlg.contains(el)) return;
   if(el.dataset&&el.dataset.act==="pname"){ const v=el.value.trim(); if(v&&v!==state.platforms[el.dataset.id]?.name){ write("platforms",el.dataset.id,{...state.platforms[el.dataset.id],name:v}); renderSelects(); } }
+  if(el.id==="s-stale"){ const d=Math.max(1,Math.min(30,Math.round(+el.value||3))); write("settings","main",{...state.settings,staleDays:d}); }
   if(el.id==="s-cap"){ const h=Math.max(1,Math.min(16,+el.value||6)); write("settings","main",{...state.settings,capacity:Math.round(h*60)}); }
 });
 document.addEventListener("submit",e=>{
@@ -954,6 +1054,13 @@ $("quick").addEventListener("submit",e=>{
   $("q-title").value=""; $("q-title").focus();
   toast("انضاف. اضغط عليه لتضيف موعد التسليم والملاحظات.");
 });
+$("archbar").addEventListener("submit",e=>e.preventDefault());
+$("a-q").addEventListener("input",e=>{ state.arch.q=e.target.value; $("view").innerHTML=viewAll(); });
+$("a-sort").addEventListener("change",e=>{ state.arch.sort=e.target.value; try{localStorage.setItem(LS_KEY+":asort",e.target.value);}catch(err){} render(); });
+$("a-csv").addEventListener("click",exportCsv);
+let dl=null;
+(async()=>{ try{ dl=window.claude&&window.claude.use?await window.claude.use("downloads"):null; }catch(e){ dl=null; } if(dl) $("a-csv").hidden=false; })();
+try{ const so=localStorage.getItem(LS_KEY+":asort"); if(so){ state.arch.sort=so; $("a-sort").value=so; } }catch(e){}
 function saveTab(){ try{ localStorage.setItem(LS_KEY+":tab",state.tab); }catch(e){} }
 $("prevDay").onclick=()=>{ state.day=addDays(state.day,state.tab==="week"?-7:-1); render(); };
 $("nextDay").onclick=()=>{ state.day=addDays(state.day,state.tab==="week"?7:1); render(); };
@@ -998,7 +1105,7 @@ try{ applyTheme(localStorage.getItem(LS_KEY+":theme")||"auto"); }catch(e){ apply
 
 /* ---------- boot ---------- */
 loadLocal();
-try{ const tb=localStorage.getItem(LS_KEY+":tab"); if(tb&&["day","board","week","platforms"].includes(tb)) state.tab=tb; }catch(e){}
+try{ const tb=localStorage.getItem(LS_KEY+":tab"); if(tb&&["day","board","week","all","platforms"].includes(tb)) state.tab=tb; }catch(e){}
 renderSelects(); render(); checkReminders();
 connectDb();
 })();
