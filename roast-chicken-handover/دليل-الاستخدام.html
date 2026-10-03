@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>دليل منيو Roast chicken</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@700;800&family=Readex+Pro:wght@400;500;600;700&display=swap">
+<style>
+:root{--green:#7ac23a;--green-text:#3d8612;--soft:#eef7e5;--red:#e2261c;--ink:#141615;--text:#1f2620;--muted:#5d685e;--line:#e2e9da}
+*{box-sizing:border-box}
+html,body{max-width:100%}
+body{margin:0;background:#fff;color:var(--text);font-family:"Readex Pro",Tahoma,sans-serif;font-size:16px;line-height:1.75}
+.wrap{max-width:760px;margin-inline:auto;padding:28px 18px 60px}
+header{background:var(--soft);border-radius:24px;padding:24px;display:flex;gap:18px;align-items:center}
+header img{width:84px;height:84px;border-radius:50%;flex:none}
+h1{font-family:"Baloo Bhaijaan 2",sans-serif;font-weight:800;font-size:30px;line-height:1.2;margin:0;color:var(--ink)}
+header p{margin:4px 0 0;color:var(--muted)}
+h2{font-family:"Baloo Bhaijaan 2",sans-serif;font-weight:800;font-size:24px;color:var(--ink);margin:40px 0 8px;display:flex;align-items:center;gap:10px}
+h2 .n{width:36px;height:36px;border-radius:50%;background:var(--green);color:#10200a;display:grid;place-items:center;font-size:18px;flex:none}
+h3{font-size:17px;margin:22px 0 6px;color:var(--ink)}
+p{margin:8px 0}
+ol,ul{padding-inline-start:24px;margin:8px 0}
+li{margin:6px 0}
+b{color:var(--ink)}
+code,.mono{font-family:ui-monospace,Menlo,Consolas,monospace;direction:ltr;unicode-bidi:isolate;background:#f3f5f1;border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-size:14px;overflow-wrap:anywhere}
+pre{direction:ltr;text-align:left;background:#f3f5f1;border:1px solid var(--line);border-radius:12px;padding:12px 14px;overflow-x:auto;font-size:14px;line-height:1.6}
+.box{border-radius:16px;padding:14px 16px;margin:14px 0}
+.tip{background:var(--soft);border:1px solid #d3e8bf}
+.warn{background:#fdecea;border:1px solid #f6c6c2}
+.warn b{color:#a52018}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:15px}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:start;vertical-align:top;overflow-wrap:anywhere}
+th{background:var(--soft);color:var(--ink)}
+.files li b{display:inline-block;min-width:70px}
+.toc{border:1px solid var(--line);border-radius:16px;padding:12px 18px;margin-top:20px}
+.toc a{color:var(--green-text);text-decoration:none;font-weight:600}
+@media print{.wrap{padding:0}h2{break-after:avoid}.box,table,pre{break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <img src="site/logo.webp" alt="">
+  <div>
+    <h1>دليل المنيو الإلكتروني</h1>
+    <p>كل شي بتحتاجه لتشغّل منيو Roast chicken وتديره بنفسك: الأسعار، الأصناف، الصور، الطلبات عبر واتساب، والـ QR.</p>
+  </div>
+</header>
+
+<div class="toc">
+  <b>المحتوى</b>
+  <ol>
+    <li><a href="#files">شو في بالملف</a></li>
+    <li><a href="#sheet">جدول الأسعار على Google Sheets</a></li>
+    <li><a href="#site">نشر الموقع على GitHub</a></li>
+    <li><a href="#qr">عمل الـ QR</a></li>
+    <li><a href="#daily">الاستخدام اليومي</a></li>
+    <li><a href="#help">إذا صار شي غلط</a></li>
+  </ol>
+</div>
+
+<h2 id="files"><span class="n">1</span>شو في بالملف</h2>
+<ul class="files">
+  <li><b>📁 site</b> ملفات الموقع، بترفعهم كلهم على GitHub متل ما هنن.
+    <ul>
+      <li><code>index.html</code> صفحة المنيو</li>
+      <li><code>config.js</code> هون بتحط رابط جدول الأسعار</li>
+      <li><code>qr.html</code> صفحة بتعملك الـ QR لحالها</li>
+      <li><code>logo.webp</code> و <code>icon.png</code> الشعار</li>
+    </ul>
+  </li>
+  <li><b>📁 sheet</b> ملفات الجدول.
+    <ul>
+      <li><code>menu-sheet.csv</code> كل الأصناف والأسعار، بتستورده على Google Sheets</li>
+      <li><code>sheet-script.gs</code> سكربت بيرتّب الجدول وبيضيف زر رفع الصور</li>
+    </ul>
+  </li>
+</ul>
+<div class="box tip">
+  <b>كيف الشغل ماشي؟</b> الموقع ثابت على GitHub وما بتحتاج تلمسه. الأسعار والأصناف والصور والإعدادات كلها بالجدول. لما تعدّل الجدول، المنيو بيتحدّث لحاله خلال 5 دقائق تقريباً.
+</div>
+
+<h2 id="sheet"><span class="n">2</span>جدول الأسعار على Google Sheets</h2>
+<p>بتحتاج حساب Google (Gmail). الأحسن يكون حساب خاص بالمطعم.</p>
+
+<h3>أ. عمل الجدول</h3>
+<ol>
+  <li>افتح <span class="mono">sheets.google.com</span> واكبس <b>جدول بيانات فارغ</b>.</li>
+  <li>فوق على اليمين، غيّر اسم الجدول لـ <b>منيو Roast chicken</b>.</li>
+  <li>من القائمة: <b>ملف ← استيراد ← تحميل</b>، واختار ملف <code>menu-sheet.csv</code>.</li>
+  <li>بنافذة الاستيراد اختار <b>استبدال الورقة الحالية</b>، وخلّي "تحويل النص إلى أرقام" مفعّل، واكبس <b>استيراد البيانات</b>.</li>
+</ol>
+
+<h3>ب. تركيب السكربت (مرة وحدة بس)</h3>
+<ol>
+  <li>من القائمة: <b>الإضافات ← برمجة التطبيقات</b>. بتنفتح صفحة جديدة.</li>
+  <li>امسح الكود الموجود هناك كله، وافتح ملف <code>sheet-script.gs</code> بأي برنامج نصوص، انسخ كل محتواه والصقه مكانه.</li>
+  <li>اكبس أيقونة الحفظ 💾.</li>
+  <li>فوق، من القائمة جنب زر <b>تنفيذ</b>، اختار <code>setupMenuSheet</code> واكبس <b>▷ تنفيذ</b>.</li>
+  <li>رح يطلب صلاحية: <b>مراجعة الأذونات</b> ← اختار حسابك ← <b>خيارات متقدمة</b> ← <b>الانتقال إلى المشروع (غير آمن)</b> ← <b>سماح</b>.
+    <br><small>كلمة "غير آمن" طبيعية لأنه السكربت خاص فيك وما راجعته Google. هو بيشتغل بس على جدولك وعلى مجلد الصور.</small></li>
+  <li>لما يطلع تحت "اكتمل التنفيذ"، ارجع للجدول. سكّره وافتحه من جديد، فبتطلع فوق قائمة جديدة اسمها <b>🍗 Roast chicken</b>.</li>
+</ol>
+
+<h3>ج. الإعدادات</h3>
+<p>على يسار الجدول في خانة حمرا اسمها <b>الإعداد / القيمة</b>. عبّيها:</p>
+<table>
+  <tr><th>الإعداد</th><th>شو بتكتب</th><th>مثال</th></tr>
+  <tr><td>واتساب</td><td>رقم استلام الطلبات بالصيغة الدولية. بدونه زر "أرسل الطلب" بيضل مقفول.</td><td><code>+905xxxxxxxxx</code></td></tr>
+  <tr><td>هاتف</td><td>رقم الاتصال (اختياري)</td><td><code>+90324xxxxxxx</code></td></tr>
+  <tr><td>يفتح / يسكّر</td><td>أوقات الدوام بصيغة 24 ساعة. المنيو بيكتب "مفتوح الآن" أو "مسكّر".</td><td><code>11:00</code> و <code>02:00</code></td></tr>
+  <tr><td>التوصيل</td><td>نعم أو لا. إذا لا، بيختفي خيار التوصيل من الطلب.</td><td>نعم</td></tr>
+  <tr><td>العنوان</td><td>عنوان المطعم بكلمات</td><td>مرسين، شارع ...</td></tr>
+  <tr><td>رابط الخريطة</td><td>رابط المطعم من Google Maps (مشاركة ← نسخ الرابط)</td><td><code>https://maps.app.goo.gl/...</code></td></tr>
+  <tr><td>إنستغرام / فيسبوك</td><td>اسم الحساب أو الرابط</td><td><code>roastchicken</code></td></tr>
+</table>
+<p>أي خانة بتضل فاضية ما بتطلع بالمنيو.</p>
+
+<h3>د. نشر الجدول</h3>
+<ol>
+  <li>من القائمة: <b>ملف ← مشاركة ← النشر على الويب</b>.</li>
+  <li>بالقائمة الأولى اختار اسم الورقة بدل "المستند بأكمله".</li>
+  <li>بالقائمة التانية اختار <b>قيم مفصولة بفواصل (.csv)</b>.</li>
+  <li>اكبس <b>نشر</b> ← <b>حسناً</b>، وانسخ الرابط يلي بيطلع. آخره لازم يكون فيه <code>output=csv</code>. هاد الرابط رح تحطه بالموقع بالخطوة الجاية.</li>
+</ol>
+<div class="box warn"><b>انتبه:</b> رابط النشر بيخلّي أي حدا يقرا الجدول (مو يعدّل عليه). لا تحط فيه شي خاص متل التكلفة أو الأرباح.</div>
+
+<h2 id="site"><span class="n">3</span>نشر الموقع على GitHub</h2>
+<p>GitHub بيستضيف الموقع مجاناً وللأبد، ورابطه بيكون باسم حسابك.</p>
+
+<h3>أ. الحساب</h3>
+<ol>
+  <li>افتح <span class="mono">github.com</span> واكبس <b>Sign up</b>.</li>
+  <li>اختار اسم مستخدم باسم المطعم، مثلاً <code>roastchicken</code> أو <code>roastchicken-mersin</code>. هاد الاسم رح يصير جزء من رابط المنيو: <code>https://roastchicken.github.io</code></li>
+  <li>كمّل التسجيل وأكّد الإيميل.</li>
+</ol>
+
+<h3>ب. المستودع ورفع الملفات</h3>
+<ol>
+  <li>فوق على اليمين اكبس <b>+</b> ← <b>New repository</b>.</li>
+  <li>بخانة <b>Repository name</b> اكتب اسم حسابك وبعده <code>.github.io</code> بالضبط. مثلاً إذا الحساب <code>roastchicken</code> بتكتب <code>roastchicken.github.io</code></li>
+  <li>اختار <b>Public</b>، واكبس <b>Create repository</b>.</li>
+  <li>بالصفحة الجديدة اكبس الرابط <b>uploading an existing file</b>.</li>
+  <li>اسحب <b>كل الملفات يلي جوّا مجلد site</b> (مو المجلد نفسه) وحطهم بالمربع. لازم يطلعو 5 ملفات.</li>
+  <li>تحت اكبس <b>Commit changes</b>.</li>
+</ol>
+
+<h3>ج. ربط الجدول بالموقع</h3>
+<ol>
+  <li>بالمستودع اكبس على ملف <code>config.js</code>، وبعدين أيقونة القلم ✏️ فوق على اليسار.</li>
+  <li>حط رابط الجدول المنشور بين علامتي التنصيص بعد كلمة <code>sheet:</code> بحيث يصير هيك:</li>
+</ol>
+<pre>window.MENU_CONFIG = {
+  sheet: "https://docs.google.com/spreadsheets/d/e/.../pub?gid=...&amp;single=true&amp;output=csv"
+};</pre>
+<ol start="3">
+  <li>اكبس <b>Commit changes</b> مرتين.</li>
+</ol>
+
+<h3>د. تشغيل الموقع</h3>
+<ol>
+  <li>بالمستودع اكبس <b>Settings</b> ← من القائمة الجانبية <b>Pages</b>.</li>
+  <li>تحت <b>Build and deployment</b>: خلّي Source على <b>Deploy from a branch</b>، و Branch على <b>main</b> و <b>/ (root)</b>، واكبس <b>Save</b>.</li>
+  <li>استنى دقيقة أو دقيقتين، وافتح <code>https://اسم-حسابك.github.io</code>. لازم يطلع المنيو.</li>
+</ol>
+<div class="box tip"><b>تأكد إنه الجدول مربوط:</b> غيّر سعر صنف بالجدول، واستنى 5 دقائق، وحدّث صفحة المنيو. إذا تغيّر السعر، كلشي تمام.</div>
+
+<h2 id="qr"><span class="n">4</span>عمل الـ QR</h2>
+<ol>
+  <li>افتح <code>https://اسم-حسابك.github.io/qr.html</code></li>
+  <li>رح يطلعلك QR جاهز لرابط المنيو، بنصه الشعار.</li>
+  <li>اكبس <b>تنزيل الصورة</b>، وجرّب تمسحه بالموبايل قبل ما تطبع.</li>
+</ol>
+<p>الـ QR ما بيتغيّر أبداً حتى لو غيّرت الأسعار أو الأصناف، لأنه بيأشّر على الموقع، والموقع بيقرا من الجدول.</p>
+
+<h2 id="daily"><span class="n">5</span>الاستخدام اليومي (كله من الجدول)</h2>
+<table>
+  <tr><th>بدك…</th><th>شو بتعمل</th></tr>
+  <tr><td>تغيّر سعر</td><td>بتغيّر الرقم بعمود <b>السعر</b>.</td></tr>
+  <tr><td>تخبّي صنف خلصان</td><td>بعمود <b>متوفر</b> بتختار <b>لا</b>. بيختفي من المنيو بدون ما ينحذف، وبترجّعه بـ <b>نعم</b>.</td></tr>
+  <tr><td>تضيف صنف</td><td>بتضيف سطر جديد: القسم، الصنف، السعر، متوفر = نعم. وإذا بدك اسمه بالتركي بتكتبه بعمود <b>الصنف بالتركي</b>.</td></tr>
+  <tr><td>تضيف خيارات (عادي/دبل، كامل/نصف، أحجام)</td><td>بتكتب نفس اسم الصنف بأكتر من سطر، وكل سطر بيختلف بعمود <b>الخيار</b> وبالسعر. المنيو بيجمعهم ببطاقة وحدة فيها كذا زر.</td></tr>
+  <tr><td>تضيف قسم جديد</td><td>بتكتب اسم القسم الجديد بعمود <b>القسم</b>، وبيطلعلو تبويب لحاله بالمنيو.</td></tr>
+  <tr><td>ترتّب الأصناف</td><td>المنيو بيمشي على ترتيب السطور بالجدول. انقل السطور لترتّب.</td></tr>
+  <tr><td>تحط صورة (من الكمبيوتر)</td><td>بتوقف على سطر الصنف ← قائمة <b>🍗 Roast chicken ← 📷 رفع صورة</b> ← بتختار الصورة.</td></tr>
+  <tr><td>تحط صورة (من الموبايل)</td><td>بترفع الصورة على تطبيق Google Drive ← مشاركة ← <b>أي شخص لديه الرابط</b> ← نسخ الرابط، وبتلصقه بعمود <b>الصورة</b>.</td></tr>
+  <tr><td>تشيل صورة</td><td>بتمسح الرابط من عمود <b>الصورة</b>.</td></tr>
+  <tr><td>تغيّر رقم الواتساب أو الدوام</td><td>من خانة <b>الإعدادات</b> الحمرا.</td></tr>
+  <tr><td>تنسّق الجدول بعد ما ضفت سطور كتير</td><td>قائمة <b>🍗 Roast chicken ← 🎨 تنسيق الجدول</b>.</td></tr>
+  <tr><td>تعطي موظف صلاحية التعديل</td><td>زر <b>مشاركة</b> بالجدول ← إيميله ← <b>محرر</b>.</td></tr>
+</table>
+
+<div class="box warn">
+  <b>لا تعمل هالشغلات:</b>
+  <ul>
+    <li>لا تغيّر أسماء العناوين بالسطر الأول، لأنه المنيو بيعتمد عليها.</li>
+    <li>لا تحذف الورقة ولا تغيّر اسمها، ولا توقف "النشر على الويب".</li>
+    <li>لا تعطي "أي شخص لديه الرابط" صلاحية <b>محرر</b> على الجدول.</li>
+  </ul>
+  <p>إذا غلطت بشي، من <b>ملف ← سجل النسخ</b> بترجّع أي نسخة قديمة.</p>
+</div>
+
+<h3>كيف بتوصل الطلبات؟</h3>
+<p>الزبون بيختار أصنافه، وبيحدد بالصالة (مع رقم الطاولة) أو استلام أو توصيل (مع الاسم والعنوان)، وبيكبس "أرسل الطلب". بينفتح عنده واتساب ورسالة جاهزة فيها الأصناف والمجموع، وبيبعتها لرقم الواتساب يلي بالإعدادات. إذا الزبون تركي، الرسالة بتوصل بالتركي وجنب كل صنف اسمه بالعربي.</p>
+
+<h2 id="help"><span class="n">6</span>إذا صار شي غلط</h2>
+<table>
+  <tr><th>المشكلة</th><th>الحل</th></tr>
+  <tr><td>غيّرت سعر وما تغيّر بالمنيو</td><td>استنى 5 دقائق، Google بيحدّث الرابط المنشور كل كم دقيقة. بعدها حدّث الصفحة.</td></tr>
+  <tr><td>المنيو عم يعرض الأسعار القديمة دايماً</td><td>تأكد إنه الرابط بـ <code>config.js</code> صح وآخره <code>output=csv</code>، وإنه الجدول لسا منشور، وإنه أسماء العناوين ما تغيّرت.</td></tr>
+  <tr><td>زر "أرسل الطلب" مقفول</td><td>رقم الواتساب فاضي بالإعدادات.</td></tr>
+  <tr><td>الصورة ما عم تطلع</td><td>تأكد إنه الصورة على Drive مشاركة "أي شخص لديه الرابط"، أو ارفعها من قائمة 🍗 Roast chicken.</td></tr>
+  <tr><td>رابط الموقع بيطلع 404</td><td>استنى دقيقتين بعد الرفع، وتأكد إنه اسم المستودع <code>اسم-حسابك.github.io</code> بالضبط، وإنه <code>index.html</code> مرفوع مباشرة مو جوّا مجلد.</td></tr>
+  <tr><td>قائمة 🍗 Roast chicken مو ظاهرة</td><td>سكّر الجدول وافتحه من جديد. قائمة رفع الصور ما بتشتغل بتطبيق الموبايل، استخدم طريقة رابط Drive.</td></tr>
+</table>
+
+<div class="box tip"><b>اختياري: دومين خاص.</b> إذا بدك رابط متل <code>roastchicken.com</code>، بتشتريه من Namecheap أو Cloudflare (حوالي 10 دولار بالسنة)، وبتحطه من <b>Settings ← Pages ← Custom domain</b>. بعدها اعمل QR جديد من صفحة <code>qr.html</code>.</div>
+
+</div>
+</body>
+</html>
