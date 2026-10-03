@@ -234,7 +234,7 @@ function teethBlock() {
     const r = 10 + (t >= 4 ? 5 : t * 1.2); s += `<ellipse class="t" data-tt="${t}" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="${r}" ry="${(r * .85).toFixed(1)}" fill="color-mix(in oklab, var(${TEETH[t][1]}) 45%, #fffaf0)"><title>${TEETH[t][0]}</title></ellipse>`;
   }); };
   arch(30, 1); arch(380, -1);
-  return `<div class="stack" data-teeth><svg class="teeth" viewBox="0 0 420 410" role="img" aria-label="مخطط أسنان الفم الاثنين والثلاثين">${s}<text x="210" y="205" text-anchor="middle" class="lbl" style="font-family:var(--f-display);font-size:26px;fill:var(--muted)">الأسنان (${ar(32)})</text></svg><div class="teeth-legend">${TEETH.map((t, i) => `<button data-tl="${i}"><i style="background:var(${t[1]})"></i>${t[0]}</button>`).join('')}</div></div>`;
+  return `<div class="stack" data-teeth><svg class="teeth" viewBox="0 0 420 410" role="img" aria-label="مخطط أسنان الفم الاثنين والثلاثين">${s}<text x="210" y="205" text-anchor="middle" class="lbl" style="font-family:var(--f-display);font-weight:700;font-size:22px;fill:var(--muted)">الأسنان (${ar(32)})</text></svg><div class="teeth-legend">${TEETH.map((t, i) => `<button data-tl="${i}"><i style="background:var(${t[1]})"></i>${t[0]}</button>`).join('')}</div></div>`;
 }
 function bindTeeth(root) {
   $$('[data-teeth]', root).forEach(w => {
@@ -382,7 +382,7 @@ V.home = () => {
   const bubbles = reduceMotion ? '' : Array.from({ length: 12 }, (_, k) => `<span style="right:${(k * 83) % 100}%;width:${6 + (k * 7) % 14}px;height:${6 + (k * 7) % 14}px;animation-duration:${7 + (k * 3) % 9}s;animation-delay:-${(k * 1.7) % 9}s"></span>`).join('');
   return `<section class="hero"><div class="bubbles" aria-hidden="true">${bubbles}</div><div class="hero-grid"><div class="stack">
       <div class="eyebrow">منصّة تفاعليّة لكتاب «الدر الثمين في تجويد كلام ربّ العالمين»</div>
-      <h1>غُصْ في بحر التجويد، واجمع دُرَرَه</h1>
+      <h1>غُصْ في بحر التجويد، <em>واجمع دُرَرَه</em></h1>
       <p>عشر وحدات مأخوذة من الكتاب، لكلّ وحدة دروس قصيرة واختبار. اجتز الاختبار لتضيف دُرّة إلى عقدك، ثم تحدَّ نفسك في الألعاب.</p>
       <div class="row"><a class="btn" href="${cont}">${I.play} ${readCount() ? 'تابع رحلتك' : 'ابدأ الرحلة'}</a><a class="btn ghost" href="#arena">ساحة التحدّي</a></div>
     </div>${necklaceSVG()}</div></section>
@@ -612,7 +612,7 @@ V.mountLab = () => {
   const show = k => {
     const L = LETTERS[k]; $$('.lbtn').forEach((b, j) => { b.classList.toggle('on', j === k); b.classList.remove('hl'); }); sfx('tick');
     const hueOf = s => ({ 'جهر': 'indigo', 'همس': 'indigo', 'شدة': 'red', 'توسط': 'red', 'رخاوة': 'red', 'استعلاء': 'sky', 'استفال': 'sky', 'إطباق': 'violet', 'انفتاح': 'violet', 'إذلاق': 'green', 'إصمات': 'green' }[s] || 'gold');
-    panel.innerHTML = `<div class="letter-panel"><div class="big-letter">${esc(L.l)}</div><div class="stack"><div><span class="eyebrow">الحرف</span><h2 style="font-family:var(--f-display);font-size:1.9rem">${esc(L.name)}</h2></div>
+    panel.innerHTML = `<div class="letter-panel"><div class="big-letter">${esc(L.l)}</div><div class="stack"><div><span class="eyebrow">الحرف</span><h2 style="font-family:var(--f-display);font-weight:800;font-size:1.6rem">${esc(L.name)}</h2></div>
       <div><span class="eyebrow">المخرج — ${esc(ZONES[L.z].n)}</span><p>${esc(L.mk)}</p></div>
       <div><span class="eyebrow">الصفات المتضادّة (خمس)</span><div class="sifa-chips">${L.s.map(s => `<span class="sifa-chip hue-${hueOf(s)}">${s}</span>`).join('')}</div></div>
       ${L.x.length ? `<div><span class="eyebrow">صفات لا ضدّ لها</span><div class="sifa-chips">${L.x.map(s => `<span class="sifa-chip solo">${s}</span>`).join('')}</div></div>` : ''}

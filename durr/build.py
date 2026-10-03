@@ -6,7 +6,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).parent
 FONTS = ('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400'
-         '&family=Aref+Ruqaa:wght@400;700&family=Readex+Pro:wght@300;400;600;700&display=swap')
+         '&family=Alexandria:wght@500;700;800&family=Readex+Pro:wght@300;400;600;700&display=swap')
 
 
 def read(p):
