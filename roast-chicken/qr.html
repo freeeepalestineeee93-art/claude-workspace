@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QR المنيو</title>
+<link rel="icon" href="icon.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@700;800&family=Readex+Pro:wght@400;600&display=swap">
+<style>
+:root{--green:#7ac23a;--green-text:#3d8612;--ink:#141615;--line:#e2e9da;--soft:#eef7e5;--muted:#5d685e}
+*{box-sizing:border-box}
+body{margin:0;background:#fff;color:var(--ink);font-family:"Readex Pro",Tahoma,sans-serif;font-size:15px;line-height:1.6}
+.wrap{max-width:520px;margin-inline:auto;padding:24px 16px 40px;display:grid;gap:16px}
+h1{font-family:"Baloo Bhaijaan 2",sans-serif;font-weight:800;font-size:28px;margin:0}
+p{margin:0;color:var(--muted)}
+label{font-weight:600;font-size:13px;color:var(--muted)}
+input{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:12px;font:inherit;direction:ltr;text-align:left}
+input:focus{outline:2px solid var(--green);border-color:var(--green)}
+.card{background:var(--soft);border-radius:22px;padding:20px;display:grid;justify-items:center;gap:10px}
+canvas{width:100%;max-width:340px;height:auto;background:#fff;border-radius:16px}
+.url{direction:ltr;font-size:12px;color:var(--muted);word-break:break-all;text-align:center}
+.btns{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+button,a.btn{display:flex;align-items:center;justify-content:center;border:0;border-radius:14px;padding:13px;font:inherit;font-weight:700;cursor:pointer;text-decoration:none}
+.primary{background:var(--green);color:#10200a}
+.ghost{background:#fff;border:1px solid var(--line);color:var(--ink)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>QR المنيو</h1>
+  <p>هاد الرمز بيفتح المنيو. نزّله واطبعه على الطاولات أو الواجهة.</p>
+  <div><label for="u">رابط المنيو</label><input id="u" type="url"></div>
+  <div class="card"><canvas id="c" width="1200" height="1380"></canvas><div class="url" id="shown"></div></div>
+  <div class="btns">
+    <a class="btn primary" id="dl" download="menu-qr.png">⬇ تنزيل الصورة</a>
+    <a class="btn ghost" id="open" target="_blank" rel="noopener">فتح المنيو</a>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script>
+const input = document.getElementById("u"), c = document.getElementById("c"), ctx = c.getContext("2d");
+const logo = new Image(); logo.src = "logo.webp";
+input.value = location.href.replace(/qr\.html.*$/, "").replace(/[?#].*$/, "");
+function draw(){
+  const url = input.value.trim(); if (!url) return;
+  const qr = qrcode(0, "H"); qr.addData(url); qr.make();
+  const n = qr.getModuleCount(), size = 1200, pad = 70, cell = (size - pad*2) / n;
+  ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, c.width, c.height);
+  ctx.fillStyle = "#141615";
+  for (let r = 0; r < n; r++) for (let k = 0; k < n; k++)
+    if (qr.isDark(r, k)) ctx.fillRect(Math.floor(pad + k*cell), Math.floor(pad + r*cell), Math.ceil(cell), Math.ceil(cell));
+  if (logo.complete && logo.naturalWidth){
+    const s = size * 0.26, x = (size - s)/2;
+    ctx.save(); ctx.beginPath(); ctx.arc(size/2, size/2, s/2 + 14, 0, Math.PI*2); ctx.fillStyle = "#fff"; ctx.fill();
+    ctx.beginPath(); ctx.arc(size/2, size/2, s/2, 0, Math.PI*2); ctx.clip(); ctx.drawImage(logo, x, x, s, s); ctx.restore();
+  }
+  ctx.fillStyle = "#3d8612"; ctx.font = "800 46px 'Baloo Bhaijaan 2', sans-serif"; ctx.textAlign = "center";
+  ctx.fillText("امسح لتشوف المنيو · Menü için okutun", size/2, 1300);
+  document.getElementById("shown").textContent = url;
+  document.getElementById("dl").href = c.toDataURL("image/png");
+  document.getElementById("open").href = url;
+}
+input.addEventListener("input", draw);
+logo.onload = draw;
+document.fonts && document.fonts.ready.then(draw);
+draw();
+</script>
+</body>
+</html>
