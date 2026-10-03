@@ -1,0 +1,332 @@
+{
+ "fps": 30,
+ "style": "neon",
+ "format": "9:16",
+ "watermark": false,
+ "progress": true,
+ "sfxEnabled": true,
+ "sfxVolume": 0.22,
+ "theme": {
+  "handle": "",
+  "wordmark": "",
+  "muted": "#DCE6DE"
+ },
+ "scenes": [
+  {
+   "type": "pop",
+   "eyebrow": "دليل صاحب المطعم",
+   "text": "تجهيز المنيو الإلكتروني",
+   "bgWord": "المنيو",
+   "sub": "مرة وحدة بس، وبعدها كل شي من الجدول",
+   "duration": 150
+  },
+  {
+   "type": "features",
+   "eyebrow": "خلال ربع ساعة",
+   "title": "تلات مراحل وبس",
+   "highlight": [
+    "تلات"
+   ],
+   "items": [
+    {
+     "icon": "Table",
+     "label": "جدول الأسعار"
+    },
+    {
+     "icon": "Globe",
+     "label": "الموقع"
+    },
+    {
+     "icon": "QrCode",
+     "label": "رمز الـ QR"
+    }
+   ],
+   "duration": 180
+  },
+  {
+   "type": "icon",
+   "icon": "FolderOpen",
+   "eyebrow": "قبل ما تبلّش",
+   "text": "افتح ملف التسليم",
+   "highlight": [
+    "التسليم"
+   ],
+   "sub": "فيه مجلد اسمه site ومجلد اسمه sheet",
+   "duration": 150
+  },
+  {
+   "type": "words",
+   "eyebrow": "المرحلة 1",
+   "text": "جدول الأسعار على Google Sheets",
+   "highlight": [
+    "الأسعار"
+   ],
+   "sub": "هاد الجدول هو لوحة التحكم تبعك",
+   "duration": 120
+  },
+  {
+   "type": "image",
+   "src": "images/v1/s1_new.png",
+   "mode": "card",
+   "eyebrow": "خطوة 1",
+   "text": "افتح جدول جديد",
+   "highlight": [
+    "جديد"
+   ],
+   "sub": "sheets.google.com ← جدول بيانات فارغ",
+   "duration": 180
+  },
+  {
+   "type": "image",
+   "src": "images/v1/s2_import.png",
+   "mode": "card",
+   "eyebrow": "خطوة 2",
+   "text": "استورد ملف الأصناف",
+   "highlight": [
+    "استورد"
+   ],
+   "sub": "من القائمة فوق: ملف ← استيراد",
+   "duration": 180
+  },
+  {
+   "type": "image",
+   "src": "images/v1/s3_upload.png",
+   "mode": "card",
+   "eyebrow": "خطوة 3",
+   "text": "ارفع ملف الأصناف",
+   "highlight": [
+    "ارفع"
+   ],
+   "sub": "تحميل ← اختار ملف menu-sheet.csv من مجلد sheet",
+   "duration": 180
+  },
+  {
+   "type": "image",
+   "src": "images/v1/s4_replace.png",
+   "mode": "card",
+   "eyebrow": "خطوة 4",
+   "text": "اختار استبدال الورقة الحالية",
+   "highlight": [
+    "استبدال"
+   ],
+   "sub": "وبعدين اكبس «استيراد البيانات»",
+   "duration": 180
+  },
+  {
+   "type": "image",
+   "src": "images/v1/s5_appsscript.png",
+   "mode": "card",
+   "eyebrow": "خطوة 5",
+   "text": "افتح برمجة التطبيقات",
+   "highlight": [
+    "برمجة"
+   ],
+   "sub": "الإضافات ← برمجة التطبيقات",
+   "duration": 180
+  },
+  {
+   "type": "image",
+   "src": "images/v1/s6_run.png",
+   "mode": "card",
+   "eyebrow": "خطوة 6",
+   "text": "الصق السكربت وشغّله",
+   "highlight": [
+    "شغّله"
+   ],
+   "sub": "امسح الكود القديم، الصق ملف sheet-script.gs واحفظ، واختار setupMenuSheet واكبس تنفيذ",
+   "duration": 240
+  },
+  {
+   "type": "list",
+   "eyebrow": "خطوة 7",
+   "title": "وافق على الصلاحيات",
+   "highlight": [
+    "الصلاحيات"
+   ],
+   "items": [
+    "مراجعة الأذونات",
+    "اختار حسابك",
+    "خيارات متقدمة",
+    "الانتقال إلى المشروع ← سماح"
+   ],
+   "duration": 210
+  },
+  {
+   "type": "icon",
+   "icon": "ShieldCheck",
+   "eyebrow": "لا تخاف",
+   "text": "كلمة «غير آمن» طبيعية",
+   "highlight": [
+    "طبيعية"
+   ],
+   "sub": "السكربت خاص فيك، وبيشتغل بس على جدولك",
+   "duration": 150
+  },
+  {
+   "type": "image",
+   "src": "images/v1/s7_settings.png",
+   "mode": "card",
+   "eyebrow": "خطوة 8",
+   "text": "عبّي خانة الإعدادات",
+   "highlight": [
+    "الإعدادات"
+   ],
+   "sub": "الخانة الحمرا على يسار الجدول. رقم الواتساب ضروري ليشتغل زر الطلب",
+   "duration": 210
+  },
+  {
+   "type": "image",
+   "src": "images/v1/s8_publish.png",
+   "mode": "card",
+   "eyebrow": "خطوة 9",
+   "text": "انشر الجدول على الويب",
+   "highlight": [
+    "انشر"
+   ],
+   "sub": "ملف ← مشاركة ← النشر على الويب، واختار الورقة وصيغة CSV وبعدين نشر",
+   "duration": 240
+  },
+  {
+   "type": "image",
+   "src": "images/v1/s9_link.png",
+   "mode": "card",
+   "eyebrow": "خطوة 10",
+   "text": "انسخ الرابط واحتفظ فيه",
+   "highlight": [
+    "انسخ"
+   ],
+   "sub": "رح نحطه بالموقع بعد شوي",
+   "duration": 180
+  },
+  {
+   "type": "words",
+   "eyebrow": "المرحلة 2",
+   "text": "الموقع على GitHub",
+   "highlight": [
+    "الموقع"
+   ],
+   "sub": "استضافة مجانية وللأبد",
+   "duration": 120
+  },
+  {
+   "type": "image",
+   "src": "images/v1/g1_signup.png",
+   "mode": "card",
+   "eyebrow": "خطوة 1",
+   "text": "اعمل حساب باسم المطعم",
+   "highlight": [
+    "باسم"
+   ],
+   "sub": "اسم الحساب بيصير جزء من رابط المنيو",
+   "duration": 180
+  },
+  {
+   "type": "image",
+   "src": "images/v1/g2_repo.png",
+   "mode": "card",
+   "eyebrow": "خطوة 2",
+   "text": "اعمل مستودع جديد",
+   "highlight": [
+    "مستودع"
+   ],
+   "sub": "اسمه اسم حسابك وبعده github.io، واختار Public",
+   "duration": 210
+  },
+  {
+   "type": "image",
+   "src": "images/v1/g3_upload_link.png",
+   "mode": "card",
+   "eyebrow": "خطوة 3",
+   "text": "اكبس رفع ملف موجود",
+   "highlight": [
+    "رفع"
+   ],
+   "sub": "الرابط الأزرق uploading an existing file",
+   "duration": 150
+  },
+  {
+   "type": "image",
+   "src": "images/v1/g4_commit.png",
+   "mode": "card",
+   "eyebrow": "خطوة 4",
+   "text": "ارفع ملفات مجلد site",
+   "highlight": [
+    "ارفع"
+   ],
+   "sub": "اسحب الملفات الخمسة، وبعدين اكبس Commit changes",
+   "duration": 180
+  },
+  {
+   "type": "image",
+   "src": "images/v1/g5_config.png",
+   "mode": "card",
+   "eyebrow": "خطوة 5",
+   "text": "حط رابط الجدول بالموقع",
+   "highlight": [
+    "رابط"
+   ],
+   "sub": "افتح config.js، اكبس القلم، والصق الرابط بين علامتي التنصيص، وبعدين Commit",
+   "duration": 240
+  },
+  {
+   "type": "image",
+   "src": "images/v1/g6_pages.png",
+   "mode": "card",
+   "eyebrow": "خطوة 6",
+   "text": "شغّل الموقع",
+   "highlight": [
+    "شغّل"
+   ],
+   "sub": "من Settings روح على Pages، اختار main واكبس Save",
+   "duration": 210
+  },
+  {
+   "type": "counter",
+   "eyebrow": "استنى",
+   "to": 2,
+   "label": "دقيقة وبيشتغل الموقع",
+   "sub": "على رابط roastchicken.github.io",
+   "duration": 150
+  },
+  {
+   "type": "image",
+   "src": "images/v1/q1_qr.png",
+   "mode": "float",
+   "eyebrow": "المرحلة 3",
+   "text": "اعمل رمز الـ QR",
+   "highlight": [
+    "رمز"
+   ],
+   "sub": "افتح صفحة qr.html على موقعك ونزّل الصورة",
+   "duration": 210
+  },
+  {
+   "type": "image",
+   "src": "images/v1/m1_menu.png",
+   "mode": "float",
+   "eyebrow": "جرّب",
+   "text": "غيّر سعر بالجدول",
+   "highlight": [
+    "سعر"
+   ],
+   "sub": "بعد 5 دقايق بيتغيّر بالمنيو لحاله",
+   "duration": 180
+  },
+  {
+   "type": "alert",
+   "eyebrow": "انتبه",
+   "text": "لا تغيّر عناوين الجدول ولا توقف النشر",
+   "duration": 150
+  },
+  {
+   "type": "cta",
+   "eyebrow": "خلصنا التجهيز",
+   "text": "الفيديو الجاي: الاستخدام اليومي",
+   "highlight": [
+    "اليومي"
+   ],
+   "button": "Roast chicken",
+   "duration": 150
+  }
+ ]
+}
