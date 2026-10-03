@@ -1,0 +1,39 @@
+{
+  "fps": 30,
+  "style": "neon",
+  "format": "9:16",
+  "watermark": false,
+  "progress": true,
+  "sfxEnabled": true,
+  "sfxVolume": 0.22,
+  "theme": { "handle": "", "wordmark": "", "muted": "#DCE6DE" },
+  "scenes": [
+    { "type": "pop", "eyebrow": "دليل صاحب المطعم", "text": "إدارة المنيو كل يوم", "bgWord": "الجدول", "sub": "كل شي بتعدّله من جدول الأسعار، والمنيو بيتحدّث لحاله", "duration": 150 },
+    { "type": "features", "eyebrow": "شو فيك تعمل", "title": "كل شي من مكان واحد", "highlight": ["واحد"],
+      "items": [ { "icon": "Tag", "label": "الأسعار" }, { "icon": "EyeOff", "label": "إخفاء صنف" }, { "icon": "CirclePlus", "label": "إضافة صنف" }, { "icon": "ImagePlus", "label": "الصور" } ], "duration": 180 },
+
+    { "type": "image", "src": "images/v2/d1_price.png", "mode": "card", "eyebrow": "تغيير سعر", "text": "اكتب السعر الجديد", "highlight": ["الجديد"], "sub": "بعمود السعر، وبس", "duration": 180 },
+    { "type": "counter", "eyebrow": "بعد", "to": 5, "label": "دقايق بيتغيّر بالمنيو", "sub": "إذا ما بيّن، حدّث صفحة المنيو", "duration": 150 },
+
+    { "type": "image", "src": "images/v2/d2_hide.png", "mode": "card", "eyebrow": "صنف خلص؟", "text": "اختار «لا» بعمود متوفر", "highlight": ["«لا»"], "sub": "بيختفي من المنيو بدون ما ينحذف، وبترجّعه بـ «نعم»", "duration": 210 },
+    { "type": "image", "src": "images/v2/d3_add.png", "mode": "card", "eyebrow": "صنف جديد", "text": "زيد سطر جديد", "highlight": ["جديد"], "sub": "القسم، الصنف، السعر، ومتوفر نعم. والاسم التركي اختياري", "duration": 210 },
+    { "type": "image", "src": "images/v2/d4_options.png", "mode": "card", "eyebrow": "عادي ودبل", "text": "نفس الاسم بسطرين", "highlight": ["بسطرين"], "sub": "وكل سطر إله خيار وسعر، والمنيو بيجمعهم ببطاقة وحدة", "duration": 240 },
+    { "type": "list", "eyebrow": "شغلات بتصير لحالها", "title": "الجدول بيرتّب المنيو", "highlight": ["بيرتّب"],
+      "items": ["قسم جديد بيطلعلو تبويب لحاله", "ترتيب السطور هو ترتيب المنيو", "إذا الاسم التركي فاضي بيبيّن العربي"], "duration": 210 },
+
+    { "type": "image", "src": "images/v2/d5_photo_menu.png", "mode": "card", "eyebrow": "صورة من الكمبيوتر", "text": "قف على الصنف وارفع صورة", "highlight": ["صورة"], "sub": "من قائمة Roast chicken فوق، اختار رفع صورة للصنف المحدد", "duration": 210 },
+    { "type": "image", "src": "images/v2/d6_photo_dialog.png", "mode": "card", "eyebrow": "صورة من الكمبيوتر", "text": "اختار الصورة واكبس رفع", "highlight": ["رفع"], "sub": "السكربت بيصغّرها وبيرفعها وبيحط رابطها لحاله", "duration": 180 },
+    { "type": "list", "eyebrow": "صورة من الموبايل", "title": "من تطبيق Google Drive", "highlight": ["Drive"],
+      "items": ["ارفع الصورة على Drive", "مشاركة ← أي شخص لديه الرابط", "انسخ الرابط", "الصقه بعمود الصورة"], "duration": 240 },
+
+    { "type": "image", "src": "images/v2/d7_settings.png", "mode": "card", "eyebrow": "الواتساب والدوام", "text": "عدّلهم من الإعدادات", "highlight": ["الإعدادات"], "sub": "الخانة الحمرا على يسار الجدول. أي خانة فاضية ما بتطلع بالمنيو", "duration": 210 },
+
+    { "type": "image", "src": "images/v2/d8_cart.png", "mode": "float", "eyebrow": "كيف بتوصلك الطلبات", "text": "الزبون بيعبّي طلبه", "highlight": ["طلبه"], "sub": "بيختار بالصالة أو استلام أو توصيل، وبيكبس أرسل", "duration": 210 },
+    { "type": "image", "src": "images/v2/d9_wa.png", "mode": "card", "eyebrow": "على واتسابك", "text": "رسالة الطلب جاهزة", "highlight": ["جاهزة"], "sub": "فيها الأصناف والمجموع ورقم الطاولة أو العنوان", "duration": 210 },
+
+    { "type": "image", "src": "images/v2/d10_share.png", "mode": "card", "eyebrow": "موظف بيساعدك؟", "text": "شاركه الجدول كمحرر", "highlight": ["كمحرر"], "sub": "زر مشاركة، اكتب إيميله، واختار محرر", "duration": 180 },
+    { "type": "alert", "eyebrow": "انتبه", "text": "لا تغيّر العناوين ولا توقف النشر", "duration": 150 },
+    { "type": "image", "src": "images/v2/d11_history.png", "mode": "card", "eyebrow": "غلطت بشي؟", "text": "رجّع نسخة قديمة", "highlight": ["قديمة"], "sub": "ملف ← سجل النسخ ← عرض سجل النسخ", "duration": 180 },
+    { "type": "cta", "eyebrow": "هيك بتدير منيوك", "text": "كل شي من الجدول وبس", "highlight": ["الجدول"], "button": "Roast chicken", "duration": 150 }
+  ]
+}
