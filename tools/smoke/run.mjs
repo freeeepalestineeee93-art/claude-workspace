@@ -1,0 +1,13 @@
+import { launch } from '../../engine/browser.js';
+import express from 'express';
+const app = express(); app.use(express.static(process.cwd()));
+const srv = app.listen(4791);
+const b = await launch();
+const p = await b.newPage({ viewport: { width: 1080, height: 1920 } });
+p.on('console', m => console.log('page:', m.text()));
+await p.goto('http://localhost:4791/tools/smoke/index.html');
+await p.waitForFunction('window.ready');
+await p.evaluate('seek(1.2)');
+console.log(await p.evaluate('window.info'));
+await p.screenshot({ path: 'tools/smoke/frame.png' });
+await b.close(); srv.close();

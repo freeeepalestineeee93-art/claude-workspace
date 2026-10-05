@@ -1,0 +1,28 @@
+# صورة
+pillow
+opencv-python-headless
+scikit-image
+numpy
+scipy
+rembg[cpu]
+vtracer
+cairosvg
+colorthief
+# فيديو
+scenedetect
+moviepy
+imageio[ffmpeg]
+# صوت
+librosa
+soundfile
+pydub
+pedalboard
+pyloudnorm
+noisereduce
+edge-tts
+faster-whisper
+# عربي ونصوص
+arabic-reshaper
+python-bidi
+fonttools[woff]
+uharfbuzz

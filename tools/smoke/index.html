@@ -1,0 +1,24 @@
+<!doctype html><html dir="rtl"><head><meta charset="utf-8">
+<style>
+@font-face{font-family:Kufi;src:url(/assets/fonts/notokufiarabic/NotoKufiArabic[wght].ttf)}
+@font-face{font-family:Ruqaa;src:url(/assets/fonts/arefruqaa/ArefRuqaa-Bold.ttf)}
+html,body{margin:0;width:1080px;height:1920px;background:#0b0d12;overflow:hidden}
+canvas{position:absolute;inset:0}
+.t{position:absolute;width:100%;text-align:center;color:#f2efe8;font-family:Kufi;font-weight:800;font-size:150px;top:1100px}
+.s{position:absolute;width:100%;text-align:center;color:#ffb547;font-family:Ruqaa;font-size:110px;top:1330px}
+</style></head><body>
+<canvas id="c" width="1080" height="1920"></canvas>
+<div class="t" id="t">استوديو الموشن</div><div class="s">جاهز للعمل</div>
+<script type="module">
+import * as THREE from '/node_modules/three/build/three.module.js';
+import gsap from '/node_modules/gsap/index.js';
+const r=new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true});
+r.setSize(1080,1920,false);
+const s=new THREE.Scene(),cam=new THREE.PerspectiveCamera(35,1080/1920,.1,100);cam.position.z=9;
+const m=new THREE.Mesh(new THREE.TorusKnotGeometry(1.4,.42,256,48),new THREE.MeshStandardMaterial({color:0xffb547,metalness:.6,roughness:.25}));
+m.position.y=1.6;s.add(m);s.add(new THREE.HemisphereLight(0xffffff,0x223344,1.2));const d=new THREE.DirectionalLight(0xffffff,2.5);d.position.set(3,4,5);s.add(d);
+const tl=gsap.timeline({paused:true}).fromTo('#t',{y:120,opacity:0},{y:0,opacity:1,duration:1,ease:'expo.out'});
+window.seek=(t)=>{tl.seek(t);m.rotation.set(t*.8,t*1.1,0);r.render(s,cam);return document.fonts.ready.then(()=>true)};
+window.info={gl:r.getContext().getParameter(r.getContext().VERSION)};
+window.ready=true;
+</script></body></html>

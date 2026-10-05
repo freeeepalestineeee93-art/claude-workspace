@@ -1,0 +1,9 @@
+node_modules/
+.venv/
+.venv-blender/
+.env
+renders/
+**/renders/
+*.tmp
+.DS_Store
+tools/smoke/frame.png
