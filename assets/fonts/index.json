@@ -1,0 +1,1316 @@
+{
+ "Alexandria": {
+  "arabic": true,
+  "files": [
+   {
+    "path": "assets/fonts/alexandria/Alexandria[wght].ttf",
+    "style": "Regular",
+    "weight": 400,
+    "italic": false,
+    "axes": {
+     "wght": [
+      100.0,
+      400.0,
+      900.0
+     ]
+    },
+    "color": false
+   }
+  ]
+ },
+ "Almarai": {
+  "arabic": true,
+  "files": [
+   {
+    "path": "assets/fonts/almarai/Almarai-Bold.ttf",
+    "style": "Bold",
+    "weight": 700,
+    "italic": false,
+    "axes": {},
+    "color": false
+   },
+   {
+    "path": "assets/fonts/almarai/Almarai-ExtraBold.ttf",
+    "style": "ExtraBold",
+    "weight": 800,
+    "italic": false,
+    "axes": {},
+    "color": false
+   },
+   {
+    "path": "assets/fonts/almarai/Almarai-Light.ttf",
+    "style": "Light",
+    "weight": 300,
+    "italic": false,
+    "axes": {},
+    "color": false
+   },
+   {
+    "path": "assets/fonts/almarai/Almarai-Regular.ttf",
+    "style": "Regular",
+    "weight": 400,
+    "italic": false,
+    "axes": {},
+    "color": false
+   }
+  ]
+ },
+ "Amiri": {
+  "arabic": true,
+  "files": [
+   {
+    "path": "assets/fonts/amiri/Amiri-Bold.ttf",
+    "style": "Bold",
+    "weight": 700,
+    "italic": false,
+    "axes": {},
+    "color": false
+   },
+   {
+    "path": "assets/fonts/amiri/Amiri-BoldItalic.ttf",
+    "style": "Bold Italic",
+    "weight": 700,
+    "italic": true,
+    "axes": {},
+    "color": false
+   },
+   {
+    "path": "assets/fonts/amiri/Amiri-Italic.ttf",
+    "style": "Italic",
+    "weight": 400,
+    "italic": true,
+    "axes": {},
+    "color": false
+   },
+   {
+    "path": "assets/fonts/amiri/Amiri-Regular.ttf",
+    "style": "Regular",
+    "weight": 400,
+    "italic": false,
+    "axes": {},
+    "color": false
+   }
+  ]
+ },
+ "Archivo": {
+  "arabic": false,
+  "files": [
+   {
+    "path": "assets/fonts/archivo/Archivo-Italic[wdth,wght].ttf",
+    "style": "SemiBold Italic",
+    "weight": 600,
+    "italic": true,
+    "axes": {
+     "wght": [
+      100.0,
+      600.0,
+      900.0
+     ],
+     "wdth": [
+      62.0,
+      100.0,
+      125.0
+     ]
+    },
+    "color": false
+   },
+   {
+    "path": "assets/fonts/archivo/Archivo[wdth,wght].ttf",
+    "style": "SemiBold",
+    "weight": 600,
+    "italic": false,
+    "axes": {
+     "wght": [
+      100.0,
+      600.0,
+      900.0
+     ],
+     "wdth": [
+      62.0,
+      100.0,
+      125.0
+     ]
+    },
+    "color": false
+   }
+  ]
+ },
+ "Aref Ruqaa": {
+  "arabic": true,
+  "files": [
+   {
+    "path": "assets/fonts/arefruqaa/ArefRuqaa-Bold.ttf",
+    "style": "Bold",
+    "weight": 700,
+    "italic": false,
+    "axes": {},
+    "color": false
+   },
+   {
+    "path": "assets/fonts/arefruqaa/ArefRuqaa-Regular.ttf",
+    "style": "Regular",
+    "weight": 400,
+    "italic": false,
+    "axes": {},
+    "color": false
+   }
+  ]
+ },
+ "Aref Ruqaa Ink": {
+  "arabic": true,
+  "files": [
+   {
+    "path": "assets/fonts/arefruqaaink/ArefRuqaaInk-Bold.ttf",
+    "style": "Bold",
+    "weight": 700,
+    "italic": false,
+    "axes": {},
+    "color": true
+   },
+   {
+    "path": "assets/fonts/arefruqaaink/ArefRuqaaInk-Regular.ttf",
+    "style": "Regular",
+    "weight": 400,
+    "italic": false,
+    "axes": {},
+    "color": true
+   }
+  ]
+ },
+ "Baloo Bhaijaan 2": {
+  "arabic": true,
+  "files": [
+   {
+    "path": "assets/fonts/baloobhaijaan2/BalooBhaijaan2[wght].ttf",
+    "style": "Regular",
+    "weight": 400,
+    "italic": false,
+    "axes": {
+     "wght": [
+      400.0,
+      400.0,
+      800.0
+     ]
+    },
+    "color": false
+   }
+  ]
+ },
+ "Bebas Neue": {
+  "arabic": false,
+  "files": [
+   {
+    "path": "assets/fonts/bebasneue/BebasNeue-Regular.ttf",
+    "style": "Regular",
+    "weight": 400,
+    "italic": false,
+    "axes": {},
+    "color": false
+   }
+  ]
+ },
+ "Blaka": {
+  "arabic": true,
+  "files": [
+   {
+    "path": "assets/fonts/blaka/Blaka-Regular.ttf",
+    "style": "Regular",
+    "weight": 400,
+    "italic": false,
+    "axes": {},
+    "color": false
+   }
+  ]
+ },
+ "Blaka Hollow": {
+  "arabic": true,
+  "files": [
+   {
+    "path": "assets/fonts/blakahollow/BlakaHollow-Regular.ttf",
+    "style": "Regular",
+    "weight": 400,
+    "italic": false,
+    "axes": {},
+    "color": false
+   }
+  ]
+ },
+ "Blaka Ink": {
+  "arabic": true,
+  "files": [
+   {
+    "path": "assets/fonts/blakaink/BlakaInk-Regular.ttf",
+    "style": "Regular",
+    "weight": 400,
+    "italic": false,
+    "axes": {},
+    "color": true
+   }
+  ]
+ },
+ "Cairo": {
+  "arabic": true,
+  "files": [
+   {
+    "path": "assets/fonts/cairo/Cairo[slnt,wght].ttf",
+    "style": "Regular",
+    "weight": 400,
+    "italic": false,
+    "axes": {
+     "wght": [
+      200.0,
+      400.0,
+      1000.0
+     ],
+     "slnt": [
+      -11.0,
+      0.0,
+      11.0
+     ]
+    },
+    "color": false
+   }
+  ]
+ },
+ "Changa": {
+  "arabic": true,
+  "files": [
+   {
+    "path": "assets/fonts/changa/Changa[wght].ttf",
+    "style": "Regular",
+    "weight": 400,
+    "italic": false,
+    "axes": {
+     "wght": [
+      200.0,
+      400.0,
+      800.0
+     ]
+    },
+    "color": false
+   }
+  ]
+ },
+ "DM Sans": {
+  "arabic": false,
+  "files": [
+   {
+    "path": "assets/fonts/dmsans/DMSans-Italic[opsz,wght].ttf",
+    "style": "9pt Italic",
+    "weight": 400,
+    "italic": true,
+    "axes": {
+     "opsz": [
+      9.0,
+      9.0,
+      40.0
+     ],
+     "wght": [
+      100.0,
+      400.0,
+      1000.0
+     ]
+    },
+    "color": false
+   },
+   {
+    "path": "assets/fonts/dmsans/DMSans[opsz,wght].ttf",
+    "style": "9pt Regular",
+    "weight": 400,
+    "italic": false,
+    "axes": {
+     "opsz": [
+      9.0,
+      9.0,
+      40.0
+     ],
+     "wght": [
+      100.0,
+      400.0,
+      1000.0
+     ]
+    },
+    "color": false
+   }
+  ]
+ },
+ "El Messiri": {
+  "arabic": true,
+  "files": [
+   {
+    "path": "assets/fonts/elmessiri/ElMessiri[wght].ttf",
+    "style": "Regular",
+    "weight": 400,
+    "italic": false,
+    "axes": {
+     "wght": [
+      400.0,
+      400.0,
+      700.0
+     ]
+    },
+    "color": false
+   }
+  ]
+ },
+ "Gulzar": {
+  "arabic": true,
+  "files": [
+   {
+    "path": "assets/fonts/gulzar/Gulzar-Regular.ttf",
+    "style": "Regular",
+    "weight": 400,
+    "italic": false,
+    "axes": {},
+    "color": false
+   }
+  ]
+ },
+ "Handjet": {
+  "arabic": true,
+  "files": [
+   {
+    "path": "assets/fonts/handjet/Handjet[ELGR,ELSH,wght].ttf",
+    "style": "Regular",
+    "weight": 400,
+    "italic": false,
+    "axes": {
+     "wght": [
+      100.0,
+      400.0,
+      900.0
+     ],
+     "ELGR": [
+      1.0,
+      1.0,
+      2.0
+     ],
+     "ELSH": [
+      0.0,
+      2.0,
+      16.0
+     ]
+    },
+    "color": false
+   }
+  ]
+ },
+ "Harmattan": {
+  "arabic": true,
+  "files": [
+   {
+    "path": "assets/fonts/harmattan/Harmattan-Bold.ttf",
+    "style": "Bold",
+    "weight": 700,
+    "italic": false,
+    "axes": {},
+    "color": false
+   },
+   {
+    "path": "assets/fonts/harmattan/Harmattan-Medium.ttf",
+    "style": "Medium",
+    "weight": 500,
+    "italic": false,
+    "axes": {},
+    "color": false
+   },
+   {
+    "path": "assets/fonts/harmattan/Harmattan-Regular.ttf",
+    "style": "Regular",
+    "weight": 400,
+    "italic": false,
+    "axes": {},
+    "color": false
+   },
+   {
+    "path": "assets/fonts/harmattan/Harmattan-SemiBold.ttf",
+    "style": "SemiBold",
+    "weight": 600,
+    "italic": false,
+    "axes": {},
+    "color": false
+   }
+  ]
+ },
+ "IBM Plex Sans Arabic": {
+  "arabic": true,
+  "files": [
+   {
+    "path": "assets/fonts/ibmplexsansarabic/IBMPlexSansArabic-Bold.ttf",
+    "style": "Bold",
+    "weight": 700,
+    "italic": false,
+    "axes": {},
+    "color": false
+   },
+   {
+    "path": "assets/fonts/ibmplexsansarabic/IBMPlexSansArabic-ExtraLight.ttf",
+    "style": "ExtraLight",
+    "weight": 200,
+    "italic": false,
+    "axes": {},
+    "color": false
+   },
+   {
+    "path": "assets/fonts/ibmplexsansarabic/IBMPlexSansArabic-Light.ttf",
+    "style": "Light",
+    "weight": 300,
+    "italic": false,
+    "axes": {},
+    "color": false
+   },
+   {
+    "path": "assets/fonts/ibmplexsansarabic/IBMPlexSansArabic-Medium.ttf",
+    "style": "Medium",
+    "weight": 500,
+    "italic": false,
+    "axes": {},
+    "color": false
+   },
+   {
+    "path": "assets/fonts/ibmplexsansarabic/IBMPlexSansArabic-Regular.ttf",
+    "style": "Regular",
+    "weight": 400,
+    "italic": false,
+    "axes": {},
+    "color": false
+   },
+   {
+    "path": "assets/fonts/ibmplexsansarabic/IBMPlexSansArabic-SemiBold.ttf",
+    "style": "SemiBold",
+    "weight": 600,
+    "italic": false,
+    "axes": {},
+    "color": false
+   },
+   {
+    "path": "assets/fonts/ibmplexsansarabic/IBMPlexSansArabic-Thin.ttf",
+    "style": "Thin",
+    "weight": 100,
+    "italic": false,
+    "axes": {},
+    "color": false
+   }
+  ]
+ },
+ "Instrument Serif": {
+  "arabic": false,
+  "files": [
+   {
+    "path": "assets/fonts/instrumentserif/InstrumentSerif-Italic.ttf",
+    "style": "Italic",
+    "weight": 400,
+    "italic": true,
+    "axes": {},
+    "color": false
+   },
+   {
+    "path": "assets/fonts/instrumentserif/InstrumentSerif-Regular.ttf",
+    "style": "Regular",
+    "weight": 400,
+    "italic": false,
+    "axes": {},
+    "color": false
+   }
+  ]
+ },
+ "Inter": {
+  "arabic": false,
+  "files": [
+   {
+    "path": "assets/fonts/inter/Inter-Italic[opsz,wght].ttf",
+    "style": "Italic",
+    "weight": 400,
+    "italic": true,
+    "axes": {
+     "opsz": [
+      14.0,
+      14.0,
+      32.0
+     ],
+     "wght": [
+      100.0,
+      400.0,
+      900.0
+     ]
+    },
+    "color": false
+   },
+   {
+    "path": "assets/fonts/inter/Inter[opsz,wght].ttf",
+    "style": "Regular",
+    "weight": 400,
+    "italic": false,
+    "axes": {
+     "opsz": [
+      14.0,
+      14.0,
+      32.0
+     ],
+     "wght": [
+      100.0,
+      400.0,
+      900.0
+     ]
+    },
+    "color": false
+   }
+  ]
+ },
+ "JetBrains Mono": {
+  "arabic": false,
+  "files": [
+   {
+    "path": "assets/fonts/jetbrainsmono/JetBrainsMono-Italic[wght].ttf",
+    "style": "Italic",
+    "weight": 400,
+    "italic": true,
+    "axes": {
+     "wght": [
+      100.0,
+      400.0,
+      800.0
+     ]
+    },
+    "color": false
+   },
+   {
+    "path": "assets/fonts/jetbrainsmono/JetBrainsMono[wght].ttf",
+    "style": "Regular",
+    "weight": 400,
+    "italic": false,
+    "axes": {
+     "wght": [
+      100.0,
+      400.0,
+      800.0
+     ]
+    },
+    "color": false
+   }
+  ]
+ },
+ "Jomhuria": {
+  "arabic": true,
+  "files": [
+   {
+    "path": "assets/fonts/jomhuria/Jomhuria-Regular.ttf",
+    "style": "Regular",
+    "weight": 400,
+    "italic": false,
+    "axes": {},
+    "color": false
+   }
+  ]
+ },
+ "Katibeh": {
+  "arabic": true,
+  "files": [
+   {
+    "path": "assets/fonts/katibeh/Katibeh-Regular.ttf",
+    "style": "Regular",
+    "weight": 400,
+    "italic": false,
+    "axes": {},
+    "color": false
+   }
+  ]
+ },
+ "Kufam": {
+  "arabic": true,
+  "files": [
+   {
+    "path": "assets/fonts/kufam/Kufam-Italic[wght].ttf",
+    "style": "Italic",
+    "weight": 400,
+    "italic": true,
+    "axes": {
+     "wght": [
+      400.0,
+      400.0,
+      900.0
+     ]
+    },
+    "color": false
+   },
+   {
+    "path": "assets/fonts/kufam/Kufam[wght].ttf",
+    "style": "Regular",
+    "weight": 400,
+    "italic": false,
+    "axes": {
+     "wght": [
+      400.0,
+      400.0,
+      900.0
+     ]
+    },
+    "color": false
+   }
+  ]
+ },
+ "Lalezar": {
+  "arabic": true,
+  "files": [
+   {
+    "path": "assets/fonts/lalezar/Lalezar-Regular.ttf",
+    "style": "Regular",
+    "weight": 400,
+    "italic": false,
+    "axes": {},
+    "color": false
+   }
+  ]
+ },
+ "Lemonada": {
+  "arabic": true,
+  "files": [
+   {
+    "path": "assets/fonts/lemonada/Lemonada[wght].ttf",
+    "style": "Regular",
+    "weight": 400,
+    "italic": false,
+    "axes": {
+     "wght": [
+      300.0,
+      400.0,
+      700.0
+     ]
+    },
+    "color": false
+   }
+  ]
+ },
+ "Mada": {
+  "arabic": true,
+  "files": [
+   {
+    "path": "assets/fonts/mada/Mada[wght].ttf",
+    "style": "Regular",
+    "weight": 400,
+    "italic": false,
+    "axes": {
+     "wght": [
+      200.0,
+      400.0,
+      900.0
+     ]
+    },
+    "color": false
+   }
+  ]
+ },
+ "Manrope": {
+  "arabic": false,
+  "files": [
+   {
+    "path": "assets/fonts/manrope/Manrope[wght].ttf",
+    "style": "ExtraLight",
+    "weight": 200,
+    "italic": false,
+    "axes": {
+     "wght": [
+      200.0,
+      200.0,
+      800.0
+     ]
+    },
+    "color": false
+   }
+  ]
+ },
+ "Marhey": {
+  "arabic": true,
+  "files": [
+   {
+    "path": "assets/fonts/marhey/Marhey[wght].ttf",
+    "style": "Light",
+    "weight": 300,
+    "italic": false,
+    "axes": {
+     "wght": [
+      300.0,
+      300.0,
+      700.0
+     ]
+    },
+    "color": false
+   }
+  ]
+ },
+ "Markazi Text": {
+  "arabic": true,
+  "files": [
+   {
+    "path": "assets/fonts/markazitext/MarkaziText[wght].ttf",
+    "style": "Regular",
+    "weight": 400,
+    "italic": false,
+    "axes": {
+     "wght": [
+      400.0,
+      400.0,
+      700.0
+     ]
+    },
+    "color": false
+   }
+  ]
+ },
+ "Mirza": {
+  "arabic": true,
+  "files": [
+   {
+    "path": "assets/fonts/mirza/Mirza-Bold.ttf",
+    "style": "Bold",
+    "weight": 700,
+    "italic": false,
+    "axes": {},
+    "color": false
+   },
+   {
+    "path": "assets/fonts/mirza/Mirza-Medium.ttf",
+    "style": "Medium",
+    "weight": 500,
+    "italic": false,
+    "axes": {},
+    "color": false
+   },
+   {
+    "path": "assets/fonts/mirza/Mirza-Regular.ttf",
+    "style": "Regular",
+    "weight": 400,
+    "italic": false,
+    "axes": {},
+    "color": false
+   },
+   {
+    "path": "assets/fonts/mirza/Mirza-SemiBold.ttf",
+    "style": "SemiBold",
+    "weight": 600,
+    "italic": false,
+    "axes": {},
+    "color": false
+   }
+  ]
+ },
+ "Montserrat": {
+  "arabic": false,
+  "files": [
+   {
+    "path": "assets/fonts/montserrat/Montserrat-Italic[wght].ttf",
+    "style": "Thin Italic",
+    "weight": 100,
+    "italic": true,
+    "axes": {
+     "wght": [
+      100.0,
+      100.0,
+      900.0
+     ]
+    },
+    "color": false
+   },
+   {
+    "path": "assets/fonts/montserrat/Montserrat[wght].ttf",
+    "style": "Thin",
+    "weight": 100,
+    "italic": false,
+    "axes": {
+     "wght": [
+      100.0,
+      100.0,
+      900.0
+     ]
+    },
+    "color": false
+   }
+  ]
+ },
+ "Noto Kufi Arabic": {
+  "arabic": true,
+  "files": [
+   {
+    "path": "assets/fonts/notokufiarabic/NotoKufiArabic[wght].ttf",
+    "style": "Regular",
+    "weight": 400,
+    "italic": false,
+    "axes": {
+     "wght": [
+      100.0,
+      400.0,
+      900.0
+     ]
+    },
+    "color": false
+   }
+  ]
+ },
+ "Noto Naskh Arabic": {
+  "arabic": true,
+  "files": [
+   {
+    "path": "assets/fonts/notonaskharabic/NotoNaskhArabic[wght].ttf",
+    "style": "Regular",
+    "weight": 400,
+    "italic": false,
+    "axes": {
+     "wght": [
+      400.0,
+      400.0,
+      700.0
+     ]
+    },
+    "color": false
+   }
+  ]
+ },
+ "Noto Nastaliq Urdu": {
+  "arabic": true,
+  "files": [
+   {
+    "path": "assets/fonts/notonastaliqurdu/NotoNastaliqUrdu[wght].ttf",
+    "style": "Regular",
+    "weight": 400,
+    "italic": false,
+    "axes": {
+     "wght": [
+      400.0,
+      400.0,
+      700.0
+     ]
+    },
+    "color": false
+   }
+  ]
+ },
+ "Noto Sans Arabic": {
+  "arabic": true,
+  "files": [
+   {
+    "path": "assets/fonts/notosansarabic/NotoSansArabic[wdth,wght].ttf",
+    "style": "Regular",
+    "weight": 400,
+    "italic": false,
+    "axes": {
+     "wght": [
+      100.0,
+      400.0,
+      900.0
+     ],
+     "wdth": [
+      62.5,
+      100.0,
+      100.0
+     ]
+    },
+    "color": false
+   }
+  ]
+ },
+ "Playfair Display": {
+  "arabic": false,
+  "files": [
+   {
+    "path": "assets/fonts/playfairdisplay/PlayfairDisplay-Italic[wght].ttf",
+    "style": "Italic",
+    "weight": 400,
+    "italic": true,
+    "axes": {
+     "wght": [
+      400.0,
+      400.0,
+      900.0
+     ]
+    },
+    "color": false
+   },
+   {
+    "path": "assets/fonts/playfairdisplay/PlayfairDisplay[wght].ttf",
+    "style": "Regular",
+    "weight": 400,
+    "italic": false,
+    "axes": {
+     "wght": [
+      400.0,
+      400.0,
+      900.0
+     ]
+    },
+    "color": false
+   }
+  ]
+ },
+ "Playpen Sans Arabic": {
+  "arabic": true,
+  "files": [
+   {
+    "path": "assets/fonts/playpensansarabic/PlaypenSansArabic[wght].ttf",
+    "style": "Regular",
+    "weight": 400,
+    "italic": false,
+    "axes": {
+     "wght": [
+      100.0,
+      400.0,
+      800.0
+     ]
+    },
+    "color": false
+   }
+  ]
+ },
+ "Qahiri": {
+  "arabic": true,
+  "files": [
+   {
+    "path": "assets/fonts/qahiri/Qahiri-Regular.ttf",
+    "style": "Regular",
+    "weight": 400,
+    "italic": false,
+    "axes": {},
+    "color": false
+   }
+  ]
+ },
+ "Rakkas": {
+  "arabic": true,
+  "files": [
+   {
+    "path": "assets/fonts/rakkas/Rakkas-Regular.ttf",
+    "style": "Regular",
+    "weight": 400,
+    "italic": false,
+    "axes": {},
+    "color": false
+   }
+  ]
+ },
+ "Readex Pro": {
+  "arabic": true,
+  "files": [
+   {
+    "path": "assets/fonts/readexpro/ReadexPro[HEXP,wght].ttf",
+    "style": "Regular",
+    "weight": 400,
+    "italic": false,
+    "axes": {
+     "wght": [
+      160.0,
+      400.0,
+      700.0
+     ],
+     "HEXP": [
+      0.0,
+      0.0,
+      100.0
+     ]
+    },
+    "color": false
+   }
+  ]
+ },
+ "Reem Kufi": {
+  "arabic": true,
+  "files": [
+   {
+    "path": "assets/fonts/reemkufi/ReemKufi[wght].ttf",
+    "style": "Regular",
+    "weight": 400,
+    "italic": false,
+    "axes": {
+     "wght": [
+      400.0,
+      400.0,
+      700.0
+     ]
+    },
+    "color": false
+   }
+  ]
+ },
+ "Reem Kufi Fun": {
+  "arabic": true,
+  "files": [
+   {
+    "path": "assets/fonts/reemkufifun/ReemKufiFun[wght].ttf",
+    "style": "Regular",
+    "weight": 400,
+    "italic": false,
+    "axes": {
+     "wght": [
+      400.0,
+      400.0,
+      700.0
+     ]
+    },
+    "color": true
+   }
+  ]
+ },
+ "Reem Kufi Ink": {
+  "arabic": true,
+  "files": [
+   {
+    "path": "assets/fonts/reemkufiink/ReemKufiInk-Regular.ttf",
+    "style": "Regular",
+    "weight": 400,
+    "italic": false,
+    "axes": {},
+    "color": true
+   }
+  ]
+ },
+ "Rubik": {
+  "arabic": true,
+  "files": [
+   {
+    "path": "assets/fonts/rubik/Rubik-Italic[wght].ttf",
+    "style": "Light Italic",
+    "weight": 300,
+    "italic": true,
+    "axes": {
+     "wght": [
+      300.0,
+      300.0,
+      900.0
+     ]
+    },
+    "color": false
+   },
+   {
+    "path": "assets/fonts/rubik/Rubik[wght].ttf",
+    "style": "Light",
+    "weight": 300,
+    "italic": false,
+    "axes": {
+     "wght": [
+      300.0,
+      300.0,
+      900.0
+     ]
+    },
+    "color": false
+   }
+  ]
+ },
+ "Sora": {
+  "arabic": false,
+  "files": [
+   {
+    "path": "assets/fonts/sora/Sora[wght].ttf",
+    "style": "Regular",
+    "weight": 400,
+    "italic": false,
+    "axes": {
+     "wght": [
+      100.0,
+      400.0,
+      800.0
+     ]
+    },
+    "color": false
+   }
+  ]
+ },
+ "Space Grotesk": {
+  "arabic": false,
+  "files": [
+   {
+    "path": "assets/fonts/spacegrotesk/SpaceGrotesk[wght].ttf",
+    "style": "Light",
+    "weight": 300,
+    "italic": false,
+    "axes": {
+     "wght": [
+      300.0,
+      300.0,
+      700.0
+     ]
+    },
+    "color": false
+   }
+  ]
+ },
+ "Syne": {
+  "arabic": false,
+  "files": [
+   {
+    "path": "assets/fonts/syne/Syne[wght].ttf",
+    "style": "Regular",
+    "weight": 400,
+    "italic": false,
+    "axes": {
+     "wght": [
+      400.0,
+      400.0,
+      800.0
+     ]
+    },
+    "color": false
+   }
+  ]
+ },
+ "Tajawal": {
+  "arabic": true,
+  "files": [
+   {
+    "path": "assets/fonts/tajawal/Tajawal-Black.ttf",
+    "style": "Black",
+    "weight": 900,
+    "italic": false,
+    "axes": {},
+    "color": false
+   },
+   {
+    "path": "assets/fonts/tajawal/Tajawal-Bold.ttf",
+    "style": "Bold",
+    "weight": 700,
+    "italic": false,
+    "axes": {},
+    "color": false
+   },
+   {
+    "path": "assets/fonts/tajawal/Tajawal-ExtraBold.ttf",
+    "style": "ExtraBold",
+    "weight": 800,
+    "italic": false,
+    "axes": {},
+    "color": false
+   },
+   {
+    "path": "assets/fonts/tajawal/Tajawal-ExtraLight.ttf",
+    "style": "ExtraLight",
+    "weight": 275,
+    "italic": false,
+    "axes": {},
+    "color": false
+   },
+   {
+    "path": "assets/fonts/tajawal/Tajawal-Light.ttf",
+    "style": "Light",
+    "weight": 300,
+    "italic": false,
+    "axes": {},
+    "color": false
+   },
+   {
+    "path": "assets/fonts/tajawal/Tajawal-Medium.ttf",
+    "style": "Medium",
+    "weight": 500,
+    "italic": false,
+    "axes": {},
+    "color": false
+   },
+   {
+    "path": "assets/fonts/tajawal/Tajawal-Regular.ttf",
+    "style": "Regular",
+    "weight": 400,
+    "italic": false,
+    "axes": {},
+    "color": false
+   }
+  ]
+ },
+ "Unbounded": {
+  "arabic": false,
+  "files": [
+   {
+    "path": "assets/fonts/unbounded/Unbounded[wght].ttf",
+    "style": "Regular",
+    "weight": 400,
+    "italic": false,
+    "axes": {
+     "wght": [
+      200.0,
+      400.0,
+      900.0
+     ]
+    },
+    "color": false
+   }
+  ]
+ },
+ "Vibes": {
+  "arabic": true,
+  "files": [
+   {
+    "path": "assets/fonts/vibes/Vibes-Regular.ttf",
+    "style": "Regular",
+    "weight": 400,
+    "italic": false,
+    "axes": {},
+    "color": false
+   }
+  ]
+ },
+ "Zain": {
+  "arabic": true,
+  "files": [
+   {
+    "path": "assets/fonts/zain/Zain-Black.ttf",
+    "style": "Black",
+    "weight": 900,
+    "italic": false,
+    "axes": {},
+    "color": false
+   },
+   {
+    "path": "assets/fonts/zain/Zain-Bold.ttf",
+    "style": "Bold",
+    "weight": 700,
+    "italic": false,
+    "axes": {},
+    "color": false
+   },
+   {
+    "path": "assets/fonts/zain/Zain-ExtraBold.ttf",
+    "style": "ExtraBold",
+    "weight": 800,
+    "italic": false,
+    "axes": {},
+    "color": false
+   },
+   {
+    "path": "assets/fonts/zain/Zain-ExtraLight.ttf",
+    "style": "ExtraLight",
+    "weight": 200,
+    "italic": false,
+    "axes": {},
+    "color": false
+   },
+   {
+    "path": "assets/fonts/zain/Zain-Italic.ttf",
+    "style": "Italic",
+    "weight": 400,
+    "italic": true,
+    "axes": {},
+    "color": false
+   },
+   {
+    "path": "assets/fonts/zain/Zain-Light.ttf",
+    "style": "Light",
+    "weight": 300,
+    "italic": false,
+    "axes": {},
+    "color": false
+   },
+   {
+    "path": "assets/fonts/zain/Zain-LightItalic.ttf",
+    "style": "Light Italic",
+    "weight": 300,
+    "italic": true,
+    "axes": {},
+    "color": false
+   },
+   {
+    "path": "assets/fonts/zain/Zain-Regular.ttf",
+    "style": "Regular",
+    "weight": 400,
+    "italic": false,
+    "axes": {},
+    "color": false
+   }
+  ]
+ }
+}

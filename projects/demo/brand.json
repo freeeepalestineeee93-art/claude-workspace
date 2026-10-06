@@ -1,0 +1,12 @@
+{
+  "name": "Demo",
+  "colors": { "bg": "#0c0d10", "surface": "#16181d", "text": "#f3efe6", "muted": "#8b8f98", "primary": "#ff6a3d", "accent": "#ffd166", "cool": "#5ec8ff" },
+  "fonts": {
+    "display": { "family": "Noto Kufi Arabic", "weight": 800 },
+    "body": { "family": "IBM Plex Sans Arabic", "weight": 500 },
+    "accent": { "family": "Aref Ruqaa", "weight": 700 },
+    "latin": { "family": "Inter", "weight": 700 }
+  },
+  "motion": { "energy": "confident", "springs": { "enter": "default", "hero": "heavy", "ui": "snappy" } },
+  "audio": { "bpm": 112 }
+}

@@ -18,6 +18,7 @@ export function launch(opts = {}) {
       '--ignore-gpu-blocklist',
       '--font-render-hinting=none', // خط أنعم وثابت بين الأجهزة
       '--disable-lcd-text',
+      '--disable-accelerated-2d-canvas', // الـ 2D على Skia CPU أسرع بكتير من SwiftShader
       ...(opts.args || []),
     ],
     ...opts,

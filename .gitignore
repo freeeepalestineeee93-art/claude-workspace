@@ -7,3 +7,4 @@ renders/
 *.tmp
 .DS_Store
 tools/smoke/frame.png
+.cache/
