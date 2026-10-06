@@ -294,7 +294,7 @@ export function evalCamera(c, t, W, H) {
 const active = (L, t) => t >= (L.in ?? -Infinity) && t < (L.out ?? Infinity);
 
 function needsIsolation(L, t) {
-  return (v(L.blur ?? 0, t) > 0.05) || L.glow || L.mask || L.matte || (L.type === 'group' && (L.isolate || v(L.opacity ?? 1, t) < 1)) || (L.fx && L.fx.length);
+  return (v(L.blur ?? 0, t) > 0.05) || L.glow || L.mask || L.matte || L.spray || (L.type === 'group' && (L.isolate || v(L.opacity ?? 1, t) < 1)) || (L.fx && L.fx.length);
 }
 
 export function drawLayers(ctx, layers, t, env) {
@@ -331,7 +331,7 @@ function drawIsolated(ctx, L, t, env, op) {
   const c = getCanvas(W, H);
   const cx = c.getContext('2d');
   cx.setTransform(ctx.getTransform());
-  const inner = { ...L, opacity: 1, blur: 0, glow: null, mask: null, matte: null, blend: null, isolate: false, fx: null };
+  const inner = { ...L, opacity: 1, blur: 0, glow: null, mask: null, matte: null, blend: null, isolate: false, fx: null, spray: null, __spray: L.spray };
   drawLayer(cx, inner, t, env.rec ? { ...env, recOpacity: (env.recOpacity ?? 1) * op, recBlur: v(L.blur ?? 0, t) } : env);
 
   if (L.mask) {
@@ -382,10 +382,63 @@ function drawIsolated(ctx, L, t, env, op) {
   release(c);
 }
 
+// ملمس رذاذ (أسلوب Bauhaus/riso): الشكل بيتآكل بحبيبات باتجاه معين
+let sprayNoise = null;
+function sprayPattern(ctx) {
+  if (!sprayNoise) {
+    const c = document.createElement('canvas');
+    c.width = c.height = 256;
+    const g = c.getContext('2d');
+    const d = g.createImageData(256, 256);
+    let sd = 99;
+    const r = () => ((sd = (sd * 16807) % 2147483647) / 2147483647);
+    for (let i = 0; i < 256 * 256; i++) d.data[i * 4 + 3] = r() < 0.5 ? 255 : r() * 255;
+    g.putImageData(d, 0, 0);
+    sprayNoise = c;
+  }
+  return ctx.createPattern(sprayNoise, 'repeat');
+}
+function applySpray(ctx, sp, d) {
+  const p = P(d);
+  // صندوق المسار (منقيسه من SVG مرة وحدة)
+  let bb = sprayBoxes.get(d);
+  if (!bb) {
+    if (!svgMeasure) pathLength('M0,0');
+    svgMeasure.setAttribute('d', d);
+    bb = svgMeasure.getBBox();
+    sprayBoxes.set(d, bb);
+  }
+  const ang = ((sp.angle ?? 0) * Math.PI) / 180;
+  const cx = bb.x + bb.width / 2, cy = bb.y + bb.height / 2, R = Math.hypot(bb.width, bb.height) / 2;
+  const tmp = document.createElement('canvas');
+  const m = ctx.getTransform();
+  tmp.width = ctx.canvas.width; tmp.height = ctx.canvas.height;
+  const g = tmp.getContext('2d');
+  g.setTransform(m);
+  const grad = g.createLinearGradient(cx - Math.cos(ang) * R, cy - Math.sin(ang) * R, cx + Math.cos(ang) * R, cy + Math.sin(ang) * R);
+  const st = sp.start ?? 0.35, amt = sp.amount ?? 0.9;
+  grad.addColorStop(0, 'rgba(0,0,0,0)'); grad.addColorStop(st, 'rgba(0,0,0,0)'); grad.addColorStop(1, `rgba(0,0,0,${amt})`);
+  g.fillStyle = grad;
+  g.fill(p);
+  g.globalCompositeOperation = 'destination-in';
+  g.setTransform(1, 0, 0, 1, 0, 0);
+  const pat = sprayPattern(g);
+  pat.setTransform(new DOMMatrix().scale(sp.grain ?? 1.4));
+  g.fillStyle = pat;
+  g.fillRect(0, 0, tmp.width, tmp.height);
+  ctx.save();
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.globalCompositeOperation = 'destination-out';
+  ctx.drawImage(tmp, 0, 0);
+  ctx.restore();
+}
+const sprayBoxes = new Map();
+
 function strokeAndFill(ctx, L, t, d, len) {
   const p = P(d);
   const fill = paint(ctx, L.fill, t);
-  if (fill) {
+  if (fill && L.__spray) { ctx.fillStyle = fill; ctx.fill(p, L.fillRule || 'nonzero'); applySpray(ctx, L.__spray, d); }
+  else if (fill) {
     ctx.fillStyle = fill;
     const fo = L.fillOpacity != null ? clamp(v(L.fillOpacity, t)) : 1;
     if (fo < 1) { ctx.save(); ctx.globalAlpha *= fo; ctx.fill(p, L.fillRule || 'nonzero'); ctx.restore(); }
@@ -438,9 +491,41 @@ function drawContent(ctx, L, t, env) {
   }
 }
 
+// قصاصة بإطار (sticker): حدود حول الأجزاء غير الشفافة بالصورة (للصور المقصوصة)
+const outlined = new Map();
+function outlineImage(img, width, color) {
+  const key = `${img.src}|${width}|${color}`;
+  if (outlined.has(key)) return outlined.get(key);
+  const c = document.createElement('canvas');
+  c.width = img.naturalWidth + width * 2; c.height = img.naturalHeight + width * 2;
+  const g = c.getContext('2d');
+  const steps = Math.max(16, Math.ceil(width * 2));
+  for (let i = 0; i < steps; i++) {
+    const a = (i / steps) * Math.PI * 2;
+    g.drawImage(img, width + Math.cos(a) * width, width + Math.sin(a) * width);
+  }
+  g.globalCompositeOperation = 'source-in';
+  g.fillStyle = colorToCss(color);
+  g.fillRect(0, 0, c.width, c.height);
+  g.globalCompositeOperation = 'source-over';
+  g.drawImage(img, width, width);
+  const res = { canvas: c, pad: width };
+  outlined.set(key, res);
+  return res;
+}
+
 function drawImageLayer(ctx, L, t) {
-  const img = images.get(L.src);
+  let img = images.get(L.src);
   if (!img) throw new Error(`الصورة ما انحمّلت: ${L.src}`);
+  if (L.outline) {
+    // الإطار محسوب بأبعاد الصورة الأصلية، ومنرسمه بنفس نسبة الحجم المطلوب
+    const o = outlineImage(img, L.outline.width ?? Math.round(Math.max(img.naturalWidth, img.naturalHeight) * 0.02), L.outline.color ?? '#ffffff');
+    const w0 = v(L.w ?? img.naturalWidth, t), h0 = v(L.h ?? (img.naturalHeight * w0) / img.naturalWidth, t);
+    const kx = w0 / img.naturalWidth, ky = h0 / img.naturalHeight;
+    const W2 = o.canvas.width * kx, H2 = o.canvas.height * ky;
+    ctx.drawImage(o.canvas, -W2 / 2, -H2 / 2, W2, H2);
+    return;
+  }
   const w = v(L.w ?? img.naturalWidth, t), h = v(L.h ?? img.naturalHeight, t);
   const fit = L.fit ?? 'cover';
   const ir = img.naturalWidth / img.naturalHeight, br = w / h;
@@ -599,9 +684,26 @@ function drawText(ctx, L, t, env) {
     const pts = [[b.x, b.y], [b.x + b.w, b.y], [b.x, b.y + b.h], [b.x + b.w, b.y + b.h]].map(([x, y]) => [m.a * x + m.c * y + m.e, m.b * x + m.d * y + m.f]);
     const xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]);
     env.rec.text({ L, scene: env.scene?.start ?? -1, text: v(L.text, t), box: { x: Math.min(...xs), y: Math.min(...ys), w: Math.max(...xs) - Math.min(...xs), h: Math.max(...ys) - Math.min(...ys) },
-      size: lay.size * Math.hypot(m.a, m.b), fill: solidOf(v(fill, t)), alpha: ctx.globalAlpha * (env.recOpacity ?? 1), lay, matrix: m, units: us, by, state: (u) => unitState(L, u, n, t), env });
+      size: lay.size * Math.hypot(m.a, m.b), fill: solidOf(v(fill, t)), alpha: ctx.globalAlpha * (env.recOpacity ?? 1), lay, matrix: m, units: us, by, state: (u) => unitState(L, u, n, t), env,
+      visible: us.reduce((mx, u) => {
+        // الظهور الفعلي: شفافية الوحدة، ومع الـ mask: لازم يكون الدخول بلّش والخروج ما خلص
+        let o = unitState(L, u, n, t).opacity;
+        if (L.reveal && animProgress(L.reveal, u, n, t) < 0.05) o = Math.min(o, L.reveal.mask || L.reveal.from?.opacity === 0 ? 0 : o);
+        if (L.exit?.mask && t >= L.exit.at && animProgress(L.exit, u, n, t) > 0.95) o = 0;
+        return Math.max(mx, o);
+      }, 0), boxFill: L.box?.fill ? solidOf(v(L.box.fill, t)) : null });
   }
 
+  // صندوق خلفية للنص (label/pill/عنوان بصندوق) — حجمه من النص نفسه، وبيختفي مع النص
+  if (L.box) {
+    let vis = 0;
+    for (const u of us) {
+      let o = unitState(L, u, n, t).opacity;
+      if (L.exit && t >= L.exit.at) o = Math.min(o, 1 - clamp(animProgress(L.exit, u, n, t)));
+      vis = Math.max(vis, o);
+    }
+    if (vis > 0.002) { ctx.save(); ctx.globalAlpha *= L.exit && t >= L.exit.at ? vis : 1; drawTextBox(ctx, L, lay, t); ctx.restore(); }
+  }
   // علامات تحت النص (تظليل كلمة) — بتنرسم قبل النص
   for (const mk of L.marks || []) if (mk.layer !== 'over') drawMark(ctx, lay, mk, t);
 
@@ -689,6 +791,39 @@ function paintText(ctx, fill, t, lay, g, s) {
   const grad = ctx.createLinearGradient(...loc(X0, Y0), ...loc(X1, Y1));
   for (const [o, c] of f.stops) grad.addColorStop(o, colorToCss(c));
   return grad;
+}
+
+// box: { fill, stroke, strokeWidth, radius, pad: [x, y], shadow, reveal: { at, dur, ease, spring, from: 'start'|'end'|'center' } }
+function drawTextBox(ctx, L, lay, t) {
+  const B = L.box;
+  const b = lay.box;
+  const [px, py] = Array.isArray(B.pad) ? B.pad : [B.pad ?? lay.size * 0.45, (B.pad ?? lay.size * 0.45) * 0.55];
+  // ارتفاع ثابت حسب مقاييس الخط (مش حسب الحروف) لحتى كل الصناديق بنفس الارتفاع
+  const first = lay.lines[0], last = lay.lines[lay.lines.length - 1];
+  const x0 = b.x - px, w = b.w + px * 2;
+  const top = first.y - lay.size * (B.ascent ?? 0.78) - py;
+  const h = last.y + lay.size * (B.descent ?? 0.36) + py - top;
+  let p = 1;
+  if (B.reveal) {
+    const r = B.reveal;
+    const lt = t - r.at;
+    p = lt <= 0 ? 0 : r.spring ? cachedSp(r.spring)(lt) : resolveEase(r.ease ?? 'glide')(clamp(lt / (r.dur ?? 0.45)));
+  }
+  if (p <= 0.001) return;
+  const from = B.reveal?.from ?? (lay.rtl ? 'start' : 'start');
+  const ww = w * Math.max(0, p);
+  let xx = x0;
+  if (from === 'center') xx = x0 + (w - ww) / 2;
+  else if ((from === 'start') === lay.rtl) xx = x0 + w - ww; // RTL: البداية يمين
+  ctx.save();
+  if (B.shadow) { const sh = B.shadow; ctx.shadowColor = colorToCss(sh.color ?? 'rgba(0,0,0,.4)'); ctx.shadowBlur = sh.blur ?? 24; ctx.shadowOffsetY = sh.y ?? 8; }
+  if (B.glow) { ctx.shadowColor = colorToCss(B.glow.color ?? B.fill); ctx.shadowBlur = B.glow.blur ?? 30; }
+  ctx.beginPath();
+  ctx.roundRect(xx, top, ww, h, Math.min(B.radius ?? lay.size * 0.22, h / 2, ww / 2));
+  if (B.fill) { ctx.fillStyle = colorToCss(v(B.fill, t)); ctx.fill(); }
+  ctx.shadowBlur = 0;
+  if (B.stroke) { ctx.strokeStyle = colorToCss(v(B.stroke, t)); ctx.lineWidth = B.strokeWidth ?? 2; ctx.stroke(); }
+  ctx.restore();
 }
 
 // علامات المصمم: تظليل، خط تحت، دائرة يدوية، شطب، إطار

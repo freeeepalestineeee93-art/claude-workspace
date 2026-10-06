@@ -10,3 +10,6 @@ tools/smoke/frame.png
 .cache/
 export-ae/
 **/export-ae/
+assets/geo/raw/
+projects/references/refs/*.mp4
+projects/references/refs/*.log

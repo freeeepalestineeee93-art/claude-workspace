@@ -4,7 +4,11 @@ python -m lib.audio.analyze song.mp3   →  song.beats.json
 بالمشهد: const m = await S.music('assets/song.beats.json'); m.beats[8] · m.drops[0] · S.snap(t)
 """
 import json
+import os
 import sys
+
+# كاش numba منفصل لكل عملية (التشغيل المتوازي كان بيخرّب الكاش وبيعمل segfault)
+os.environ.setdefault('NUMBA_CACHE_DIR', f'/tmp/numba-cache-{os.getpid()}')
 from pathlib import Path
 
 import numpy as np

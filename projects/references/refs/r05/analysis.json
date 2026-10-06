@@ -1,0 +1,71 @@
+{
+ "file": "projects/references/refs/r05.mp4",
+ "w": 720,
+ "h": 720,
+ "fps": 30.0,
+ "duration": 9.033333,
+ "audio": null,
+ "cuts": [],
+ "shots": [
+  9.033
+ ],
+ "pacing": {
+  "count": 1,
+  "mean": 9.03,
+  "median": 9.03,
+  "min": 9.03,
+  "max": 9.03,
+  "cuts_per_10s": 0.0
+ },
+ "hook": {
+  "first_cut": null,
+  "motion_first_2s": 19.62,
+  "motion_avg": 17.14
+ },
+ "motion_per_sec": [
+  22.45,
+  16.79,
+  12.5,
+  14.33,
+  13.77,
+  15.22,
+  19.05,
+  17.74,
+  22.95
+ ],
+ "palette": [
+  {
+   "hex": "#3e685c",
+   "share": 0.319
+  },
+  {
+   "hex": "#548d80",
+   "share": 0.199
+  },
+  {
+   "hex": "#1f2e31",
+   "share": 0.165
+  },
+  {
+   "hex": "#95492e",
+   "share": 0.111
+  },
+  {
+   "hex": "#d98c63",
+   "share": 0.063
+  },
+  {
+   "hex": "#eecab1",
+   "share": 0.054
+  },
+  {
+   "hex": "#849cbe",
+   "share": 0.052
+  },
+  {
+   "hex": "#313e7c",
+   "share": 0.036
+  }
+ ],
+ "brightness_avg": 0.39
+}

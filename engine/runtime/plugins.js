@@ -179,12 +179,16 @@ function video(ctx, L, t) {
   if (r) ctx.restore();
 }
 
-export const plugins = { particles, three, lottie, video };
+import { drawMap, prepMap, ensureMapTiles } from './map.js';
+
+export const plugins = { particles, three, lottie, video, map: drawMap };
+export { ensureMapTiles };
 
 export async function preparePlugins(all, env) {
   for (const L of all) {
     if (L.type === 'three') await prepThree(L, env);
     if (L.type === 'lottie') await prepLottie(L);
     if (L.type === 'video') await prepVideo(L, env);
+    if (L.type === 'map') await prepMap(L, env);
   }
 }

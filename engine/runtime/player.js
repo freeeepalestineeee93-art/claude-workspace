@@ -116,7 +116,7 @@ async function boot() {
     // فحص فريم: صناديق النصوص على الشاشة + التباين مع الخلفية
     audit(t) {
       const texts = [];
-      renderFrame(wctx, comp, t, { ...env, rec: { text: (r) => { if (r.alpha > 0.5 && r.box.w > 2) texts.push(r); } } });
+      renderFrame(wctx, comp, t, { ...env, rec: { text: (r) => { if (r.alpha * r.visible > 0.5 && r.box.w > 2) texts.push(r); } } });
       renderFrame(wctx, comp, t, { ...env, hideText: true });
       const lum = ([r, g, b]) => { const f = (c) => { c /= 255; return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4; }; return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b); };
       return texts.map((r) => {
@@ -130,6 +130,7 @@ async function boot() {
           ls.sort((a, b) => a - b);
           bgL = ls[Math.floor(ls.length / 2)] ?? 0;
         } catch { /* خارج الكانفاس */ }
+        if (r.boxFill) bgL = lum(parseColorSafe(r.boxFill)); // نص بصندوق: التباين مع الصندوق
         const fg = lum(parseColorSafe(r.fill));
         const contrast = (Math.max(fg, bgL) + 0.05) / (Math.min(fg, bgL) + 0.05);
         return { text: r.text, box: r.box, size: r.size, contrast: +contrast.toFixed(2), layer: r.L.id ?? null, scene: r.scene };

@@ -6,7 +6,7 @@ import { value as v, resolveEase, clamp, colorToCss } from '../../lib/anim.js';
 import { drawLayers, evalCamera, preload } from './runtime.js';
 import { transitions2d } from './transitions2d.js';
 import { glTransition, loadGlTransitions } from './gltransitions.js';
-import { preparePlugins, ensureVideoFrames } from './plugins.js';
+import { preparePlugins, ensureVideoFrames, ensureMapTiles } from './plugins.js';
 
 export function buildTimeline(comp) {
   const scenes = (comp.scenes || []).map((s) => ({ ...s }));
@@ -112,6 +112,8 @@ export function allLayers(comp) {
 export async function prepareFrame(comp, t) {
   if (!comp.__videos) comp.__videos = allLayers(comp).filter((L) => L.type === 'video');
   if (comp.__videos.length) await ensureVideoFrames(comp.__videos, t);
+  if (!comp.__maps) comp.__maps = allLayers(comp).filter((L) => L.type === 'map');
+  for (const L of comp.__maps) await ensureMapTiles(L, t - (L.__shift ?? 0));
 }
 
 export async function preloadAll(comp, env = {}) {

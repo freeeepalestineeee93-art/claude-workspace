@@ -40,6 +40,7 @@ uniform sampler2D src, b1, b2, b3, lut;
 uniform vec2 res; uniform float time, seed;
 uniform float bloomK, halK, chroma, vigK, vigSoft, grainK, grainSize, exposure, contrast, sat, temp, tint, lutMix, useLut, dither;
 uniform vec3 lift, gamma_, gain;
+uniform float lensK, scanK, crtK;
 
 float hash(vec3 p){ p = fract(p * .1031); p += dot(p, p.zyx + 31.32); return fract((p.x + p.y) * p.z); }
 vec3 sampleLut(vec3 c){
@@ -51,6 +52,9 @@ vec3 sampleLut(vec3 c){
 
 void main(){
   vec2 st = uv;
+  // عدسة/شاشة منحنية (barrel)
+  if (lensK != 0.) { vec2 d = uv - .5; d *= 1. + lensK * dot(d, d) * 2.; st = d + .5; }
+  if (st.x < 0. || st.x > 1. || st.y < 0. || st.y > 1.) { o = vec4(0., 0., 0., 1.); return; }
   vec2 cc = st - .5;
   // chromatic aberration شعاعي (أقوى عالأطراف متل العدسات الحقيقية)
   vec3 col;
@@ -80,6 +84,9 @@ void main(){
     float lw = 1. - abs(l - .5) * 1.4;
     col += n * grainK * max(lw, .25);
   }
+  // خطوط شاشة CRT + زوايا معتمة
+  if (scanK > 0.) col *= 1. - scanK * (.5 + .5 * sin(gl_FragCoord.y * 3.14159 * .5));
+  if (crtK > 0.) { vec2 q = abs(st - .5) * 2.; float cr = smoothstep(1., 1. - crtK, max(q.x, q.y) + .25 * dot(q, q) * crtK); col *= cr; }
   // dither ضد الـ banding بالتدرجات
   if (dither > 0.) col += (hash(vec3(gl_FragCoord.xy, seed + 9.)) - .5) / 255.;
   o = vec4(clamp(col, 0., 1.), 1.);
@@ -220,6 +227,7 @@ export class Post {
       grainK: this.quality === 'draft' ? 0 : gr.amount, grainSize: gr.size,
       exposure: g.exposure, contrast: g.contrast, sat: g.saturation, temp: g.temperature, tint: g.tint,
       lift: g.lift, gamma_: g.gamma, gain: g.gain,
+      lensK: val(c.lens, 0), scanK: val(c.scanlines, 0), crtK: val(c.crt, 0),
       useLut: this.lutTex ? 1 : 0, lutMix: c.lut?.mix ?? 1, dither: c.dither === false ? 0 : 1,
     }, { src: srcTex, b1: this.levels[0][0].tex, b2: this.levels[1][0].tex, b3: this.levels[2][0].tex, lut: this.lutTex ?? this.input });
     if (out) out.getContext('2d').drawImage(this.canvas, 0, 0);

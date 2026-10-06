@@ -1,0 +1,107 @@
+{
+ "file": "projects/references/refs/r01.mp4",
+ "w": 1280,
+ "h": 720,
+ "fps": 25.0,
+ "duration": 5.225375,
+ "audio": {
+  "file": "projects/references/refs/r01/.f/a.wav",
+  "duration": 5.143,
+  "bpm": 95.7,
+  "beats": [
+   0.07,
+   0.72,
+   1.37,
+   1.974,
+   2.601,
+   3.228,
+   3.855,
+   4.481,
+   5.108
+  ],
+  "bars": [
+   0.07,
+   2.601,
+   5.108
+  ],
+  "drops": [],
+  "energy_step": 0.1,
+  "cuts_on_beat": 0.12
+ },
+ "cuts": [
+  0.32,
+  0.6,
+  1.6,
+  1.88,
+  2.08,
+  2.32,
+  3.16,
+  4.08
+ ],
+ "shots": [
+  0.32,
+  0.28,
+  1.0,
+  0.28,
+  0.2,
+  0.24,
+  0.84,
+  0.92,
+  1.145
+ ],
+ "pacing": {
+  "count": 9,
+  "mean": 0.58,
+  "median": 0.32,
+  "min": 0.2,
+  "max": 1.15,
+  "cuts_per_10s": 15.3
+ },
+ "hook": {
+  "first_cut": 0.32,
+  "motion_first_2s": 57.37,
+  "motion_avg": 32.56
+ },
+ "motion_per_sec": [
+  51.05,
+  63.69,
+  10.23,
+  13.55,
+  24.27
+ ],
+ "palette": [
+  {
+   "hex": "#ebb949",
+   "share": 0.267
+  },
+  {
+   "hex": "#df7120",
+   "share": 0.224
+  },
+  {
+   "hex": "#ebca88",
+   "share": 0.109
+  },
+  {
+   "hex": "#332017",
+   "share": 0.101
+  },
+  {
+   "hex": "#47591d",
+   "share": 0.1
+  },
+  {
+   "hex": "#180a07",
+   "share": 0.079
+  },
+  {
+   "hex": "#f0ede4",
+   "share": 0.063
+  },
+  {
+   "hex": "#a44a10",
+   "share": 0.057
+  }
+ ],
+ "brightness_avg": 0.48
+}

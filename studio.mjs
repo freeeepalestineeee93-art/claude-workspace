@@ -14,6 +14,8 @@ const cmds = {
   align: [PY, '-m', 'lib.audio.tts', 'align'], // recording.wav ["السكربت"]
   beats: [PY, '-m', 'lib.audio.analyze'], // song.mp3
   profile: ['node', 'tools/profile.mjs'], // <main.js>
+  cutout: [PY, 'tools/cutout.py'], // in.jpg out.png
+  geo: [PY, 'tools/geo-build.py'],
   fonts: [PY, 'tools/font-index.py'],
   setup: ['bash', 'scripts/setup.sh'],
 };
@@ -29,6 +31,7 @@ if (!cmds[cmd]) {
   say "نص" out.wav [--voice سوري-رجل]   تعليق صوتي + توقيت الكلمات
   align rec.wav ["السكربت"]   توقيت كلمات تسجيلك
   beats song.mp3             BPM والـ beats والـ drops
+  cutout in.jpg out.png      قص خلفية صورة (لـ S.sticker)
   profile <main.js>          قياس أداء الرندر
   fonts | setup`);
   process.exit(cmd ? 1 : 0);

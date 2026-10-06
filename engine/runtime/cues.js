@@ -80,6 +80,15 @@ function layerCues(layers, t0, env, out) {
       for (const s of [].concat(L.sfx)) out.push({ ...s, at: lt0 + (s.at ?? (L.in ?? 0)), manual: true });
       if (!L.sfxAuto) continue;
     }
+    if (L.type === 'map' && L.camera?.keys) {
+      // كل طيران كاميرا = whoosh بطول الحركة (أقوى للحركات البعيدة)
+      const ks = L.camera.keys;
+      for (let i = 0; i < ks.length - 1; i++) {
+        const d = ks[i + 1].t - ks[i].t, dz = Math.abs(ks[i + 1].zoom - ks[i].zoom);
+        out.push({ kind: 'whoosh', at: lt0 + ks[i].t + d * 0.5, align: 'peak', params: { dur: Math.min(2.5, d * 0.9), brightness: 0.7, weight: 1 + Math.min(1, dz / 3) }, gain_db: -11 });
+      }
+      continue;
+    }
     if (L.type === 'text') textCues(L, lt0, env.W, out);
     else if (L.type === 'particles' && (L.count ?? 0) >= 40) out.push({ kind: 'sparkle', at: lt0 + (L.start ?? 0), params: { dur: 1.2, density: Math.min(24, Math.round(L.count / 10)) } });
     else if (L.type !== 'group') moveCues(L, lt0, env.W, env.H, out);
