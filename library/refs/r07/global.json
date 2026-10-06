@@ -1,0 +1,279 @@
+{
+ "purpose": "Educate football fans on the historical evolution of the back-pass and goalkeeper time-wasting rules from the 1990 World Cup to the updated 2025 regulations.",
+ "sequences": [
+  {
+   "name": "Hook & Dilemma",
+   "start": 0.0,
+   "end": 8.3,
+   "pacing": "Fast-paced motion collage contrasting modern restrictions with past allowances",
+   "role": "Hook the viewer with dynamic visuals illustrating modern goalkeeper passing restrictions compared to ancient rules."
+  },
+  {
+   "name": "Show Title Card",
+   "start": 8.3,
+   "end": 13.8,
+   "pacing": "Rhythmic branded identity sting with whistle audio",
+   "role": "Introduce the series title 'Hikayat Qanun' (Story of a Law) centered on the back-pass rule."
+  },
+  {
+   "name": "The Catalyst: Italia 1990 & Egypt",
+   "start": 13.8,
+   "end": 32.8,
+   "pacing": "Documentary archival montage with kinetic collage effects",
+   "role": "Establish historical context: the dull Egypt vs Ireland 1990 match where keeper Ahmed Shobair repeatedly killed time via back-passes."
+  },
+  {
+   "name": "The 1992 Back-Pass Revolution",
+   "start": 32.8,
+   "end": 53.9,
+   "pacing": "Technical infographic breakdown with 2D tactical pitch and player cutouts",
+   "role": "Explain the 1992 FIFA back-pass ban, anatomical exceptions (head/chest allowed, feet forbidden), and indirect free-kick penalties."
+  },
+  {
+   "name": "The 1997 Six-Second Rule & Referee Dilemma",
+   "start": 53.9,
+   "end": 126.3,
+   "pacing": "Mixed collage and vintage VHS clips with stopwatch kinetic typography",
+   "role": "Show how keepers exploited the loop hole by holding the ball in hands, leading to the 1997 6-second rule and why referees neglected it."
+  },
+  {
+   "name": "The 2025 Modern Overhaul",
+   "start": 126.3,
+   "end": 140.8,
+   "pacing": "Clean, punchy motion graphics and kinetic tactical diagrams",
+   "role": "Reveal the new 2025 law: extending the time limit to 8 seconds and awarding a corner kick or throw-in to the opposing team."
+  }
+ ],
+ "shots": [
+  {
+   "start": 0.0,
+   "end": 1.3,
+   "subject": "Goalkeeper legs and glowing neon ball on green stylized pitch",
+   "transition_in": "Hard cut",
+   "transition_out": "Cut",
+   "what_moves": "Camera pushes forward between stylized cutout goalkeeper legs; animated lime-green ball floats in foreground; stadium silhouette subtly shifts in background parallax; kinetic typography drops in centrally between legs on narration cue 'تمرير الكرة'. Layer separation between legs, ball, text, and field is distinct and staggered in depth velocity; typography is screen-anchored in 2D space aligned to subject framing; sound features crisp voiceover entry over minimal ambient music bed; attention target is the center glowing neon ball transitioning up to text; purpose is instantly setting the football motif with a striking high-contrast neon-green palette; composition is low-angle perspective looking through goalkeeper legs toward field; evidence is OBSERVED; kind of event: text_in at 0.5s, punch_in continuous."
+  },
+  {
+   "start": 1.3,
+   "end": 4.3,
+   "subject": "Stylized halftone cleat kicking a luminous ball with dynamic bold lettering",
+   "transition_in": "Cut with graphic snap",
+   "transition_out": "Hard cut to archival CRT footage",
+   "what_moves": "Cutout boot kicks upward; ball pops and wobbles on impact; large white headline text 'أو تشتيتها' slides into screen, followed by smaller subline 'هو الخيار الوحيد المتاح للحارس هنا'; subtle film grain and halftone noise texture animate on the green canvas; kick impact synchronized with subtle swoosh sound effect; attention target is the boot kicking motion and top-aligned headline; composition is diagonal low-angle boot silhouette across frame; purpose is defining the contemporary physical options (pass or clear); evidence is OBSERVED; events: graphic_hit at 1.4s, text_in at 1.4s and 2.1s."
+  },
+  {
+   "start": 4.3,
+   "end": 6.3,
+   "subject": "1990 World Cup retro broadcast footage inside rounded CRT vignette border",
+   "transition_in": "Cut with subtle digital scanline flash",
+   "transition_out": "Hard cut to graphic cutout",
+   "what_moves": "Archival clip displays goalkeeper catching back-pass; subtle camera tracking jitter embedded in archival tape; digital CRT curved mask vignette encloses frame; animated digital football graphic flies across screen at 05.9s; text 'رغم أنه كان يستطيع' animates across bottom third synchronized with speech; attention target is the goalkeeper holding the ball; composition is medium wide match broadcast angle enclosed in vertical CRT frame; sound contains authentic low-fi broadcast noise combined with narration; purpose is providing historical archival proof of vintage goalkeeper behavior; evidence is OBSERVED; events: text_in at 5.0s, graphic_hit ball overlay at 5.9s."
+  },
+  {
+   "start": 6.3,
+   "end": 8.3,
+   "subject": "Halftone goalkeeper gloves gripping soccer ball against clean white background",
+   "transition_in": "Snap cut",
+   "transition_out": "Rotational camera snap transition",
+   "what_moves": "Goalkeeper gloves with ball bounce with spring physics into screen center; repeating neon green echo typography 'إمساكها بيده قديماً' tiers along the sides; floating drop shadow grounds the gloves; subtle floating idle motion on subject; sound features soft thud on catch; attention target is the central ball and gloves; composition is symmetrical centered medium close-up; purpose is emphasizing the past legality of catching back-passes with hands; evidence is OBSERVED; events: text_in cascade at 6.8s, graphic bounce hit at 6.4s."
+  },
+  {
+   "start": 8.3,
+   "end": 13.8,
+   "subject": "Animated stadium vector transforming into referee whistle and title card 'حكاية قانون'",
+   "transition_in": "Rotational zoom wipe into green aerial stadium",
+   "transition_out": "Hard cut to historical collage",
+   "what_moves": "Green vector stadium rotates 90 degrees while zooming out; a stylized metallic 3D whistle drops into stadium center; whistle blows and emits soundwaves; stadium morphs smoothly into a rectangular football pitch graphic; title typography 'حكاية قانون' snaps into center with whistle motif; subtitle 'التمرير لحارس المرمى' animates below; sound features loud whistle blow sound effect synced to whistle entrance at 9.0s; attention target is center whistle and subsequent title logo; composition is top-down aerial graphic expanding into centered graphic lockup; purpose is brand title sequence establishing topic; evidence is OBSERVED; events: rotation at 8.5s, punch_in at 10.8s, text_in at 11.2s and 12.0s."
+  },
+  {
+   "start": 13.8,
+   "end": 17.3,
+   "subject": "Split collage of 1990 World Cup figures (Higuita, Maradona, Matthäus, Klinsmann)",
+   "transition_in": "Cut with vertical slide",
+   "transition_out": "Glitch cut to match footage",
+   "what_moves": "Tiered visual layers slide into vertical alignment; top layer shows Rene Higuita in color, middle shows Maradona and Matthäus shaking hands with referees, bottom shows Klinsmann with World Cup trophy; typography 'مونديال 1990' animates dynamically across middle and top; slight focal blur pulls emphasis from Klinsmann to Higuita; subtle camera tilt-up; sound has narration and subtle riser swoosh; attention target is the tiered historical portraits; composition is three-way vertical split collage; purpose is establishing the landmark tournament of 1990; evidence is OBSERVED; events: text_in at 14.5s and 15.6s, layer separation slide at 14.0s."
+  },
+  {
+   "start": 17.3,
+   "end": 19.8,
+   "subject": "Broadcast footage of Egypt vs Ireland match in 1990 with match title card",
+   "transition_in": "Cut with scanline glitch",
+   "transition_out": "Cut to black and white referee photo",
+   "what_moves": "Archival match clip loops in CRT curved frame; large bold Arabic typography 'مصر X أيرلندا' enters with snap and tracking expansion; broadcast scoreboard in top left corner; attention target is central match title typography; composition is vertical retro frame over blurry match pitch; sound features vintage stadium cheer and voiceover; purpose is pinpointing the specific controversial match; evidence is OBSERVED; events: text_in at 18.0s, text_out at 19.7s."
+  },
+  {
+   "start": 19.8,
+   "end": 23.7,
+   "subject": "Monochrome archival still of referee showing yellow card to Egypt goalkeeper Ahmed Shobair",
+   "transition_in": "Cut",
+   "transition_out": "Hard cut to graphic icon",
+   "what_moves": "Slow push-in on black-and-white still photo; neon green horizontal baseline scans across bottom; animated green arrow indicator drops pointing directly at Shobair's head; name 'أحمد شوبير' animates above keeper; secondary text 'الأكثر ظهوراً في المباراة' slams vertically into the right third; selective color on yellow card held by referee; sound syncs whoosh to text and arrow landing; attention target is the yellow card and keeper Shobair; composition is full-length medium shot of referee and keeper facing each other; purpose is dramatizing Shobair's notoriety during this match; evidence is OBSERVED; events: punch_in continuous, text_in at 20.8s, text_in at 22.3s, selective_color on yellow card at 19.9s."
+  },
+  {
+   "start": 23.7,
+   "end": 24.9,
+   "subject": "Futuristic goalkeeper glove icon with sparkling dots and kinetic text 'ليس للتصديات'",
+   "transition_in": "Cut with zoom snap",
+   "transition_out": "Cut back to CRT archival footage",
+   "what_moves": "Stylized 3D glove graphic pulses in screen center; sparkling particle dots shimmer over the glove; typography 'ليس للتصديات' flanks both sides and tracks outward; camera executes rapid punch-in; sound features metallic sparkle hit; attention target is central glove and flanking typography; composition is centered portrait close-up; purpose is clarifying the reason for his frequent appearances was not heroic saves; evidence is OBSERVED; events: punch_in at 24.0s, text_in at 23.9s."
+  },
+  {
+   "start": 24.9,
+   "end": 27.9,
+   "subject": "Overhead match camera tracking defenders passing back to the goalkeeper",
+   "transition_in": "Cut to CRT framed clip",
+   "transition_out": "Hard cut to vertical collage",
+   "what_moves": "Archival match clip pans right following the back-pass rolling gently towards Shobair; scanline jitter and timecode overlay '03:28:20'; synchronized kinetic subtitle 'لكثرة ما أعاد المدافعون الكرة له' enters word by word matching spoken cadence; attention target is the ball rolling back to keeper; composition is wide tactical broadcast angle inside vintage vertical matte; sound is narration with soft muffled retro crowd roar; purpose is visually presenting the repetitive, boring back-pass tactic; evidence is OBSERVED; events: text_in staggered from 25.4s to 27.2s."
+  },
+  {
+   "start": 27.9,
+   "end": 32.8,
+   "subject": "Collage of prominent world goalkeepers (Schmeichel, Casillas, etc.) holding ball",
+   "transition_in": "Cut to layered collage",
+   "transition_out": "Cut to historical portrait cutout",
+   "what_moves": "Three horizontal photo slices slide onto screen sequentially; top layer features Iker Casillas, middle features Sergio Goycochea/Peter Schmeichel, bottom features Schmeichel in Manchester United jersey; animated text 'وهو سلوك كان متبعاً من قبل الكثير من المنتخبات حينها' animates in bottom third; camera performs slow drifting push-in; sound matches sliding sound effects to layer entrances; attention target is the layered goalkeeper cutouts; composition is three-tier split screen collage framed in CRT monitor border; purpose is establishing that this was a widespread tactical plague across international football; evidence is OBSERVED; events: punch_in continuous, text_in at 28.5s, 30.2s, 31.5s."
+  },
+  {
+   "start": 32.8,
+   "end": 37.3,
+   "subject": "Stylized halftone portrait of Egypt coach Mahmoud El-Gohary with FIFA legal document and 1992 date",
+   "transition_in": "Cut with bright flash",
+   "transition_out": "Smooth zoom out to overhead tactical pitch diagram",
+   "what_moves": "Cutout portrait of Mahmoud El-Gohary with thick white outline scales up slightly; giant bold 'FIFA' letters slam down behind head; neon green year '1992' pops in at 35.2s; historic IFAB circular text document scrolls upwards from bottom; attention target is the 1992 typography and FIFA document; composition is centered vertical portrait collage; sound includes bass impact on FIFA and year entrance; purpose is introducing FIFA's legislative intervention in 1992; evidence is OBSERVED; events: punch_in at 34.0s, text_in 'FIFA' at 34.2s, text_in '1992' at 35.2s."
+  },
+  {
+   "start": 37.3,
+   "end": 42.3,
+   "subject": "Overhead 2D tactical football pitch diagram showing illegal pass to goalkeeper",
+   "transition_in": "Continuous zoom out and perspective rotation",
+   "transition_out": "Hard cut to jumping outfield player cutout",
+   "what_moves": "Tactical pitch diagram tilts flat; top and bottom show official FIFA circular text in green margins; animated outfield player passes ball backward towards penalty area; multiple trailing neon ball frames trace trajectory; keeper receives ball; red prohibited indicator / bold Arabic text 'المعادة من المدافعين' duplicates downwards with echo effect; attention target is animated ball trajectory and bottom kinetic typography; composition is bird's-eye tactical plan within vertical frame; sound features soft digital clicks and whoosh on ball movement; purpose is demonstrating the mechanical definition of an illegal back-pass; evidence is OBSERVED; events: graphic_hit at 38.5s, text_in at 40.8s."
+  },
+  {
+   "start": 42.3,
+   "end": 47.7,
+   "subject": "Cutout of football player in mid-air header with anatomical arrows and highlighted red boot",
+   "transition_in": "Hard cut",
+   "transition_out": "Cut to goalkeeper hands catching ball",
+   "what_moves": "Floating cutout player ascends with soft hovering physics; glowing neon green ball hovers near forehead; hand-drawn indicator arrows and curved doodles point to head, chest, and knee; text 'مررت بالرأس' appears near head; camera punches in to highlight the red boot with circular sketch doodle and text 'عدا القدم'; sound features marker doodle sketch sound and pop; attention target is header position then punch-in on red boot; composition is full body cutout floating against minimalist stadium backdrop; purpose is detailing the exact legal body parts versus illegal foot pass; evidence is OBSERVED; events: punch_in at 46.2s, marker_doodle at 44.5s and 46.3s, text_in at 43.0s and 46.4s."
+  },
+  {
+   "start": 47.7,
+   "end": 53.9,
+   "subject": "Goalkeeper gloves catching ball followed by goal post perspective with penalty typography",
+   "transition_in": "Snap cut",
+   "transition_out": "Cut to Manuel Neuer monochrome portrait",
+   "what_moves": "At 47.7s gloves clasp ball; layered text 'التقطها' repeats; at 49.7s camera jumps to low-angle behind keeper legs looking at open goal post; neon ball rests in foreground; massive bold white text 'ركلة حرة غير مباشرة داخل منطقة الجزاء' animates across stadium grass; stadium graphic stretches vertically; sound features whistle tweet and heavy bass hit on penalty text; attention target is goal post and 'ركلة حرة غير مباشرة' text; composition is low-angle foreground ball leading to goal background; purpose is stating the penalty for violation: indirect free-kick inside the box; evidence is OBSERVED; events: text_in at 47.9s, punch_in at 50.0s, text_in at 50.5s."
+  },
+  {
+   "start": 53.9,
+   "end": 60.6,
+   "subject": "Manuel Neuer portrait and collage of keepers stalling with animated stopwatch and stick figure",
+   "transition_in": "Hard cut",
+   "transition_out": "Cut to official FIFA white document layout",
+   "what_moves": "Monochrome portrait of Manuel Neuer slides into frame; text 'لكن ذلك لم يثن الحراس عن إضاعة الوقت' drops in vertically; center split collage unfolds revealing keepers clutching ball; neon glowing stopwatch icon ticks in center; neon yellow animated stick figure of a walking keeper loops on the left; bold text 'يحتفظون بالكرة' anchors bottom; sound includes ticking clock SFX synced with stopwatch needle; attention target is Neuer's expression, then ticking stopwatch; composition is vertical collage framed in dark green CRT border; purpose is exposing the loophole: keepers held the ball in hands to waste time; evidence is OBSERVED; events: text_in at 54.5s, 56.5s, 58.0s, graphic_hit clock at 56.5s."
+  },
+  {
+   "start": 60.6,
+   "end": 110.0,
+   "subject": "Minimalist FIFA white legal document with 1997 date, giant green '6', and vintage analog stopwatch",
+   "transition_in": "Smooth cross-wipe to clean white backdrop",
+   "transition_out": "Hard cut to referee cutout on green backdrop",
+   "what_moves": "Clean white document with official text fades in; bronze FIFA logo sits at top; animated counter spins to '1997'; bold kinetic typography 'قانوناً جديداً يمنع احتفاظ الحارس بالكرة' stacks downwards; cutout keeper clutching ball rests atop a realistic silver analog stopwatch; giant lime green numeral '6' scales up dramatically behind stopwatch representing 6 seconds; stopwatch needle rapidly rotates; sound features mechanical clock winding and bell ding on 6; attention target is the giant number 6 and ticking stopwatch; composition is centered vertical layout with editorial document typography; purpose is introducing the 1997 6-second holding rule; evidence is OBSERVED; events: text_in '1997' at 102.5s, text_in cascade at 105.0s-107.5s, punch_in at 108.0s, graphic_hit numeral 6 at 108.5s."
+  },
+  {
+   "start": 110.0,
+   "end": 116.2,
+   "subject": "Monochrome referee cutout walking across stadium grass with assistant referee flags appearing",
+   "transition_in": "Hard cut",
+   "transition_out": "Cut to vintage archival match footage",
+   "what_moves": "Full-body cutout of referee walks from left to right across vibrant green field; beige paper cut shadow silhouette surrounds him; text 'ويبدو أن بعض الحكام رأوا ذلك جائراً' enters on left; at 113.5s hands holding checkered assistant referee flags punch in from left and right edges; whistle icon drops onto field grass; text 'فلم يكترث أغلبهم بذلك القانون' centers; sound includes soft footstep rustle and whistle drop tap; attention target is walking referee and appearing flags; composition is asymmetric profile shot moving through vertical field; purpose is showing referee reluctance to penalize goalkeepers with this strict rule; evidence is OBSERVED; events: text_in at 111.5s and 113.8s, graphic_hit flags at 113.5s."
+  },
+  {
+   "start": 116.2,
+   "end": 126.3,
+   "subject": "Archival footage of goalkeeper surrounded by aggressive opposing attackers and referee waving on",
+   "transition_in": "Cut to vintage match tape",
+   "transition_out": "Cut to 2025 dark green technical pitch graphic",
+   "what_moves": "Archival clip displays goalkeeper under extreme pressure from attacking strikers in penalty box; camera pans following play; referee gestures with outstretched arm; subtitles 'فقد برر البعض أن تنفيذه صعب حيث يبقى الحراس محاطين بلاعبي الفريق المنافس ما يجعل من الصعب التخلي عن الكرة في الوقت المحدد' follow speech rhythmically; sound features vintage broadcast ambiance and narrator's explanation; attention target is goalkeeper evading attackers; composition is live broadcast camera inside vintage rounded television border; purpose is presenting the practical referee justification for not enforcing the 6 seconds; evidence is OBSERVED; events: text_in continuous throughout clip, speed_ramp subtle on match playback."
+  },
+  {
+   "start": 126.3,
+   "end": 140.8,
+   "subject": "Futuristic 2025 tactical pitch graphic, 8-second stopwatch upgrade, and corner kick penalty animation",
+   "transition_in": "Hard cut to dark tactical theme",
+   "transition_out": "Fade out to channel watermark",
+   "what_moves": "Dark tactical pitch displays bold white numeral '2025' on a ruler timeline; document expands with text 'صارت المدة أطول'; analog stopwatch drops in and switches large white numeral from '6' to '8' with curved animated arrow; needle extends to 9 with green background shift; multiple trailing neon balls trace path to corner flag; text 'ركلة ركنية' flips to 'رمية تماس' as ball hops outside sideline; sound includes countdown tick, pneumatic whoosh on numeral flip, and solid thud on final penalty graphic; attention target is the transition from 6 to 8 seconds and the corner/throw-in diagram; composition is central infographic layout transitioning to tactical corner-flag diagram; purpose is presenting the brand-new 2025 regulation and its distinct penalties; evidence is OBSERVED; events: text_in '2025' at 127.0s, text_in at 128.8s, graphic_hit numeral switch 6 to 8 at 132.5s, marker_doodle trajectory at 134.8s, text_in 'ركلة ركنية' at 136.8s, text_in 'رمية تماس' at 138.5s."
+  }
+ ],
+ "hypotheses": [
+  {
+   "start": 8.3,
+   "subject": "3D whistle graphic and vector stadium transformation",
+   "test": "layer_separation and camera_curve: verify whether the stadium elements are 3D pre-renders or nested 2D shape layers with continuous scale and rotation interpolation curve."
+  },
+  {
+   "start": 42.3,
+   "subject": "Mid-air jumping footballer cutout and marker annotations",
+   "test": "layer_separation: test whether the player cutout uses anchor-point secondary bounce oscillation independent of the marker doodle overlays and background stadium plate."
+  },
+  {
+   "start": 108.0,
+   "subject": "Giant numeral 6 scaling behind analog stopwatch",
+   "test": "camera_curve: determine if the scale-up of numeral 6 utilizes exponential ease-out with overshoot damping or a strictly linear zoom."
+  },
+  {
+   "start": 131.0,
+   "subject": "Transition of numeral 6 to 8 with curved directional arrow",
+   "test": "audio_sync: measure whether the whoosh SFX leads the number transformation keyframe by 2-3 frames to heighten perceived responsiveness."
+  }
+ ],
+ "signature_techniques": [
+  {
+   "name": "Halftone & Paper Cutout Collage on High-Contrast Pitch",
+   "what": "Isolating historical sports figures as black-and-white or high-contrast cutout silhouettes bordered by paper-edge mats over vibrant lime-green football pitch graphics.",
+   "why": "Bridges low-resolution vintage SD broadcast footage with crisp modern 9:16 mobile aesthetics, turning grainy archive material into stylish editorial graphics without quality jarringness- OBSERVED."
+  },
+  {
+   "name": "Curved CRT Television Frame with Analog Scanline Accents",
+   "what": "Framing historical archival clips inside a curved barrel-distorted vignette mask with soft scanlines and timecodes.",
+   "why": "Instantly telegraphs historical flashbacks to the 1990s while preventing low-resolution horizontal broadcast clips from looking poorly cropped or stretched on 9:16 vertical displays- OBSERVED."
+  },
+  {
+   "name": "Kinetic Infographic Law Explainer via Overhead 2D Pitch",
+   "what": "Translating abstract rule texts into animated overhead tactical diagrams using motion trails, neon dotted trajectories, and bold typographic labels.",
+   "why": "Enables immediate comprehension of complex spatial sports rules (back-pass angle, penalty box boundary, corner vs throw-in outcomes) within seconds- OBSERVED."
+  }
+ ],
+ "motion_philosophy": "Perceived energy comes from snappy layer-separated pop entrances, tight audio-visual SFX synchronization, and rhythmic kinetic typography matching the voiceover cadence. Instead of sweeping continuous camera fly-throughs, the piece relies on rapid graphic hits, springy pop-ins, and layered parallax drifts that maintain viewer engagement on mobile vertical screens.",
+ "editing_philosophy": "Rhythmic, modular sequence-based editing structured chronologically (1990 -> 1992 -> 1997 -> 2025). Edits alternate strategically between historical archival evidence and clean graphic explainers to balance authentic nostalgia with contemporary visual polish.",
+ "genre": "Sports Motion Graphic Documentary / Explainer",
+ "sound_philosophy": "Precision foley and tactile UI sound effects (whistle blasts, marker doodles, analog stopwatch ticking, digital swooshes) synchronized down to individual word hits and graphic impacts, anchored under a clear, measured documentary voiceover.",
+ "storytelling": "Problem-solution-dilemma-evolution narrative: Introduces the historical problem (time wasting in 1990), FIFA's first reform (1992 back-pass ban), the subsequent loophole (holding ball in hand), the flawed intermediate fix (1997 6-second rule), and the ultimate modern solution (2025 8-second rule with corner penalties).",
+ "visual_language": "Bold chromatic pairing of deep Al Jazeera green, neon lime accents, and pure paper-white typography, accented by black-and-white halftone cutouts, vintage CRT framing, and tactical pitch iconography.",
+ "_meta": {
+  "model": "gemini-3.8-flash",
+  "fps": 2.0,
+  "native_video": true,
+  "audio": true,
+  "chunked": false,
+  "usage": {
+   "promptTokenCount": 16208,
+   "candidatesTokenCount": 6353,
+   "totalTokenCount": 23984,
+   "promptTokensDetails": [
+    {
+     "modality": "VIDEO",
+     "tokenCount": 15855
+    },
+    {
+     "modality": "TEXT",
+     "tokenCount": 353
+    }
+   ],
+   "thoughtsTokenCount": 1423,
+   "serviceTier": "standard"
+  },
+  "src": "projects/references/refs/r07.mp4"
+ }
+}

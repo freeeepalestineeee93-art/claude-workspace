@@ -93,16 +93,23 @@ def say(text, out_wav, voice="ar-SA-HamedNeural", provider="edge", rate="+0%", p
         import urllib.request
         key = os.environ["GEMINI_API_KEY"]
         model = os.environ.get("GEMINI_TTS_MODEL") or gemini_tts_model(key)
-        # الأسلوب بيتحط كتعليمات قبل النص (Gemini TTS بيفهم توجيه الإلقاء باللغة الطبيعية)
-        prompt = f"{style}:\n{text}" if style else text
-        body = json.dumps({"contents": [{"parts": [{"text": prompt}]}], "generationConfig": {"responseModalities": ["AUDIO"], "speechConfig": {"voiceConfig": {"prebuiltVoiceConfig": {"voiceName": voice if not voice.startswith("ar-") else "Charon"}}}}}).encode()
-        req = urllib.request.Request(f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={key}", body, {"Content-Type": "application/json"})
-        data = json.loads(urllib.request.urlopen(req, context=_ssl_ctx()).read())
-        pcm = base64.b64decode(data["candidates"][0]["content"]["parts"][0]["inlineData"]["data"])
-        raw = out_wav.with_suffix(".pcm")
-        raw.write_bytes(pcm)
-        subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "s16le", "-ar", "24000", "-ac", "1", "-i", str(raw), str(tmp)], check=True)
-        raw.unlink()
+        vname = voice if not voice.startswith("ar-") else "Charon"
+        # الأسلوب (بالإنجليزي) بيتحط قبل النص. أحياناً الموديل بيقرا التعليمات نفسها (خصوصاً مع نص قصير):
+        # منتحقق بالتفريغ وبنعيد التوليد، وآخر محاولة بدون أسلوب.
+        for attempt in range(4):
+            st = style if (style and attempt < 3) else None
+            prompt = f"{st}:\n{text}" if st else text
+            body = json.dumps({"contents": [{"parts": [{"text": prompt}]}], "generationConfig": {"responseModalities": ["AUDIO"], "speechConfig": {"voiceConfig": {"prebuiltVoiceConfig": {"voiceName": vname}}}}}).encode()
+            req = urllib.request.Request(f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={key}", body, {"Content-Type": "application/json"})
+            data = json.loads(urllib.request.urlopen(req, context=_ssl_ctx()).read())
+            pcm = base64.b64decode(data["candidates"][0]["content"]["parts"][0]["inlineData"]["data"])
+            raw = out_wav.with_suffix(".pcm")
+            raw.write_bytes(pcm)
+            subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "s16le", "-ar", "24000", "-ac", "1", "-i", str(raw), str(tmp)], check=True)
+            raw.unlink()
+            if not st or _clean_read(tmp, text):
+                break
+            print(f"  ↻ {out_wav.name}: الموديل قرا التعليمات، عم عيد ({attempt + 1})", file=sys.stderr)
     else:
         raise ValueError(f"مزوّد غير معروف: {provider}")
     to_wav(tmp, out_wav)
@@ -111,6 +118,23 @@ def say(text, out_wav, voice="ar-SA-HamedNeural", provider="edge", rate="+0%", p
         words = align(out_wav, script=text)
     Path(str(out_wav).replace(".wav", ".words.json")).write_text(json.dumps(words, ensure_ascii=False, indent=1))
     return {"wav": str(out_wav), "words": words, "duration": words[-1]["end"] if words else 0}
+
+
+def _clean_read(audio, script):
+    """القراءة نظيفة؟ ما في حروف لاتينية بالتفريغ، وطول الكلام مش أكبر بكتير من النص."""
+    import re
+    from faster_whisper import WhisperModel
+    global _WM
+    try:
+        _WM
+    except NameError:
+        _WM = WhisperModel("small", device="cpu", compute_type="int8")
+    segs, _ = _WM.transcribe(str(audio), language="ar")
+    heard = " ".join(s.text for s in segs)
+    if re.search(r"[A-Za-z]{3,}", heard):
+        return False
+    words_heard = len(heard.split()); words_script = len(script.split())
+    return words_heard <= words_script * 1.6 + 3
 
 
 _GEM_MODEL = None
@@ -125,7 +149,11 @@ def gemini_tts_model(key):
     try:
         data = json.loads(urllib.request.urlopen(f"https://generativelanguage.googleapis.com/v1beta/models?key={key}&pageSize=1000", context=_ssl_ctx()).read())
         names = [m["name"].split("/")[-1] for m in data.get("models", []) if "tts" in m["name"]]
-        names.sort(key=lambda n: (("pro" in n), n), reverse=True)
+        import re
+        ver = lambda n: tuple(int(x) for x in re.findall(r"\d+", n.split("-tts")[0])[:2] or [0])
+        # الأحدث أولاً، والـ lite آخر شي
+        names = [n for n in names if "live" not in n]
+        names.sort(key=lambda n: (ver(n), "lite" not in n, "preview" not in n), reverse=True)
         _GEM_MODEL = names[0] if names else "gemini-2.5-flash-preview-tts"
     except Exception:
         _GEM_MODEL = "gemini-2.5-flash-preview-tts"

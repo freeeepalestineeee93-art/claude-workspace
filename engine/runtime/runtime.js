@@ -306,6 +306,8 @@ export function drawLayers(ctx, layers, t, env) {
 
 export function drawLayer(ctx, L, t, env) {
   if (env.hideText && L.type === 'text') return;
+  // posterize: الطبقة بتتحرك بفريمات أقل (12fps = خربشة ماركر/رسم يدوي) وهي ضمن فيديو 24/30
+  if (L.posterize) t = Math.floor(t * L.posterize + 1e-6) / L.posterize;
   // صدى: نسخ من الطبقة بأزمنة سابقة بشفافية متناقصة (أثر الكرة الطايرة، نص مكرر)
   if (L.echo && !env.inEcho) {
     const e = L.echo, n = e.count ?? 5, step = e.step ?? 0.035, decay = e.decay ?? 0.62;
