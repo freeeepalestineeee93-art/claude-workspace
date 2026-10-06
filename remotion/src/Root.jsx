@@ -16,6 +16,6 @@ export const Root = () => <>
   {videos.map((v) => (
     <Composition key={v.id} id={v.id} component={v.component} fps={v.meta.fps} width={v.meta.width} height={v.meta.height}
       durationInFrames={Math.round(v.meta.duration * v.meta.fps)}
-      defaultProps={{ audio: v.meta.audio ?? null, project: v.project, name: v.name }} />
+      defaultProps={{ audio: v.meta.audio ?? null, post: v.meta.post ?? null, project: v.project, name: v.name }} />
   ))}
 </>;

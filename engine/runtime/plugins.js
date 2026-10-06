@@ -81,7 +81,7 @@ let THREE = null;
 const threeState = new WeakMap();
 
 async function prepThree(L, env) {
-  if (!THREE) THREE = await import('/node_modules/three/build/three.module.js');
+  if (!THREE) THREE = await import(/* webpackIgnore: true */ (globalThis.__studioBase ?? '') + '/node_modules/three/build/three.module.js'); // (جوّا Remotion: سيرفر الاستوديو)
   const w = L.w ?? env.W, h = L.h ?? env.H;
   const canvas = document.createElement('canvas');
   canvas.width = w; canvas.height = h;

@@ -1,6 +1,6 @@
 // نص عربي بمستوى الحرف/الكلمة جوّا Remotion — عبر محرك HarfBuzz تبعنا (lib/type.js)، فالوصل ما بينكسر أبداً.
 //
-//   anchor: center | start | end | right | left
+//   anchor: center | start | end | right | left · kashida: [{ word, amount }] (تطويل حقيقي، بيتحرك)
 //   <ArabicText text="الحقيقة أولاً" size={120} weight={700} fill="#fff" x={540} y={800}
 //     reveal={{ by: 'word', at: 0.4, dur: 0.6, ease: 'out', stagger: 0.08, from: { y: 60, opacity: 0, blur: 8 }, mask: true }}
 //     exit={{ by: 'word', at: 3.2, dur: 0.35, to: { y: -40, opacity: 0 } }}
@@ -46,11 +46,13 @@ function progress(an, i, n, t, fps) {
 }
 
 export function ArabicText({ text, family = 'IBM Plex Sans Arabic', weight = 700, size = 80, fill = '#fff', stroke, strokeWidth = 0,
-  x = 0, y = 0, anchor = 'center', lineHeight = 1.3, align = 'center', maxWidth, reveal, exit, draw, words = {}, glow, style }) {
+  x = 0, y = 0, anchor = 'center', lineHeight = 1.3, align = 'center', maxWidth, reveal, exit, draw, words = {}, glow, kashida, style }) {
   const ok = useFont(family, weight);
   const frame = useCurrentFrame(), { fps } = useVideoConfig();
   const t = frame / fps;
-  const lay = useMemo(() => (ok ? layoutText(text, { family, size, weight, lineHeight, align, maxWidth }) : null), [ok, text, family, size, weight, lineHeight, align, maxWidth]);
+  // kashida: [{ word: 1, amount: 180 }] كشيدة حقيقية (تطويل) — amount ممكن يتغير كل فريم (تمدد متحرك)
+  const kj = kashida ? JSON.stringify(kashida) : '';
+  const lay = useMemo(() => (ok ? layoutText(text, { family, size, weight, lineHeight, align, maxWidth, kashida: kashida ?? [] }) : null), [ok, text, family, size, weight, lineHeight, align, maxWidth, kj]);
   const by = reveal?.by ?? exit?.by ?? 'word';
   // وحدات الحركة مرتبة حسب القراءة (يمين ← يسار بالعربي)
   const units = useMemo(() => {

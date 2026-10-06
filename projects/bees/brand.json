@@ -1,0 +1,6 @@
+{
+  "name": "النحل — أصغر عامل، أكبر وظيفة",
+  "fps": 30,
+  "colors": { "bg": "#F6F1E6", "cream": "#FBF7EF", "honey": "#F2B33D", "amber": "#D98E1F", "sky": "#CFE6F5", "ink": "#2B2A33", "muted": "#8C8579", "leaf": "#7FA36B" },
+  "fonts": { "display": { "family": "thmanyah sans", "weight": 900 }, "body": { "family": "thmanyah sans", "weight": 500 } }
+}

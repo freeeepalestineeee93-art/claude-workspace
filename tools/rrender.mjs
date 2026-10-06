@@ -86,6 +86,26 @@ try {
   }
   await run('ffmpeg', ['-v', 'error', '-y', '-i', silent, ...(audio ? ['-i', audio, '-map', '0:v', '-map', '1:a', '-c:a', 'aac', '-b:a', '256k', '-shortest'] : []), '-c:v', 'copy', '-movflags', '+faststart', out]);
   await rm(silent, { force: true }); if (audio) await rm(audio, { force: true });
+
+  // ── ملمس نهائي (أسلوب الجزيرة): أطراف عدسة مضبّبة + RGB split عالأطراف + توهّج + grain ──
+  // meta.post = { edge: 0.7, edgeWidth: 0.45, blur: 12, rgb: 4, bloom: 0.16, grain: 7, vignette: 0 }
+  const post = composition.props.post;
+  if (post) {
+    const P = { edge: 0.7, edgeWidth: 0.45, blur: 12, rgb: 4, bloom: 0.16, grain: 7, vignette: 0, ...post };
+    const k = draft ? 0.5 : 1;
+    const fx = [
+      'format=gbrp,split=3[base][b1][b2]',
+      `[b1]gblur=sigma=${P.blur * k},rgbashift=rh=${-Math.round(P.rgb * k)}:bh=${Math.round(P.rgb * k)}[edge]`,
+      `[base][edge]blend=all_expr='A+(B-A)*clip((hypot((X-W/2)/(W/2)\\,(Y-H/2)/(H/2))-${P.edge})/${P.edgeWidth}\\,0\\,1)'[e]`,
+      `[b2]gblur=sigma=${22 * k}[bl]`,
+      `[e][bl]blend=all_mode=screen:all_opacity=${P.bloom}[f]`,
+      `[f]noise=alls=${P.grain}:allf=t+u${P.vignette ? `,vignette=angle=${P.vignette}` : ''},format=yuv420p[out]`,
+    ].join(';');
+    const tmpOut = out.replace(/\.mp4$/, '.post.mp4');
+    await run('ffmpeg', ['-v', 'error', '-y', '-i', out, '-filter_complex', fx, '-map', '[out]', '-map', '0:a?', '-c:v', 'libx264', '-crf', draft ? '24' : '16', '-preset', 'medium', '-c:a', 'copy', '-movflags', '+faststart', tmpOut]);
+    await run('mv', [tmpOut, out]);
+    console.log(`  🎞️  ملمس نهائي: أطراف عدسة + RGB ${P.rgb}px + توهّج ${P.bloom} + grain ${P.grain}`);
+  }
   const s = await stat(out);
   console.log(`✓ ${path.relative(ROOT, out)}  ${W * (draft ? 0.5 : 1)}x${H * (draft ? 0.5 : 1)} ${fps}fps ${((to - from + 1) / fps).toFixed(1)}s  ${(s.size / 1e6).toFixed(1)}MB  بـ ${((Date.now() - t0) / 1000).toFixed(0)}s`);
 

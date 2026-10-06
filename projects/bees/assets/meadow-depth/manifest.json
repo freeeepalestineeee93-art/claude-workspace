@@ -1,0 +1,23 @@
+{
+ "w": 1200,
+ "h": 2125,
+ "layers": [
+  {
+   "src": "layer-0.png",
+   "depth": 0.002
+  },
+  {
+   "src": "layer-1.png",
+   "depth": 0.025
+  },
+  {
+   "src": "layer-2.png",
+   "depth": 0.269
+  },
+  {
+   "src": "layer-3.png",
+   "depth": 0.645
+  }
+ ],
+ "source": "projects/bees/assets/meadow.jpg"
+}
