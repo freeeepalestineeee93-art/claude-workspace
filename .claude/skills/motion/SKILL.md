@@ -8,7 +8,8 @@ description: يصنع فيديو موشن غرافيك عربي احترافي �
 الهدف: فيديو ما حدا بيقول عنه "AI عمله". البرومبت 10%، والباقي هو الشغل هون.
 
 ## قبل ما تكتب سطر
-1. اقرأ `docs/craft/principles.md` و`docs/craft/ai-tells.md` و`docs/api.md` (المرجع الكامل).
+1. اقرأ `docs/craft/principles.md` و`docs/craft/ai-tells.md` و`docs/api.md` (المرجع الكامل) و`docs/references.md` (دروس 16 مرجع من المستخدم).
+   فيديو شارح بخريطة؟ شوف `projects/maps/videos/red-sea/main.js` كمثال كامل.
 2. حدّد المشروع: `projects/<اسم>/brand.json`. ما في مشروع؟ استعمل skill `motion-brand`.
 3. في مراجع بـ `projects/<اسم>/refs/`؟ اقرأ `style_guide.md` وافتح صور التحليل. في فيديو مرجعي جديد؟ استعمل `motion-reference`.
 

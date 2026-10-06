@@ -88,6 +88,36 @@ export default async (S) => ({
 **وصفات جاهزة `S.fx`:** `maskRise rise blurIn pop slam drop cascade type draw stretch flip assemble` · خروج: `exitUp exitBlur exitMask exitCollapse` · مستمر: `wave breathe` · دمج: `S.fx.combine(a, b)`.
 كلها `(at, { size, by, each, spring, stagger })`.
 
+## صندوق النص (كبسولة/عنوان)
+`box: { fill, stroke, strokeWidth, radius, pad: [x, y], shadow, glow, reveal: { at, dur|spring, from: 'start'|'end'|'center' } }`
+حجمه من النص تلقائياً، وبيختفي مع خروج النص. (أسلوب الجزيرة: كبسولة حمرا ونص أبيض.)
+
+## خرائط
+```js
+const map = S.map({
+  base: 'terrain' | 'satellite' | 'bluemarble' | 'vector' | 'none',
+  style: { land, high, water, deep, exaggeration, shade, saturation, brightness, contrast, tint },   // terrain = تضاريس مرسومة
+  camera: S.fly([{ t: 0, center: [lon, lat], zoom: 4 }, { t: 3, center: [...], zoom: 7, ease: 'smooth', mode?: 'linear' }]),
+  borders: { color, opacity, width },
+  countries: [{ id: 'YEM' | 'اليمن' | 'Yemen', fill, stroke, strokeWidth, glow: { blur }, hatch: { color, spacing }, wipe: anim, wipeFrom, opacity, trim }],
+  regions: [{ country: 'EGY', id: 'القاهرة', ...نفس الخصائص }],
+  routes: [{ points: [[lon, lat], ...] | from/to, smooth, curve, color, width, dash: [a, b], dashSpeed, glow, trim: anim }],
+  markers: [{ at: [lon, lat], type: 'pulse'|'dot', color, size, appear }],
+  clouds: { opacity: anim, scale, layers },
+});
+S.text({ text: 'قناة السويس', ...S.at(map, [32.5, 29.9], [0, -60]), box: {...} })   // نص لاصق على مكان
+S.icon({ icon: 'lucide:ship', ...S.along(map, route, { kf: [[2, 0], [6, 1]] }) })    // عنصر ماشي على مسار
+S.mapPhoto(map, [31.26, 30.05], { src: 'assets/x.jpg', number: 1, label: 'باب الفتوح', at: 2 })
+const yem = await S.place('اليمن'); yem.center; yem.fit()   // مركز/زوم يغطي البلد
+```
+الطيران بين مكانين بيبعد لفوق وبيقرّب (متل Google Earth)، وكل حركة كاميرا إلها whoosh تلقائي.
+
+## أدوات المراجع
+- `S.sticker({ src: 'assets/player.png', w, outlineWidth, outlineColor })`: صورة مقصوصة بإطار أبيض وظل (اقصها بـ `node studio.mjs cutout in.jpg out.png`).
+- `S.donut({ value: anim 0..1, r, width, color, track })` · `S.bars({ values: [...], h, barWidth, gap, color, at })`.
+- `spray: { angle, start, amount, grain }` على أي شكل: ملمس رذاذ متل Bauhaus/riso.
+- post: `lens` (عدسة منحنية 0.05–0.2) · `crt` (زوايا شاشة قديمة) · `scanlines` (0.03–0.08).
+
 ## الانتقالات `transition: { type, dur, ease, ... }`
 `cut fade dip{color} flash{color} push{dir,blur} whip{dir} slide{dir} zoom{amount} wipe{dir,soft} iris{at,ring} shape{at,from,radius} blinds{count,dir} split{axis} glitch spin{angle}`
 + **125 انتقال GLSL:** `gl:crosswarp` `gl:cube` `gl:Dreamy` `gl:directionalwarp` `gl:ripple` `gl:swap` `gl:doorway` `gl:CrossZoom` `gl:GlitchMemories` `gl:InvertedPageCurl` … (`params: {...}`)
