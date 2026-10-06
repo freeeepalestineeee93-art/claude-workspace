@@ -198,6 +198,12 @@ export async function render(compPath, o = {}) {
         let o = ''; py.stdout.on('data', (d) => (o += d));
         py.on('close', () => { console.log(o.trim().split('\n').map((l) => '  ' + l).join('\n')); r(); });
       });
+      // انسيابية الكاميرا مقابل معيار المراجع (library/camera)
+      await new Promise((r) => {
+        const py = spawn(path.join(ROOT, '.venv/bin/python'), ['tools/camlang.py', 'audit', out, '--json', path.join(outDir, 'camera-audit.json')], { cwd: ROOT, stdio: ['ignore', 'pipe', 'ignore'] });
+        let o = ''; py.stdout.on('data', (d) => (o += d));
+        py.on('close', () => { if (o.trim()) console.log(o.trim().split('\n').map((l) => '  ' + l).join('\n')); r(); });
+      });
     }
     return { out, W, H, fps, duration: total / fps };
   } finally {

@@ -89,8 +89,8 @@ try {
   await run('ffmpeg', ['-v', 'error', '-y', '-i', out, '-vf', `fps=${Math.max(1, Math.round(10 / Math.max(1, (to - from + 1) / fps / 4)) / 10)},scale=180:-1,tile=8x5`, '-frames:v', '1', sheet]).catch(() => {});
   const audit = await run(path.join(ROOT, '.venv/bin/python'), ['tools/videoaudit.py', out, '--json', path.join(outDir, 'video-audit.json')], { quiet: true }).catch((e) => `⚠ videoaudit: ${e.message}`);
   console.log(audit.trim().split('\n').map((l) => '  ' + l).join('\n'));
-  if (existsSync(path.join(ROOT, 'tools/camaudit.py'))) {
-    const cam = await run(path.join(ROOT, '.venv/bin/python'), ['tools/camaudit.py', out, '--json', path.join(outDir, 'camera-audit.json')], { quiet: true }).catch((e) => `⚠ camaudit: ${e.message}`);
+  if (existsSync(path.join(ROOT, 'library/camera/library.json'))) {
+    const cam = await run(path.join(ROOT, '.venv/bin/python'), ['tools/camlang.py', 'audit', out, '--json', path.join(outDir, 'camera-audit.json')], { quiet: true }).catch((e) => `⚠ camlang: ${e.message}`);
     console.log(cam.trim().split('\n').map((l) => '  ' + l).join('\n'));
   }
   console.log(`  🖼️  ${path.relative(ROOT, sheet)}`);
