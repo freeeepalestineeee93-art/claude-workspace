@@ -106,7 +106,11 @@ def measure(ref_id, src):
     g = json.loads((LIB / "refs" / ref_id / "global.json").read_text())
     out = []
     for h in g.get("hypotheses", []):
-        t0, t1 = float(h["start"]), float(h["end"])
+        t0 = float(h.get("start", 0)); t1 = float(h.get("end", t0 + 1.5))
+        dur = refmap.probe(src)["duration"]
+        if t0 >= dur:  # Gemini أحياناً بيعطي توقيت برا الفيديو: منسجله كغير مؤكد بدل ما نقيس شي غلط
+            out.append({"hypothesis": h, "results": {}, "evidence": "UNCERTAIN", "note": f"timestamp {t0}s beyond video ({dur:.1f}s)"})
+            continue
         if t1 - t0 < 0.3:
             t1 = t0 + 0.6
         rec = {"hypothesis": h, "results": {}}

@@ -1,0 +1,304 @@
+[
+ {
+  "hypothesis": {
+   "start": 8.3,
+   "subject": "3D whistle graphic and vector stadium transformation",
+   "test": "layer_separation and camera_curve: verify whether the stadium elements are 3D pre-renders or nested 2D shape layers with continuous scale and rotation interpolation curve."
+  },
+  "results": {
+   "camera": {
+    "zoom_start": 1.0,
+    "zoom_peak": 1.0,
+    "zoom_min": 0.588,
+    "zoom_end": 0.588,
+    "keys": {
+     "zoom": [
+      [
+       0.0,
+       1.0,
+       "ae:95:50"
+      ],
+      [
+       0.167,
+       0.9896
+      ],
+      [
+       0.292,
+       0.9904,
+       "sineInOut"
+      ],
+      [
+       0.708,
+       0.666,
+       "quadOut"
+      ],
+      [
+       1.0,
+       0.6093,
+       "linear"
+      ],
+      [
+       1.125,
+       0.6002,
+       "linear"
+      ],
+      [
+       1.417,
+       0.5894
+      ]
+     ],
+     "x": [
+      [
+       0.0,
+       0.0,
+       "ae:33:33"
+      ],
+      [
+       0.292,
+       -619.262,
+       "ae:33:95"
+      ],
+      [
+       0.417,
+       -606.8175,
+       "linear"
+      ],
+      [
+       0.583,
+       -546.8478,
+       "linear"
+      ],
+      [
+       0.792,
+       -507.2731,
+       "linear"
+      ],
+      [
+       0.917,
+       -493.5649,
+       "linear"
+      ],
+      [
+       1.458,
+       -465.6853
+      ]
+     ],
+     "y": [
+      [
+       0.0,
+       0.0,
+       "ae:95:33"
+      ],
+      [
+       0.292,
+       141.6221
+      ],
+      [
+       0.833,
+       145.1677,
+       "ae:33:50"
+      ],
+      [
+       1.042,
+       140.7427
+      ]
+     ],
+     "rotation": [
+      [
+       0.0,
+       0.0,
+       "ae:33:33"
+      ],
+      [
+       0.292,
+       35.1287,
+       "ae:33:95"
+      ],
+      [
+       0.417,
+       34.4912,
+       "linear"
+      ],
+      [
+       0.583,
+       31.4132,
+       "linear"
+      ],
+      [
+       0.792,
+       29.2986,
+       "ae:50:33"
+      ],
+      [
+       0.958,
+       28.4427,
+       "linear"
+      ],
+      [
+       1.458,
+       27.1756
+      ]
+     ]
+    },
+    "evidence": "MEASURED"
+   }
+  }
+ },
+ {
+  "hypothesis": {
+   "start": 42.3,
+   "subject": "Mid-air jumping footballer cutout and marker annotations",
+   "test": "layer_separation: test whether the player cutout uses anchor-point secondary bounce oscillation independent of the marker doodle overlays and background stadium plate."
+  },
+  "results": {
+   "camera": {
+    "zoom_start": 1.0,
+    "zoom_peak": 1.589,
+    "zoom_min": 0.997,
+    "zoom_end": 1.589,
+    "keys": {
+     "zoom": [
+      [
+       0.0,
+       1.0
+      ],
+      [
+       0.083,
+       0.9968,
+       "quadIn"
+      ],
+      [
+       0.375,
+       1.2235,
+       "ae:33:95"
+      ],
+      [
+       0.542,
+       1.2643,
+       "linear"
+      ],
+      [
+       0.708,
+       1.4597,
+       "linear"
+      ],
+      [
+       1.0,
+       1.5315,
+       "linear"
+      ],
+      [
+       1.167,
+       1.5567,
+       "linear"
+      ],
+      [
+       1.458,
+       1.589
+      ]
+     ],
+     "x": [
+      [
+       0.0,
+       0.0
+      ],
+      [
+       0.125,
+       0.1698,
+       "ae:33:50"
+      ],
+      [
+       0.417,
+       -22.9545
+      ],
+      [
+       0.583,
+       -22.2106,
+       "sineInOut"
+      ],
+      [
+       0.792,
+       -17.8065
+      ]
+     ],
+     "y": [
+      [
+       0.0,
+       0.0
+      ],
+      [
+       0.208,
+       -0.3855,
+       "ae:50:85"
+      ],
+      [
+       0.417,
+       -10.1621
+      ],
+      [
+       0.5,
+       3.7155,
+       "ae:33:33"
+      ],
+      [
+       0.708,
+       -71.6072,
+       "quadOut"
+      ],
+      [
+       1.0,
+       -87.1427
+      ]
+     ],
+     "rotation": [
+      [
+       0.0,
+       0.0
+      ],
+      [
+       0.292,
+       -0.0225,
+       "ae:95:75"
+      ],
+      [
+       0.417,
+       -0.2059
+      ],
+      [
+       0.667,
+       -0.3301,
+       "ae:95:66"
+      ],
+      [
+       0.792,
+       -0.4896
+      ]
+     ]
+    },
+    "evidence": "MEASURED",
+    "time_to_90pct_peak_s": 1.0,
+    "peak_rate_per_s": 2.033
+   }
+  }
+ },
+ {
+  "hypothesis": {
+   "start": 108.0,
+   "subject": "Giant numeral 6 scaling behind analog stopwatch",
+   "test": "camera_curve: determine if the scale-up of numeral 6 utilizes exponential ease-out with overshoot damping or a strictly linear zoom."
+  },
+  "results": {},
+  "evidence": "UNCERTAIN",
+  "note": "timestamp 108.0s beyond video (101.0s)"
+ },
+ {
+  "hypothesis": {
+   "start": 131.0,
+   "subject": "Transition of numeral 6 to 8 with curved directional arrow",
+   "test": "audio_sync: measure whether the whoosh SFX leads the number transformation keyframe by 2-3 frames to heighten perceived responsiveness."
+  },
+  "results": {},
+  "evidence": "UNCERTAIN",
+  "note": "timestamp 131.0s beyond video (101.0s)"
+ }
+]
