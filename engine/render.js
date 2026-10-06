@@ -4,6 +4,7 @@
 //   --out file.mp4   --from 0 --to 3   --workers 4   --still 1.5 (صورة واحدة)
 //   --format mp4|prores|webm|gif   --crf 16   --no-audio
 
+import fs from 'node:fs';
 import { spawn } from 'node:child_process';
 import { mkdir, writeFile, rm, stat } from 'node:fs/promises';
 import path from 'node:path';
@@ -45,9 +46,20 @@ export async function openPlayer(browser, base, comp, opts) {
   return { page, info, errors };
 }
 
+// فريمات المشروع: من brand.json ("fps": 24 لمراجع سينمائية/أرشيف 24fps) وإلا 30
+export function projectFps(compPath) {
+  let dir = path.dirname(path.resolve(compPath));
+  for (let i = 0; i < 6; i++) {
+    const f = path.join(dir, 'brand.json');
+    if (fs.existsSync(f)) { try { return JSON.parse(fs.readFileSync(f, 'utf8')).fps ?? 30; } catch { return 30; } }
+    dir = path.dirname(dir);
+  }
+  return 30;
+}
+
 export async function render(compPath, o = {}) {
   const opts = {
-    aspect: '9:16', fps: 30, quality: 'final', scale: 1, workers: Math.max(1, Math.min(4, os.cpus().length)),
+    aspect: '9:16', fps: projectFps(compPath), quality: 'final', scale: 1, workers: Math.max(1, Math.min(4, os.cpus().length)),
     format: 'mp4', crf: 16, ...o,
   };
   opts.fps = +opts.fps; opts.scale = +opts.scale; opts.workers = +opts.workers;

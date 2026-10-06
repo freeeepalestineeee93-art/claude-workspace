@@ -1,12 +1,44 @@
 {
   "name": "رياضة (كيت r07)",
-  "colors": { "bg": "#2a2c21", "surface": "#3a3d2e", "text": "#ffffff", "muted": "#cfcbb8", "primary": "#20813f", "accent": "#c8e62a", "cream": "#f1e3bf", "paper": "#f6f7f2" },
-  "fonts": {
-    "display": { "family": "Al Jazeera", "weight": 900 },
-    "body": { "family": "thmanyah sans", "weight": 500 },
-    "light": { "family": "Al Jazeera", "weight": 300 },
-    "mono": { "family": "Courier Prime", "weight": 400 }
+  "colors": {
+    "bg": "#2a2c21",
+    "surface": "#3a3d2e",
+    "text": "#ffffff",
+    "muted": "#cfcbb8",
+    "primary": "#20813f",
+    "accent": "#c8e62a",
+    "cream": "#f1e3bf",
+    "paper": "#f6f7f2"
   },
-  "motion": { "energy": "punchy", "springs": { "enter": "snappy", "hero": "heavy", "ui": "snappy", "fun": "playful" } },
-  "audio": { "bpm": 117 }
+  "fonts": {
+    "display": {
+      "family": "Al Jazeera",
+      "weight": 900
+    },
+    "body": {
+      "family": "thmanyah sans",
+      "weight": 500
+    },
+    "light": {
+      "family": "Al Jazeera",
+      "weight": 300
+    },
+    "mono": {
+      "family": "Courier Prime",
+      "weight": 400
+    }
+  },
+  "motion": {
+    "energy": "punchy",
+    "springs": {
+      "enter": "snappy",
+      "hero": "heavy",
+      "ui": "snappy",
+      "fun": "playful"
+    }
+  },
+  "audio": {
+    "bpm": 117
+  },
+  "fps": 24
 }

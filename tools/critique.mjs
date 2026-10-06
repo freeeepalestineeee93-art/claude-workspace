@@ -10,7 +10,7 @@ import path from 'node:path';
 import express from 'express';
 import { serve } from '../engine/server.js';
 import { launch } from '../engine/browser.js';
-import { openPlayer, parseArgs } from '../engine/render.js';
+import { openPlayer, parseArgs, projectFps } from '../engine/render.js';
 
 const a = parseArgs(process.argv.slice(2));
 const comp = a._[0];
@@ -29,7 +29,7 @@ const issues = [];
 const warn = (sev, area, msg, t, detail) => issues.push({ sev, area, msg, t: t != null ? +t.toFixed(2) : null, detail });
 
 try {
-  const { page, info } = await openPlayer(browser, base, comp, { aspect, fps: 30, scale: 1, quality: 'final' });
+  const { page, info } = await openPlayer(browser, base, comp, { aspect, fps: projectFps(comp), scale: 1, quality: 'final' });
   const { W, H, duration } = info;
   const style = await page.evaluate(() => studio.styleReport());
 

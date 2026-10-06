@@ -293,8 +293,11 @@ export function evalCamera(c, t, W, H) {
 
 const active = (L, t) => t >= (L.in ?? -Infinity) && t < (L.out ?? Infinity);
 
+// توهج الأشكال البسيطة بينعمل بـ shadowBlur (رخيص)؛ النصوص والمجموعات بيحتاجوا طبقة منفصلة
+const CHEAP_GLOW = new Set(['circle', 'ellipse', 'rect', 'path', 'line', 'polygon']);
+const cheapGlow = (L) => L.glow && CHEAP_GLOW.has(L.type) && !L.shadow && !(L.glow.strength > 1);
 function needsIsolation(L, t) {
-  return (v(L.blur ?? 0, t) > 0.05) || L.glow || L.mask || L.matte || L.spray || (L.type === 'group' && (L.isolate || v(L.opacity ?? 1, t) < 1)) || (L.fx && L.fx.length);
+  return (v(L.blur ?? 0, t) > 0.05) || (L.glow && !cheapGlow(L)) || L.mask || L.matte || L.spray || (L.type === 'group' && (L.isolate || v(L.opacity ?? 1, t) < 1)) || (L.fx && L.fx.length);
 }
 
 export function drawLayers(ctx, layers, t, env) {
@@ -324,6 +327,10 @@ export function drawLayer(ctx, L, t, env) {
   ctx.save();
   if (L.blend) ctx.globalCompositeOperation = L.blend === 'add' ? 'lighter' : L.blend;
   ctx.globalAlpha *= op;
+  if (cheapGlow(L)) {
+    ctx.shadowColor = colorToCss(L.glow.color ?? L.fill ?? '#fff');
+    ctx.shadowBlur = L.glow.blur ?? 20;
+  }
   if (L.shadow) {
     const s = v(L.shadow, t);
     ctx.shadowColor = colorToCss(s.color ?? 'rgba(0,0,0,.35)');
@@ -558,6 +565,30 @@ function toneImage(img, o) {
   return c;
 }
 
+// تنظيف حافة القص (rembg بيترك هالة رمادية): تقليص ألفا بكسل-اتنين + شد الحافة لتصير حادة وناعمة
+const choked = new Map();
+function chokeImage(img, px) {
+  const key = `${img.src}|choke${px}`;
+  if (choked.has(key)) return choked.get(key);
+  const w = img.naturalWidth ?? img.width, h = img.naturalHeight ?? img.height;
+  const c = document.createElement('canvas'); c.width = w; c.height = h;
+  const g = c.getContext('2d', { willReadFrequently: true });
+  g.drawImage(img, 0, 0);
+  const id = g.getImageData(0, 0, w, h), d = id.data, a0 = new Uint8ClampedArray(w * h);
+  for (let p = 0; p < w * h; p++) a0[p] = d[p * 4 + 3];
+  const r = Math.max(1, Math.round(px));
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    let mn = 255;
+    for (let k = -r; k <= r && mn > 0; k++) { const xx = x + k, yy = y + k; if (xx >= 0 && xx < w) mn = Math.min(mn, a0[y * w + xx]); if (yy >= 0 && yy < h) mn = Math.min(mn, a0[yy * w + x]); }
+    const a = mn / 255, s = Math.max(0, Math.min(1, (a - 0.35) / 0.4));
+    d[(y * w + x) * 4 + 3] = s * s * (3 - 2 * s) * 255;
+  }
+  g.putImageData(id, 0, 0);
+  c.naturalWidth = w; c.naturalHeight = h; c.src = key;
+  choked.set(key, c);
+  return c;
+}
+
 // قصاصة بإطار (sticker): حدود حول الأجزاء غير الشفافة بالصورة (للصور المقصوصة)
 // rough: حافة متعرجة عضوية متل قص المقص (أسلوب الجزيرة رياضة) · offset: إزاحة الورقة ورا الصورة
 const outlined = new Map();
@@ -586,7 +617,7 @@ function outlineImage(img, width, color, o = {}) {
     for (let i = 3, p = 0; i < d.length; i += 4, p++) {
       const x = p % b.width, y = (p / b.width) | 0;
       const th = 0.5 + (vnoise(x * sc, y * sc, seed) - 0.5) * rough * 0.9 + (vnoise(x * sc * 3, y * sc * 3, seed + 1) - 0.5) * rough * 0.25;
-      d[i] = d[i] / 255 > th ? 255 : 0;
+      d[i] = Math.max(0, Math.min(255, ((d[i] / 255 - th) / 0.06 + 0.5) * 255)); // عتبة ناعمة (حافة بدون تسنين)
     }
     g.clearRect(0, 0, c.width, c.height);
     g.putImageData(id, 0, 0);
@@ -606,6 +637,7 @@ function drawImageLayer(ctx, L, t) {
   let img = images.get(L.src);
   if (!img) throw new Error(`الصورة ما انحمّلت: ${L.src}`);
   if (L.tone) img = toneImage(img, L.tone);
+  if (L.outline && L.choke !== 0) img = chokeImage(img, L.choke ?? 1);
   if (L.outline) {
     // الإطار محسوب بأبعاد الصورة الأصلية، ومنرسمه بنفس نسبة الحجم المطلوب. أكتر من إطار = طبقات (كريمي ثم أخضر...)
     const w0 = v(L.w ?? img.naturalWidth, t), h0 = v(L.h ?? (img.naturalHeight * w0) / img.naturalWidth, t);
