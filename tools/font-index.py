@@ -4,7 +4,7 @@ from fontTools.ttLib import TTFont
 
 root = pathlib.Path(__file__).resolve().parent.parent / "assets" / "fonts"
 index = {}
-for f in sorted(root.rglob("*.ttf")):
+for f in sorted([*root.rglob("*.ttf"), *root.rglob("*.otf")]):
     tt = TTFont(f, lazy=True)
     name = tt["name"]
     fam = (name.getDebugName(16) or name.getDebugName(1)).strip()

@@ -2704,6 +2704,106 @@
    }
   ]
  },
+ "Al Jazeera": {
+  "arabic": true,
+  "files": [
+   {
+    "path": "assets/fonts/private/aljazeera/AlJazeera-Bold.otf",
+    "style": "Bold",
+    "weight": 700,
+    "italic": false,
+    "axes": {},
+    "color": false,
+    "ps": "AlJazeera-Bold",
+    "instances": []
+   },
+   {
+    "path": "assets/fonts/private/aljazeera/AlJazeera-Heavy.otf",
+    "style": "Heavy",
+    "weight": 900,
+    "italic": false,
+    "axes": {},
+    "color": false,
+    "ps": "AlJazeera-Heavy",
+    "instances": []
+   },
+   {
+    "path": "assets/fonts/private/aljazeera/AlJazeera-Light.otf",
+    "style": "Light",
+    "weight": 300,
+    "italic": false,
+    "axes": {},
+    "color": false,
+    "ps": "AlJazeera-Light",
+    "instances": []
+   },
+   {
+    "path": "assets/fonts/private/aljazeera/AlJazeera-Regular.otf",
+    "style": "Regular",
+    "weight": 400,
+    "italic": false,
+    "axes": {},
+    "color": false,
+    "ps": "AlJazeera-Regular",
+    "instances": []
+   }
+  ]
+ },
+ "thmanyah sans": {
+  "arabic": true,
+  "files": [
+   {
+    "path": "assets/fonts/private/thmanyahsans/thmanyahsans-Black.otf",
+    "style": "Black",
+    "weight": 900,
+    "italic": false,
+    "axes": {},
+    "color": false,
+    "ps": "thmanyahsans-Black",
+    "instances": []
+   },
+   {
+    "path": "assets/fonts/private/thmanyahsans/thmanyahsans-Bold.otf",
+    "style": "Bold",
+    "weight": 700,
+    "italic": false,
+    "axes": {},
+    "color": false,
+    "ps": "thmanyahsans-Bold",
+    "instances": []
+   },
+   {
+    "path": "assets/fonts/private/thmanyahsans/thmanyahsans-Light.otf",
+    "style": "Light",
+    "weight": 300,
+    "italic": false,
+    "axes": {},
+    "color": false,
+    "ps": "thmanyahsans-Light",
+    "instances": []
+   },
+   {
+    "path": "assets/fonts/private/thmanyahsans/thmanyahsans-Medium.otf",
+    "style": "Medium",
+    "weight": 500,
+    "italic": false,
+    "axes": {},
+    "color": false,
+    "ps": "thmanyahsans-Medium",
+    "instances": []
+   },
+   {
+    "path": "assets/fonts/private/thmanyahsans/thmanyahsans-Regular.otf",
+    "style": "Regular",
+    "weight": 400,
+    "italic": false,
+    "axes": {},
+    "color": false,
+    "ps": "thmanyahsans-Regular",
+    "instances": []
+   }
+  ]
+ },
  "Qahiri": {
   "arabic": true,
   "files": [
