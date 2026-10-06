@@ -73,7 +73,9 @@ export function renderFrame(ctx, comp, t, env) {
   }
 
   const live = comp.scenes.map((s, i) => ({ s, i })).filter(({ s }) => t >= s.start && t < s.end + 1e-9);
-  if (live.length === 1) drawScene(ctx, comp, live[0].s, t, env);
+  // قطع حاد: عند الحد بالظبط بيكون في مشهدين "حيين"؛ الجديد هو اللي بينرسم
+  if (live.length >= 2 && !(live.at(-1).s.transition && live.at(-1).s.overlap)) drawScene(ctx, comp, live.at(-1).s, t, env);
+  else if (live.length === 1) drawScene(ctx, comp, live[0].s, t, env);
   else if (live.length >= 2) {
     const [a, b] = live.slice(-2);
     const tr = b.s.transition;

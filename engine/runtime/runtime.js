@@ -303,6 +303,18 @@ export function drawLayers(ctx, layers, t, env) {
 
 export function drawLayer(ctx, L, t, env) {
   if (env.hideText && L.type === 'text') return;
+  // صدى: نسخ من الطبقة بأزمنة سابقة بشفافية متناقصة (أثر الكرة الطايرة، نص مكرر)
+  if (L.echo && !env.inEcho) {
+    const e = L.echo, n = e.count ?? 5, step = e.step ?? 0.035, decay = e.decay ?? 0.62;
+    const base = (L.__echoL ??= { ...L, echo: null, sfx: false });
+    const eenv = { ...env, rec: null, inEcho: true };
+    for (let k = n; k >= 1; k--) {
+      ctx.save();
+      ctx.globalAlpha *= (e.opacity ?? 0.9) * decay ** k;
+      drawLayer(ctx, base, t - k * step, eenv);
+      ctx.restore();
+    }
+  }
   const op = clamp(v(L.opacity ?? 1, t));
   if (op <= 0.001) return;
   const lt = t - (L.shift ?? 0); // زمن محلي (precomp)
@@ -491,25 +503,101 @@ function drawContent(ctx, L, t, env) {
   }
 }
 
+// ضجيج قيمي حتمي (لحواف القصاصات الخشنة)
+function hash2(x, y, seed) { let h = (x * 374761393 + y * 668265263 + seed * 1442695041) | 0; h = (h ^ (h >>> 13)) * 1274126177; return ((h ^ (h >>> 16)) >>> 0) / 4294967295; }
+function vnoise(x, y, seed) {
+  const xi = Math.floor(x), yi = Math.floor(y), fx = x - xi, fy = y - yi;
+  const sx = fx * fx * (3 - 2 * fx), sy = fy * fy * (3 - 2 * fy);
+  const a = hash2(xi, yi, seed), b = hash2(xi + 1, yi, seed), c = hash2(xi, yi + 1, seed), d = hash2(xi + 1, yi + 1, seed);
+  return a + (b - a) * sx + (c - a) * sy + (a - b - c + d) * sx * sy;
+}
+
+// معالجة صورة (مرة وحدة وبتنحفظ): أبيض وأسود، تباين، grain، dither خشن، halftone، duotone
+const toned = new Map();
+function toneImage(img, o) {
+  const key = `${img.src}|${JSON.stringify(o)}`;
+  if (toned.has(key)) return toned.get(key);
+  const w = img.naturalWidth, h = img.naturalHeight;
+  const c = document.createElement('canvas'); c.width = w; c.height = h;
+  const g = c.getContext('2d', { willReadFrequently: true });
+  g.drawImage(img, 0, 0);
+  const id = g.getImageData(0, 0, w, h), d = id.data;
+  const con = o.contrast ?? 1.25, bri = o.brightness ?? 0, gam = o.gamma ?? 1, grain = o.grain ?? 0, dither = o.dither ?? 0, seed = o.seed ?? 1;
+  const duo = o.duotone ? o.duotone.map(parseColor) : null;
+  const L = new Float32Array(w * h);
+  for (let i = 0, p = 0; i < d.length; i += 4, p++) {
+    let l = (0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2]) / 255;
+    l = Math.pow(Math.max(0, Math.min(1, (l - 0.5) * con + 0.5 + bri)), gam);
+    if (grain) l += (hash2(p % w, (p / w) | 0, seed) - 0.5) * grain;
+    if (dither) { const th = hash2(p % w, (p / w) | 0, seed + 7); l = l * (1 - dither) + (l > th ? 1 : 0) * dither; }
+    L[p] = Math.max(0, Math.min(1, l));
+  }
+  if (o.halftone) {
+    // نقاط halftone: كل خلية بنقطة سودا حجمها حسب العتمة
+    const cell = o.halftone.cell ?? 6, mix = o.halftone.mix ?? 1;
+    const out = document.createElement('canvas'); out.width = w; out.height = h;
+    const og = out.getContext('2d');
+    og.fillStyle = '#fff'; og.fillRect(0, 0, w, h); og.fillStyle = '#000';
+    for (let y = 0; y < h; y += cell) for (let x = 0; x < w; x += cell) {
+      let s = 0, n = 0;
+      for (let yy = y; yy < Math.min(h, y + cell); yy += 2) for (let xx = x; xx < Math.min(w, x + cell); xx += 2) { s += L[yy * w + xx]; n++; }
+      const r = Math.sqrt(1 - s / n) * cell * 0.72;
+      if (r > 0.3) { og.beginPath(); og.arc(x + cell / 2, y + cell / 2, r, 0, Math.PI * 2); og.fill(); }
+    }
+    const hd = og.getImageData(0, 0, w, h).data;
+    for (let p = 0; p < L.length; p++) L[p] = L[p] * (1 - mix) + (hd[p * 4] / 255) * mix;
+  }
+  for (let i = 0, p = 0; i < d.length; i += 4, p++) {
+    const l = L[p];
+    if (duo) { d[i] = duo[0][0] + (duo[1][0] - duo[0][0]) * l; d[i + 1] = duo[0][1] + (duo[1][1] - duo[0][1]) * l; d[i + 2] = duo[0][2] + (duo[1][2] - duo[0][2]) * l; }
+    else d[i] = d[i + 1] = d[i + 2] = l * 255;
+  }
+  g.putImageData(id, 0, 0);
+  c.naturalWidth = w; c.naturalHeight = h; c.src = key;
+  toned.set(key, c);
+  return c;
+}
+
 // قصاصة بإطار (sticker): حدود حول الأجزاء غير الشفافة بالصورة (للصور المقصوصة)
+// rough: حافة متعرجة عضوية متل قص المقص (أسلوب الجزيرة رياضة) · offset: إزاحة الورقة ورا الصورة
 const outlined = new Map();
-function outlineImage(img, width, color) {
-  const key = `${img.src}|${width}|${color}`;
+function outlineImage(img, width, color, o = {}) {
+  const key = `${img.src}|${width}|${color}|${JSON.stringify(o)}`;
   if (outlined.has(key)) return outlined.get(key);
+  const iw = img.naturalWidth ?? img.width, ih = img.naturalHeight ?? img.height;
+  const rough = o.rough ?? 0, off = o.offset ?? [0, 0];
+  const pad = Math.ceil(width * (1 + rough) + Math.max(Math.abs(off[0]), Math.abs(off[1])) + 4);
   const c = document.createElement('canvas');
-  c.width = img.naturalWidth + width * 2; c.height = img.naturalHeight + width * 2;
-  const g = c.getContext('2d');
-  const steps = Math.max(16, Math.ceil(width * 2));
+  c.width = iw + pad * 2; c.height = ih + pad * 2;
+  const g = c.getContext('2d', { willReadFrequently: true });
+  const R = width * (1 + rough * 0.6);
+  const steps = Math.max(16, Math.ceil(R * 2));
   for (let i = 0; i < steps; i++) {
     const a = (i / steps) * Math.PI * 2;
-    g.drawImage(img, width + Math.cos(a) * width, width + Math.sin(a) * width);
+    g.drawImage(img, pad + off[0] + Math.cos(a) * R, pad + off[1] + Math.sin(a) * R);
+  }
+  g.drawImage(img, pad + off[0], pad + off[1]);
+  if (rough > 0 || o.smooth) {
+    // تنعيم + عتبة متغيرة بالضجيج = حافة عضوية
+    const b = document.createElement('canvas'); b.width = c.width; b.height = c.height;
+    const bg = b.getContext('2d', { willReadFrequently: true });
+    bg.filter = `blur(${Math.max(1, width * 0.45)}px)`; bg.drawImage(c, 0, 0); bg.filter = 'none';
+    const id = bg.getImageData(0, 0, b.width, b.height), d = id.data, sc = 1 / Math.max(8, width * (o.scale ?? 2.2)), seed = o.seed ?? 3;
+    for (let i = 3, p = 0; i < d.length; i += 4, p++) {
+      const x = p % b.width, y = (p / b.width) | 0;
+      const th = 0.5 + (vnoise(x * sc, y * sc, seed) - 0.5) * rough * 0.9 + (vnoise(x * sc * 3, y * sc * 3, seed + 1) - 0.5) * rough * 0.25;
+      d[i] = d[i] / 255 > th ? 255 : 0;
+    }
+    g.clearRect(0, 0, c.width, c.height);
+    g.putImageData(id, 0, 0);
   }
   g.globalCompositeOperation = 'source-in';
   g.fillStyle = colorToCss(color);
   g.fillRect(0, 0, c.width, c.height);
   g.globalCompositeOperation = 'source-over';
-  g.drawImage(img, width, width);
-  const res = { canvas: c, pad: width };
+  g.drawImage(img, pad, pad);
+  c.naturalWidth = c.width; c.naturalHeight = c.height; c.src = key;
+  const res = { canvas: c, pad };
   outlined.set(key, res);
   return res;
 }
@@ -517,13 +605,17 @@ function outlineImage(img, width, color) {
 function drawImageLayer(ctx, L, t) {
   let img = images.get(L.src);
   if (!img) throw new Error(`الصورة ما انحمّلت: ${L.src}`);
+  if (L.tone) img = toneImage(img, L.tone);
   if (L.outline) {
-    // الإطار محسوب بأبعاد الصورة الأصلية، ومنرسمه بنفس نسبة الحجم المطلوب
-    const o = outlineImage(img, L.outline.width ?? Math.round(Math.max(img.naturalWidth, img.naturalHeight) * 0.02), L.outline.color ?? '#ffffff');
+    // الإطار محسوب بأبعاد الصورة الأصلية، ومنرسمه بنفس نسبة الحجم المطلوب. أكتر من إطار = طبقات (كريمي ثم أخضر...)
     const w0 = v(L.w ?? img.naturalWidth, t), h0 = v(L.h ?? (img.naturalHeight * w0) / img.naturalWidth, t);
     const kx = w0 / img.naturalWidth, ky = h0 / img.naturalHeight;
-    const W2 = o.canvas.width * kx, H2 = o.canvas.height * ky;
-    ctx.drawImage(o.canvas, -W2 / 2, -H2 / 2, W2, H2);
+    let src = img;
+    for (const ol of Array.isArray(L.outline) ? L.outline : [L.outline]) {
+      src = outlineImage(src, ol.width ?? Math.round(Math.max(img.naturalWidth, img.naturalHeight) * 0.02), ol.color ?? '#ffffff', ol).canvas;
+    }
+    const W2 = src.width * kx, H2 = src.height * ky;
+    ctx.drawImage(src, -W2 / 2, -H2 / 2, W2, H2);
     return;
   }
   const w = v(L.w ?? img.naturalWidth, t), h = v(L.h ?? img.naturalHeight, t);

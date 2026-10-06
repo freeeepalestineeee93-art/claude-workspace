@@ -175,8 +175,44 @@ function video(ctx, L, t) {
   if ((L.fit ?? 'cover') === 'cover') { if (ir > br) { sw = sh * br; sx = (img.naturalWidth - sw) / 2; } else { sh = sw / br; sy = (img.naturalHeight - sh) / 2; } }
   const r = v(L.radius ?? 0, t);
   if (r) { ctx.save(); ctx.beginPath(); ctx.roundRect(-w / 2, -h / 2, w, h, r); ctx.clip(); }
-  ctx.drawImage(img, sx, sy, sw, sh, -w / 2, -h / 2, w, h);
+  if (L.vhs) drawVHS(ctx, img, sx, sy, sw, sh, w, h, L.vhs, i);
+  else ctx.drawImage(img, sx, sy, sw, sh, -w / 2, -h / 2, w, h);
   if (r) ctx.restore();
+}
+
+// شريط VHS/بث قديم: دقة منخفضة ناعمة، انزياح ألوان، ضجيج متغير كل فريم، خطوط مسح، تلوين دافي
+let vhsC = null;
+function drawVHS(ctx, img, sx, sy, sw, sh, w, h, o, frame) {
+  const k = o.res ?? 0.3;
+  const lw = Math.max(16, Math.round(w * k)), lh = Math.max(16, Math.round(h * k));
+  vhsC ??= document.createElement('canvas');
+  if (vhsC.width !== lw || vhsC.height !== lh) { vhsC.width = lw; vhsC.height = lh; }
+  const g = vhsC.getContext('2d', { willReadFrequently: true });
+  g.drawImage(img, sx, sy, sw, sh, 0, 0, lw, lh);
+  const id = g.getImageData(0, 0, lw, lh), d = id.data, src = new Uint8ClampedArray(d);
+  const sh2 = Math.round((o.chroma ?? 2.5) * k * 3), noise = o.noise ?? 0.06, sat = o.saturation ?? 0.75;
+  const tint = o.tint ?? [1.06, 1.0, 0.82];
+  let seed = (frame + 1) * 9781;
+  const rnd = () => ((seed = (seed * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff);
+  for (let y = 0; y < lh; y++) {
+    const jitter = rnd() < 0.04 ? Math.round((rnd() - 0.5) * 3) : 0; // اهتزاز سطر نادر
+    for (let x = 0; x < lw; x++) {
+      const i = (y * lw + x) * 4;
+      const xr = Math.min(lw - 1, Math.max(0, x + sh2 + jitter)), xb = Math.min(lw - 1, Math.max(0, x - sh2 + jitter));
+      let R = src[(y * lw + xr) * 4], G = src[i + 1], B = src[(y * lw + xb) * 4 + 2];
+      const l = 0.299 * R + 0.587 * G + 0.114 * B;
+      R = l + (R - l) * sat; G = l + (G - l) * sat; B = l + (B - l) * sat;
+      const n = (rnd() - 0.5) * 255 * noise;
+      d[i] = R * tint[0] + n; d[i + 1] = G * tint[1] + n; d[i + 2] = B * tint[2] + n;
+    }
+  }
+  g.putImageData(id, 0, 0);
+  ctx.save();
+  ctx.imageSmoothingQuality = 'high';
+  ctx.drawImage(vhsC, -w / 2, -h / 2, w, h);
+  const sl = o.scanlines ?? 0.12;
+  if (sl) { ctx.fillStyle = `rgba(0,0,0,${sl})`; for (let y = -h / 2; y < h / 2; y += 4) ctx.fillRect(-w / 2, y, w, 1.5); }
+  ctx.restore();
 }
 
 import { drawMap, prepMap, ensureMapTiles } from './map.js';

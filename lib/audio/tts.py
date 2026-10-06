@@ -106,7 +106,7 @@ def say(text, out_wav, voice="ar-SA-HamedNeural", provider="edge", rate="+0%", p
     to_wav(tmp, out_wav)
     tmp.unlink(missing_ok=True)
     if not words:
-        words = align(out_wav)
+        words = align(out_wav, script=text)
     Path(str(out_wav).replace(".wav", ".words.json")).write_text(json.dumps(words, ensure_ascii=False, indent=1))
     return {"wav": str(out_wav), "words": words, "duration": words[-1]["end"] if words else 0}
 

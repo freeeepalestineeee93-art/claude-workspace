@@ -696,6 +696,31 @@
    }
   ]
  },
+ "Courier Prime": {
+  "arabic": false,
+  "files": [
+   {
+    "path": "assets/fonts/courierprime/CourierPrime-Bold.ttf",
+    "style": "Bold",
+    "weight": 700,
+    "italic": false,
+    "axes": {},
+    "color": false,
+    "ps": "CourierPrime-Bold",
+    "instances": []
+   },
+   {
+    "path": "assets/fonts/courierprime/CourierPrime-Regular.ttf",
+    "style": "Regular",
+    "weight": 400,
+    "italic": false,
+    "axes": {},
+    "color": false,
+    "ps": "CourierPrime-Regular",
+    "instances": []
+   }
+  ]
+ },
  "DM Sans": {
   "arabic": false,
   "files": [
