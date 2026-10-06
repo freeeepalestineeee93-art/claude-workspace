@@ -79,7 +79,8 @@ def audit(path):
         ys = [x[1] for x in g]
         xs = [x[2] for x in g]
         edge = min(ys) == 0 or min(xs) == 0 or max(ys) == gh - 1 or max(xs) == gw - 1
-        out.append({"sev": 3 if edge else 2, "t": round(t, 2), "kind": "pop-park",
+        box = [min(xs) * B * 1080 // w, min(ys) * B * 1920 // h, (max(xs) + 1) * B * 1080 // w, (max(ys) + 1) * B * 1920 // h]
+        out.append({"sev": 3 if edge else 2, "t": round(t, 2), "kind": "pop-park", "box": box,
                     "msg": f"عنصر ظهر فجأة{' على طرف الكادر' if edge else ''} وضل جامد {park:.2f}s قبل ما يتحرك — لازم يكون برا الكادر كلياً أو يدخل وهو متحرك"})
 
     # ── blank ──
@@ -105,6 +106,6 @@ if __name__ == "__main__":
     if "--json" in sys.argv:
         open(sys.argv[sys.argv.index("--json") + 1], "w").write(json.dumps(res, ensure_ascii=False, indent=1))
     for x in res:
-        print(f"{'✗' if x['sev'] >= 3 else '⚠'} @{x['t']}s [{x['kind']}] {x['msg']}")
+        print(f"{'✗' if x['sev'] >= 3 else '⚠'} @{x['t']}s [{x['kind']}]{' ' + str(x['box']) if x.get('box') else ''} {x['msg']}")
     if not res:
         print("✓ ما في ظهور مفاجئ جامد ولا كوادر فاضية")

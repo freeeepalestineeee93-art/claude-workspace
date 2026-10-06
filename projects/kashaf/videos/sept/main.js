@@ -12,8 +12,10 @@ export default async (S) => {
   const F = 'IBM Plex Sans Arabic';
   const D = 43.87;
   const T = [0, 3.2, 7.7, 14.7, 20.0, 28.8, 33.3, 36.5, D];
-  const P = [[0, 0], [620, 2050], [-380, 4150], [560, 6250], [-420, 8350], [520, 10450], [-300, 12550], [0, 14650]].map(([x, y]) => [px(x), px(y)]);
+  const P = [[0, 0], [300, 1560], [-260, 3120], [280, 4680], [-270, 6240], [260, 7800], [-220, 9360], [0, 10920]].map(([x, y]) => [px(x), px(y)]);
   const sfx = [];
+  const ADV = 0.5; // محتوى كل قسم بيبلش يدخل والكاميرا لسا واصلة (مش بعد ما توقف)
+  const EX = 1.4; // الخروج بيصير والكاميرا عم تحمل المحتوى لبرا (مش قبلها، وإلا الكادر بيفضى)
 
   // ── أدوات ──
   const clamp = (u) => Math.max(0, Math.min(1, u));
@@ -126,7 +128,7 @@ export default async (S) => {
       reveal: { by: 'word', at: at + 0.06, mask: true, from: { y: px(40), opacity: 0 }, dur: 0.5, ease: 'ae:80:33', stagger: { each: 0.06 } } }),
   ]);
   const exitText = (at) => ({ by: 'word', at, to: { y: -px(70), opacity: 0, blur: 8 }, dur: 0.38, ease: 'quadIn', stagger: { each: 0.035 } });
-  const sec = (k, layers) => S.group({ x: cx + P[k][0], y: cy + P[k][1] }, layers);
+  const sec = (k, layers) => S.group({ x: cx + P[k][0], y: cy + P[k][1], shift: k ? -ADV : 0 }, layers);
   const glass = (w, h, o = {}) => S.rect({ w, h, radius: px(30), fill: { linear: [[-w / 2, -h / 2], [w / 2, h / 2]], stops: [[0, 'rgba(70,100,230,0.32)'], [1, 'rgba(30,50,150,0.22)']] }, stroke: 'rgba(140,170,255,0.30)', strokeWidth: px(2), shadow: { color: 'rgba(0,0,30,0.35)', blur: 30, y: 12 }, ...o });
   const checkMark = (x, y, at) => S.group({ x, y, scale: { at, from: 0.4, to: 1, spring: 'playful' }, opacity: { kf: [[at - 0.01, 0], [at + 0.08, 1]] } }, [
     S.circle({ r: px(24), fill: 'rgba(79,220,255,0.12)', stroke: 'rgba(79,220,255,0.6)', strokeWidth: px(2.5) }),
@@ -145,7 +147,7 @@ export default async (S) => {
   const calPos = (k) => { const r = Math.floor(k / 10), c = k % 10; return [XR - px(8) - c * px(74), px(430) + r * px(70)]; };
   const ringPos = (k) => { const a = -Math.PI / 2 + (k / 30) * Math.PI * 2; return [ringC[0] + Math.cos(a) * ringR, ringC[1] + Math.sin(a) * ringR]; };
   const c2 = (t) => 125 * out3((t - 3.7) / 2.4); // عداد 125
-  const c3 = (t) => 113 * out3((t - 8.55) / 2.7); // عداد 113
+  const c3 = (t) => 30 + 83 * out3((t - 8.55) / 2.7); // عداد 113: بيبلش من 30 (النقاط اللي إجت مضوية من فوق)
   const world = (k, [x, y]) => [cx + P[k][0] + x, cy + P[k][1] + y];
   const dayAt = (k) => 1.55 + k * 0.026 + ((k * 7) % 5) * 0.012;
   const dayDots = Array.from({ length: 30 }, (_, k) => {
@@ -155,10 +157,10 @@ export default async (S) => {
     const leg = (t, ta, tb, p, q) => { const e = io3((t - ta) / (tb - ta)); return p + (q - p) * e; };
     const pos = (t, i) => t < 5 ? leg(t, T[1] - 0.42 + d1, T[1] + 0.55 + d1, A[i], B[i]) : leg(t, T[2] - 0.4 + d2, T[2] + 0.6 + d2, B[i], G[i]);
     const rad = (t) => t < 5 ? px(9) + (px(12) - px(9)) * io3((t - T[1] + 0.4) / 0.9) : px(12) + (px(18) - px(12)) * io3((t - T[2] + 0.4) / 0.9);
-    const lit = (t) => t < T[1] ? 0.55 : t < T[2] - 0.4 ? 0.3 + 0.7 * clamp(c2(t) / 125 * 30 - k) : 1;
-    const ex = T[3] - 0.5 + (Math.floor(k / 13) + (k % 13)) * 0.008;
+    const lit = (t) => t < T[1] ? 0.55 : t < T[2] - 0.4 ? 0.3 + 0.7 * clamp(c2(t + ADV) / 125 * 30 - k) : 1;
+    const ex = T[3] - 0.5 + EX + (Math.floor(k / 13) + (k % 13)) * 0.008;
     return S.group({ x: (t) => pos(t, 0), y: (t) => pos(t, 1), scale: { at: dayAt(k), from: 0, to: 1, spring: 'playful' }, opacity: { kf: [[ex, 1, 'quadIn'], [ex + 0.3, 0]] } }, [
-      S.circle({ r: px(40), scale: (t) => rad(t) / px(18), fill: { radial: { c: [0, 0], r: px(40) }, stops: [[0, 'rgba(79,220,255,0.35)'], [1, 'rgba(79,220,255,0)']] }, opacity: (t) => clamp(lit(t) * 1.4 - 0.4) * clamp((t - T[1] - 0.3) * 2) }),
+      S.circle({ r: px(40), scale: (t) => rad(t) / px(18), fill: { radial: { c: [0, 0], r: px(40) }, stops: [[0, 'rgba(79,220,255,0.35)'], [1, 'rgba(79,220,255,0)']] }, opacity: (t) => clamp(lit(t) * 1.4 - 0.4) * clamp((t - T[1] - 0.3 + EX) * 2) }),
       S.circle({ r: px(18), scale: (t) => rad(t) / px(18), fill: C.cyan, opacity: lit }),
     ]);
   });
@@ -167,11 +169,11 @@ export default async (S) => {
   const s1 = sec(0, [
     label(-px(220), 'تقرير فريق التحقق', 0.55),
     txt({ text: 'شهر أيلول', size: px(124), x: XR, y: -px(95), anchor: 'start',
-      reveal: { by: 'word', at: 0.72, mask: true, from: { y: px(150), opacity: 0 }, dur: 0.7, ease: 'ae:85:33', stagger: { each: 0.11 } }, exit: exitText(T[1] - 0.42) }),
+      reveal: { by: 'word', at: 0.72, mask: true, from: { y: px(150), opacity: 0 }, dur: 0.7, ease: 'ae:85:33', stagger: { each: 0.11 } }, exit: exitText(T[1] - 0.42 + EX) }),
     txt({ text: 'بالأرقام', size: px(236), fill: C.cyan, x: XR + px(6), y: px(110), anchor: 'start', glow: { color: C.cyan, radius: px(34), strength: 0.55 },
-      reveal: { by: 'all', at: 0.98, mask: true, from: { y: px(260), opacity: 0 }, dur: 0.85, ease: 'ae:90:30' }, exit: exitText(T[1] - 0.38) }),
+      reveal: { by: 'all', at: 0.98, mask: true, from: { y: px(260), opacity: 0 }, dur: 0.85, ease: 'ae:90:30' }, exit: exitText(T[1] - 0.38 + EX) }),
     txt({ text: 'من 1 حتى 30 أيلول 2026', size: px(40), weight: 500, fill: C.dim, x: XR, y: px(285), anchor: 'start',
-      reveal: { by: 'word', at: 1.3, from: { y: px(24), opacity: 0, blur: 6 }, dur: 0.45, ease: 'ae:70:33', stagger: { each: 0.06 } }, exit: exitText(T[1] - 0.45) }),
+      reveal: { by: 'word', at: 1.3, from: { y: px(24), opacity: 0, blur: 6 }, dur: 0.45, ease: 'ae:70:33', stagger: { each: 0.06 } }, exit: exitText(T[1] - 0.45 + EX) }),
   ]);
   sfx.push({ kind: 'swell', at: 0.3, params: { dur: 0.7 }, gain_db: -27 }, { kind: 'swish', at: 0.98, gain_db: -26 });
 
@@ -179,17 +181,17 @@ export default async (S) => {
   const s2 = sec(1, [
     // حلقة متقطعة بتلف ببطء + توهج داخلي
     S.circle({ r: ringR + px(62), fill: null, stroke: 'rgba(79,220,255,0.22)', strokeWidth: px(2), dash: [px(4), px(14)], rotation: (t) => t * 8, x: ringC[0], y: ringC[1],
-      scale: { at: 3.45, from: 0.7, to: 1, spring: 'gentle' }, opacity: { kf: [[3.45, 0], [3.9, 1], [T[2] - 0.3, 1], [T[2] + 0.1, 0]] } }),
+      scale: { at: 3.45, from: 0.7, to: 1, spring: 'gentle' }, opacity: { kf: [[3.45, 0], [3.9, 1], [T[2] - 0.3 + EX, 1], [T[2] + 0.1, 0]] } }),
     S.circle({ r: ringR * 0.92, x: ringC[0], y: ringC[1], fill: { radial: { c: [0, 0], r: ringR }, stops: [[0, 'rgba(60,120,255,0.28)'], [1, 'rgba(60,120,255,0)']] },
-      opacity: { kf: [[3.5, 0], [4.2, 1], [T[2] - 0.3, 1], [T[2] + 0.1, 0]] } }),
+      opacity: { kf: [[3.5, 0], [4.2, 1], [T[2] - 0.3 + EX, 1], [T[2] + 0.1, 0]] } }),
     label(-px(560), 'خلال 30 يومًا', 3.4, { x: 0, center: true }),
     txt({ text: { expr: (t) => String(Math.round(c2(t))) }, size: px(250), x: ringC[0], y: ringC[1] + px(10), glow: { color: '#7FE6FF', radius: px(30), strength: 0.45 },
-      opacity: { kf: [[3.55, 0], [3.75, 1]] }, scale: { at: 3.55, from: 0.8, to: 1, spring: 'default' }, exit: { by: 'all', at: T[2] - 0.45, to: { scale: 1.3, opacity: 0, blur: 14 }, dur: 0.4, ease: 'quadIn' } }),
+      opacity: { kf: [[3.55, 0], [3.75, 1]] }, scale: { at: 3.55, from: 0.8, to: 1, spring: 'default' }, exit: { by: 'all', at: T[2] - 0.45 + EX, to: { scale: 1.3, opacity: 0, blur: 14 }, dur: 0.4, ease: 'quadIn' } }),
     txt({ text: 'شائعةً رصدها الفريق', size: px(70), x: 0, y: px(390),
-      reveal: { by: 'word', at: 5.0, mask: true, from: { y: px(90), opacity: 0 }, dur: 0.6, ease: 'ae:85:33', stagger: { each: 0.1 } }, exit: exitText(T[2] - 0.45) }),
+      reveal: { by: 'word', at: 5.0, mask: true, from: { y: px(90), opacity: 0 }, dur: 0.6, ease: 'ae:85:33', stagger: { each: 0.1 } }, exit: exitText(T[2] - 0.45 + EX) }),
     txt({ text: 'بمعدّل يتجاوز 4 شائعات يوميًا', size: px(36), weight: 500, fill: C.muted, x: 0, y: px(500),
       box: { fill: 'rgba(25,45,140,0.55)', stroke: 'rgba(79,220,255,0.38)', strokeWidth: px(2), radius: px(40), pad: [px(34), px(16)], reveal: { at: 5.45, spring: 'snappy', from: 'center' } },
-      reveal: { by: 'word', at: 5.55, from: { opacity: 0, y: px(14) }, dur: 0.35, ease: 'ae:70:33', stagger: { each: 0.05 } }, exit: exitText(T[2] - 0.5) }),
+      reveal: { by: 'word', at: 5.55, from: { opacity: 0, y: px(14) }, dur: 0.35, ease: 'ae:70:33', stagger: { each: 0.05 } }, exit: exitText(T[2] - 0.5 + EX) }),
   ]);
   sfx.push({ kind: 'whoosh', at: T[1] + 0.05, align: 'peak', params: { dur: 0.9, brightness: 0.6 }, gain_db: -24 }, { kind: 'count', at: 3.75, gain_db: -30 }, { kind: 'pop', at: 5.45, params: { pitch: 0.9 }, gain_db: -28 });
 
@@ -200,7 +202,7 @@ export default async (S) => {
     const r = Math.floor(k / GRID.cols), c = k % GRID.cols;
     const at = 7.95 + (r + c) * 0.03;
     const hollow = k >= 113;
-    const exitAt = T[3] - 0.5 + (r + c) * 0.008;
+    const exitAt = T[3] - 0.5 + EX + (r + c) * 0.008;
     gridDots.push(S.group({ x, y, scale: { kf: [[exitAt, 1, 'quadIn'], [exitAt + 0.3, 0]] } }, [S.group({ scale: { at, from: 0, to: 1, spring: 'playful' } }, hollow
       ? [S.circle({ r: px(17), fill: null, stroke: 'rgba(201,205,240,0.75)', strokeWidth: px(2.5), dash: [px(4), px(5)], rotation: (t) => t * 30 })]
       : [
@@ -211,24 +213,24 @@ export default async (S) => {
   const s3 = sec(2, [
     label(-px(700), 'وماذا فعلنا بها؟', 7.85),
     txt({ text: { expr: (t) => String(Math.round(c3(t))) }, size: px(240), fill: C.cyan, x: XR, y: -px(500), anchor: 'start', glow: { color: C.cyan, radius: px(30), strength: 0.5 },
-      opacity: { kf: [[8.0, 0], [8.2, 1]] }, scale: { at: 8.0, from: 0.82, to: 1, spring: 'default' }, origin: [XR, 0], exit: exitText(T[3] - 0.45) }),
+      opacity: { kf: [[8.0, 0], [8.2, 1]] }, scale: { at: 8.0, from: 0.82, to: 1, spring: 'default' }, origin: [XR, 0], exit: exitText(T[3] - 0.45 + EX) }),
     txt({ text: 'شائعةً\nتمّت معالجتها', size: px(58), lineHeight: 1.25, x: XR - px(450), y: -px(500), anchor: 'start', align: 'start',
-      reveal: { by: 'line', at: 8.35, mask: true, from: { y: px(70), opacity: 0 }, dur: 0.6, ease: 'ae:85:33', stagger: { each: 0.12 } }, exit: exitText(T[3] - 0.48) }),
+      reveal: { by: 'line', at: 8.35, mask: true, from: { y: px(70), opacity: 0 }, dur: 0.6, ease: 'ae:85:33', stagger: { each: 0.12 } }, exit: exitText(T[3] - 0.48 + EX) }),
     ...gridDots,
     // الـ12 بلا مصادر: هالة بتنبض بعد ما يخلص العد
     S.rect({ x: (gridPos(117)[0] + gridPos(124)[0]) / 2, y: gridPos(117)[1], w: px(8 * 62 + 30), h: px(62), radius: px(31), fill: 'rgba(201,205,240,0.06)', stroke: 'rgba(201,205,240,0.35)', strokeWidth: px(2), dash: [px(8), px(8)],
-      scale: { at: 11.25, from: [0, 1], to: [1, 1], spring: 'snappy' }, opacity: { kf: [[11.24, 0], [11.3, 1], [T[3] - 0.5, 1], [T[3] - 0.25, 0]] } }),
+      scale: { at: 11.25, from: [0, 1], to: [1, 1], spring: 'snappy' }, opacity: { kf: [[11.24, 0], [11.3, 1], [T[3] - 0.5 + EX, 1], [T[3] - 0.25 + EX, 0]] } }),
     txt({ text: '● 113 عولجت', size: px(34), weight: 600, x: px(330), y: px(450), anchor: 'start', words: { 0: { color: C.cyan }, 1: { color: C.cyan } },
       box: { fill: 'rgba(25,45,140,0.6)', stroke: 'rgba(79,220,255,0.35)', strokeWidth: px(2), radius: px(36), pad: [px(28), px(14)], reveal: { at: 11.4, spring: 'snappy', from: 'start' } },
-      reveal: { by: 'word', at: 11.48, from: { opacity: 0, x: px(20) }, dur: 0.3, ease: 'ae:70:33', stagger: { each: 0.05 } }, exit: exitText(T[3] - 0.5) }),
+      reveal: { by: 'word', at: 11.48, from: { opacity: 0, x: px(20) }, dur: 0.3, ease: 'ae:70:33', stagger: { each: 0.05 } }, exit: exitText(T[3] - 0.5 + EX) }),
     txt({ text: '◌ 12 بلا مصادر موثوقة', size: px(34), weight: 500, fill: C.muted, x: -px(330), y: px(450), anchor: 'end',
       box: { fill: 'rgba(25,45,140,0.45)', stroke: 'rgba(201,205,240,0.28)', strokeWidth: px(2), radius: px(36), pad: [px(28), px(14)], reveal: { at: 11.6, spring: 'snappy', from: 'start' } },
-      reveal: { by: 'word', at: 11.68, from: { opacity: 0, x: px(20) }, dur: 0.3, ease: 'ae:70:33', stagger: { each: 0.05 } }, exit: exitText(T[3] - 0.52) }),
+      reveal: { by: 'word', at: 11.68, from: { opacity: 0, x: px(20) }, dur: 0.3, ease: 'ae:70:33', stagger: { each: 0.05 } }, exit: exitText(T[3] - 0.52 + EX) }),
     txt({ text: 'نسبة المعالجة تتجاوز 90%', size: px(44), weight: 500, fill: C.muted, x: 0, y: px(570), words: { 3: { color: C.cyan } },
-      reveal: { by: 'word', at: 12.05, mask: true, from: { y: px(50), opacity: 0 }, dur: 0.5, ease: 'ae:80:33', stagger: { each: 0.08 } }, exit: exitText(T[3] - 0.5) }),
-    S.rect({ x: 0, y: px(640), w: px(640), h: px(10), radius: px(5), fill: 'rgba(140,170,255,0.18)', scale: { kf: [[12.2, [0, 1], 'ae:80:33'], [12.6, [1, 1]], [T[3] - 0.5, [1, 1], 'quadIn'], [T[3] - 0.2, [0, 1]]] } }),
+      reveal: { by: 'word', at: 12.05, mask: true, from: { y: px(50), opacity: 0 }, dur: 0.5, ease: 'ae:80:33', stagger: { each: 0.08 } }, exit: exitText(T[3] - 0.5 + EX) }),
+    S.rect({ x: 0, y: px(640), w: px(640), h: px(10), radius: px(5), fill: 'rgba(140,170,255,0.18)', scale: { kf: [[12.2, [0, 1], 'ae:80:33'], [12.6, [1, 1]], [T[3] - 0.5 + EX, [1, 1], 'quadIn'], [T[3] - 0.2 + EX, [0, 1]]] } }),
     S.rect({ x: px(32), y: px(640), w: px(576), h: px(10), radius: px(5), fill: { linear: [[px(288), 0], [-px(288), 0]], stops: [[0, '#30D1FF'], [1, '#0373FF']] }, origin: [px(288), 0], glow: { color: C.cyan, radius: px(12), strength: 0.5 },
-      scale: { kf: [[12.5, [0, 1], 'ae:60:85'], [13.6, [1, 1]], [T[3] - 0.5, [1, 1], 'quadIn'], [T[3] - 0.25, [0, 1]]] } }),
+      scale: { kf: [[12.5, [0, 1], 'ae:60:85'], [13.6, [1, 1]], [T[3] - 0.5 + EX, [1, 1], 'quadIn'], [T[3] - 0.25 + EX, [0, 1]]] } }),
   ]);
   sfx.push({ kind: 'whoosh', at: T[2] + 0.05, align: 'peak', params: { dur: 0.9, brightness: 0.7 }, gain_db: -24 }, { kind: 'count', at: 8.6, gain_db: -30 },
     { kind: 'click', at: 11.4, gain_db: -28 }, { kind: 'click', at: 11.6, params: { pitch: 0.8 }, gain_db: -29 }, { kind: 'swish', at: 12.5, params: { dur: 0.6 }, gain_db: -28 });
@@ -243,7 +245,7 @@ export default async (S) => {
   const scanY = (t) => -px(360) + (px(400) + px(360)) * io3((t - 17.0) / 1.25);
   const cardLayers = cards.map((cd, i) => {
     const at = 15.55 + i * 0.16 + (i === 2 ? 0.04 : 0);
-    const exitAt = T[4] - 0.55 + i * 0.04;
+    const exitAt = T[4] - 0.55 + EX + i * 0.04;
     const hit = (t) => Math.max(0, 1 - Math.abs(scanY(t) - cd.y) / px(170)) * (t > 16.9 && t < 18.4 ? 1 : 0);
     return S.group({ x: cd.x, y: { at, from: cd.y + px(90), to: cd.y, spring: 'default' }, scale: { kf: [[exitAt, 1, 'quadIn'], [exitAt + 0.32, 0.85]] },
       opacity: { kf: [[at - 0.01, 0], [at + 0.12, 1], [exitAt, 1], [exitAt + 0.32, 0]] } }, [S.group({ scale: { at, from: [0.15, 0.8], to: [1, 1], spring: { stiffness: 210, damping: 17, mass: 1 } } }, [
@@ -256,7 +258,7 @@ export default async (S) => {
   const s4 = sec(3, [
     label(-px(640), 'كيف نتحقّق؟', 14.9),
     txt({ text: 'بالأدلّة، لا بالرأي', size: px(112), x: XR, y: -px(500), anchor: 'start', words: { 0: { color: C.cyan } },
-      reveal: { by: 'word', at: 15.08, mask: true, from: { y: px(130), opacity: 0 }, dur: 0.65, ease: 'ae:85:33', stagger: { each: 0.14 } }, exit: exitText(T[4] - 0.45) }),
+      reveal: { by: 'word', at: 15.08, mask: true, from: { y: px(130), opacity: 0 }, dur: 0.65, ease: 'ae:85:33', stagger: { each: 0.14 } }, exit: exitText(T[4] - 0.45 + EX) }),
     ...cardLayers,
     // خط المسح الضوئي
     S.rect({ x: 0, y: scanY, w: px(880), h: px(5), radius: px(3), fill: C.cyan, glow: { color: C.cyan, radius: px(22), strength: 0.9 }, opacity: (t) => (t > 16.95 && t < 18.3 ? Math.min(1, (t - 16.95) * 6, (18.3 - t) * 6) : 0) }),
@@ -269,8 +271,8 @@ export default async (S) => {
   const PH = { x: -px(290), y: -px(255), w: px(290), h: px(330) };
   const wave = Array.from({ length: 22 }, (_, i) => S.rect({ x: PH.x - PH.w / 2 + px(18) + i * px(11.5), y: PH.y + PH.h / 2 - px(26), w: px(6), h: (t) => px(8) + px(30) * Math.abs(Math.sin(t * (5 + (i % 5)) + i * 1.7)) * (0.5 + 0.5 * Math.sin(i * 0.9 + t * 1.3)) ** 2, radius: px(2), fill: C.red, opacity: { kf: [[21.4, 0], [21.7, 0.95]] }, origin: [0, px(0)] }));
   const corner = (sx, sy, at) => S.path({ d: `M${PH.x + sx * (PH.w / 2 + px(12))},${PH.y + sy * (PH.h / 2 + px(12)) - sy * px(40)} L${PH.x + sx * (PH.w / 2 + px(12))},${PH.y + sy * (PH.h / 2 + px(12))} L${PH.x + sx * (PH.w / 2 + px(12)) - sx * px(40)},${PH.y + sy * (PH.h / 2 + px(12))}`, fill: null, stroke: C.cyan, strokeWidth: px(4), lineCap: 'round', trim: { at, from: [0.5, 0.5], to: [0, 1], dur: 0.4, ease: 'ae:70:80' } });
-  const STAMP = 25.0;
-  const row = (y, icon, text, at) => S.group({ y, x: { at, from: px(160), to: 0, spring: 'default' }, opacity: { kf: [[at - 0.01, 0], [at + 0.15, 1], [T[5] - 0.5, 1], [T[5] - 0.2, 0]] } }, [
+  const STAMP = 25.0 + ADV; // زمن محلي؛ فعلياً بينزل على 25.0 مع الموسيقى
+  const row = (y, icon, text, at) => S.group({ y, x: { at, from: px(160), to: 0, spring: 'default' }, opacity: { kf: [[at - 0.01, 0], [at + 0.15, 1], [T[5] - 0.5 + EX, 1], [T[5] - 0.2 + EX, 0]] } }, [
     glass(px(940), px(112), { radius: px(26) }),
     iconBox(px(405), 0, icon, at + 0.1, px(66)),
     txt({ text, size: px(38), x: px(352), anchor: 'start', reveal: { by: 'word', at: at + 0.12, from: { opacity: 0, x: px(20) }, dur: 0.35, ease: 'ae:70:33', stagger: { each: 0.05 } } }),
@@ -278,7 +280,7 @@ export default async (S) => {
   ]);
   const s5 = sec(4, [
     label(-px(560), 'مثال من ملفّات الشهر', 20.15),
-    S.group({ y: { at: 20.35, from: px(120), to: 0, spring: 'default' }, opacity: { kf: [[20.34, 0], [20.5, 1], [T[5] - 0.45, 1], [T[5] - 0.15, 0]] }, scale: { at: 20.35, from: 0.94, to: 1, spring: 'default' } }, [
+    S.group({ y: { at: 20.35, from: px(120), to: 0, spring: 'default' }, opacity: { kf: [[20.34, 0], [20.5, 1], [T[5] - 0.45 + EX, 1], [T[5] - 0.15 + EX, 0]] }, scale: { at: 20.35, from: 0.94, to: 1, spring: 'default' } }, [
       glass(px(940), px(440), { y: -px(255) }),
       // الصورة مع زووم بطيء، خط مسح، موجة صوت حمرا، زوايا
       S.group({ mask: S.rect({ x: PH.x, y: PH.y, w: PH.w, h: PH.h, radius: px(18) }), isolate: true }, [
@@ -300,19 +302,19 @@ export default async (S) => {
     row(px(200), 'lucide:audio-lines', 'الهتافات مركّبة على الصوت الأصلي', 23.25),
     // الختم: بينزل من فوق الكاميرا تقريباً
     S.group({ x: PH.x - px(10), y: PH.y + px(10), rotation: { at: STAMP, from: -24, to: -9, spring: 'heavy' },
-      scale: { at: STAMP, from: 2.6, to: 1, spring: { stiffness: 380, damping: 22, mass: 1 } }, opacity: { kf: [[STAMP - 0.01, 0], [STAMP + 0.05, 1], [T[5] - 0.45, 1], [T[5] - 0.15, 0]] } }, [
+      scale: { at: STAMP, from: 2.6, to: 1, spring: { stiffness: 380, damping: 22, mass: 1 } }, opacity: { kf: [[STAMP - 0.01, 0], [STAMP + 0.05, 1], [T[5] - 0.45 + EX, 1], [T[5] - 0.15 + EX, 0]] } }, [
       S.rect({ w: px(330), h: px(150), radius: px(22), fill: 'rgba(255,79,94,0.12)', stroke: C.red, strokeWidth: px(9), glow: { color: C.red, radius: px(20), strength: 0.5 } }),
       txt({ text: 'مضلّل', size: px(118), fill: C.red, y: px(4) }),
     ]),
     txt({ text: 'صوتٌ مفبرك على مشهد من مكان وسياق مختلفين', size: px(36), weight: 500, fill: C.muted, x: 0, y: px(335),
-      reveal: { by: 'word', at: 25.65, from: { opacity: 0, y: px(20), blur: 6 }, dur: 0.45, ease: 'ae:70:33', stagger: { each: 0.06 } }, exit: exitText(T[5] - 0.5) }),
+      reveal: { by: 'word', at: 25.65, from: { opacity: 0, y: px(20), blur: 6 }, dur: 0.45, ease: 'ae:70:33', stagger: { each: 0.06 } }, exit: exitText(T[5] - 0.5 + EX) }),
   ]);
   sfx.push({ kind: 'whoosh', at: T[4] + 0.05, align: 'peak', params: { dur: 0.9, brightness: 0.7 }, gain_db: -24 }, { kind: 'shutter', at: 20.9, gain_db: -29 },
     { kind: 'swish', at: 22.2, gain_db: -28 }, { kind: 'tick', at: 22.75, gain_db: -28 }, { kind: 'swish', at: 23.25, gain_db: -28 }, { kind: 'tick', at: 23.8, gain_db: -28 },
     { kind: 'impact', at: STAMP, params: { weight: 0.6 }, gain_db: -21 }, { kind: 'chime', at: 26.1, gain_db: -29 });
 
   // ════════ ٦. حملتين ════════
-  const camp = (y, num, text, at) => S.group({ y, x: { at, from: px(180), to: 0, spring: 'default' }, opacity: { kf: [[at - 0.01, 0], [at + 0.15, 1], [T[6] - 0.5, 1], [T[6] - 0.2, 0]] } }, [
+  const camp = (y, num, text, at) => S.group({ y, x: { at, from: px(180), to: 0, spring: 'default' }, opacity: { kf: [[at - 0.01, 0], [at + 0.15, 1], [T[6] - 0.5 + EX, 1], [T[6] - 0.2 + EX, 0]] } }, [
     glass(px(940), px(172)),
     txt({ text: num, family: 'IBM Plex Sans Arabic', size: px(72), fill: C.cyan, x: px(392), y: px(4), glow: { color: C.cyan, radius: px(18), strength: 0.4 },
       reveal: { by: 'all', at: at + 0.1, mask: true, from: { y: px(70), opacity: 0 }, dur: 0.45, ease: 'ae:85:33' } }),
@@ -323,11 +325,11 @@ export default async (S) => {
   const s6 = sec(5, [
     label(-px(520), 'أكثر من شائعة عابرة', 29.0),
     txt({ text: 'تفنيد حملتَي تضليل', size: px(112), x: XR, y: -px(375), anchor: 'start', words: { 1: { color: C.cyan } },
-      reveal: { by: 'word', at: 29.18, mask: true, from: { y: px(130), opacity: 0 }, dur: 0.65, ease: 'ae:85:33', stagger: { each: 0.13 } }, exit: exitText(T[6] - 0.45) }),
+      reveal: { by: 'word', at: 29.18, mask: true, from: { y: px(130), opacity: 0 }, dur: 0.65, ease: 'ae:85:33', stagger: { each: 0.13 } }, exit: exitText(T[6] - 0.45 + EX) }),
     camp(-px(120), '01', 'إعادة تدوير مشاهد قديمة\nفي سياق الاحتجاجات', 29.95),
     camp(px(85), '02', 'ادّعاءات عن مقاتلين\nسوريين في اليمن', 30.35),
     txt({ text: 'العدد المؤكَّد خلال فترة التقرير', size: px(32), weight: 500, fill: C.dim, x: 0, y: px(250),
-      reveal: { by: 'word', at: 31.2, from: { opacity: 0, y: px(16) }, dur: 0.4, ease: 'ae:70:33', stagger: { each: 0.06 } }, exit: exitText(T[6] - 0.5) }),
+      reveal: { by: 'word', at: 31.2, from: { opacity: 0, y: px(16) }, dur: 0.4, ease: 'ae:70:33', stagger: { each: 0.06 } }, exit: exitText(T[6] - 0.5 + EX) }),
   ]);
   sfx.push({ kind: 'whoosh', at: T[5] + 0.05, align: 'peak', params: { dur: 0.9, brightness: 0.75 }, gain_db: -24 }, { kind: 'swish', at: 29.95, gain_db: -28 }, { kind: 'swish', at: 30.35, params: { pitch: 1.1 }, gain_db: -28 }, { kind: 'tick', at: 30.55, gain_db: -28 }, { kind: 'tick', at: 30.95, gain_db: -28 });
 
@@ -335,13 +337,13 @@ export default async (S) => {
   const s7 = sec(6, [
     label(-px(330), 'الخلاصة', 33.45, { x: 0, center: true }),
     txt({ text: 'أداءٌ مستقرّ', size: px(156), x: 0, y: -px(170),
-      reveal: { by: 'word', at: 33.6, mask: true, from: { y: px(180), opacity: 0 }, dur: 0.7, ease: 'ae:85:33', stagger: { each: 0.14 } }, exit: exitText(T[7] - 0.45) }),
+      reveal: { by: 'word', at: 33.6, mask: true, from: { y: px(180), opacity: 0 }, dur: 0.7, ease: 'ae:85:33', stagger: { each: 0.14 } }, exit: exitText(T[7] - 0.45 + EX) }),
     txt({ text: 'في مواجهة التضليل', size: px(108), x: 0, y: px(10), words: { 1: { color: C.cyan }, 2: { color: C.cyan } }, glow: { color: C.cyan, radius: px(20), strength: 0.25 },
-      reveal: { by: 'word', at: 33.92, mask: true, from: { y: px(130), opacity: 0 }, dur: 0.65, ease: 'ae:85:33', stagger: { each: 0.12 } }, exit: exitText(T[7] - 0.42) }),
+      reveal: { by: 'word', at: 33.92, mask: true, from: { y: px(130), opacity: 0 }, dur: 0.65, ease: 'ae:85:33', stagger: { each: 0.12 } }, exit: exitText(T[7] - 0.42 + EX) }),
     S.rect({ y: px(130), w: px(460), h: px(8), radius: px(4), fill: { linear: [[-px(230), 0], [px(230), 0]], stops: [[0, '#0373FF'], [1, '#30D1FF']] }, glow: { color: C.cyan, radius: px(14), strength: 0.5 },
-      scale: { kf: [[34.35, [0, 1], 'ae:70:85'], [34.95, [1, 1]], [T[7] - 0.45, [1, 1], 'quadIn'], [T[7] - 0.15, [0, 1]]] } }),
+      scale: { kf: [[34.35, [0, 1], 'ae:70:85'], [34.95, [1, 1]], [T[7] - 0.45 + EX, [1, 1], 'quadIn'], [T[7] - 0.15 + EX, [0, 1]]] } }),
     txt({ text: 'ونواصل توسيع الرصد وتسريع الاستجابة', size: px(40), weight: 500, fill: C.muted, x: 0, y: px(225),
-      reveal: { by: 'word', at: 34.6, from: { opacity: 0, y: px(18), blur: 6 }, dur: 0.45, ease: 'ae:70:33', stagger: { each: 0.06 } }, exit: exitText(T[7] - 0.48) }),
+      reveal: { by: 'word', at: 34.6, from: { opacity: 0, y: px(18), blur: 6 }, dur: 0.45, ease: 'ae:70:33', stagger: { each: 0.06 } }, exit: exitText(T[7] - 0.48 + EX) }),
   ]);
   sfx.push({ kind: 'whoosh', at: T[6] + 0.05, align: 'peak', params: { dur: 0.9, brightness: 0.65 }, gain_db: -24 }, { kind: 'swell', at: 33.6, params: { dur: 0.8 }, gain_db: -28 });
 
@@ -368,7 +370,7 @@ export default async (S) => {
 
   // ── HUD: شعار صغير + نقاط التقدم ──
   const act = (t) => { let a = 0; for (let k = 1; k < 8; k++) a += io3(trav(k, t)); return a; };
-  const hudOut = { kf: [[0.3, 0], [0.7, 1], [T[7] - 0.4, 1], [T[7] + 0.1, 0]] };
+  const hudOut = { kf: [[0.3, 0], [0.7, 1], [T[7] - 0.4 + EX, 1], [T[7] + 0.1, 0]] };
   const dotW = (i, t) => px(10) + px(34) * Math.max(0, 1 - Math.abs(act(t) - i));
   const dotX = (i, t) => { let x = px(72); for (let j = 0; j < i; j++) x += dotW(j, t) + px(10); return x + dotW(i, t) / 2; };
   const hud = S.group({ opacity: hudOut, y: { at: 0.3, from: -px(30), to: 0, spring: 'default' } }, [
@@ -378,6 +380,9 @@ export default async (S) => {
 
   // غبار بالضو (مستمر، حياة بالكادر)
   const dust = S.particles({ count: 70, rate: 7, start: -10, loop: true, seed: 4, emitter: { x: cx, y: cy, w: W, h: H }, life: [6, 10], angle: [-100, -80], speed: [6, 22], size: [px(2), px(5)], color: ['rgba(150,225,255,0.55)', 'rgba(200,235,255,0.4)'], turbulence: { amp: px(30), freq: 0.25 } });
+
+  // المؤثرات المكتوبة بزمن القسم بتتقدّم معه (إلا whoosh الكاميرا والشعار)
+  for (const e of sfx) if (e.kind !== 'whoosh' && e.at >= T[1] + 0.2 && e.at < T[7]) e.at -= ADV;
 
   return {
     duration: D,
