@@ -281,7 +281,7 @@ export default async (S) => {
           ...keys.map((k, n) => S.circle({ r: S.px(10), x: P(k)[0], y: P(k)[1], fill: C.lime, stroke: C.ink, strokeWidth: S.px(2), glow: { color: C.lime, blur: 12 }, scale: { at: tp + n * 0.03 + (n % 3) * 0.012, from: 0, to: 1, spring: 'snappy' }, sfx: n % 6 === 0 ? { kind: 'tick', at: tp + n * 0.03 } : false })),
           S.text({ text: '29', family: HEAD, weight: 900, size: S.px(340), fill: C.white, x: S.px(740), y: S.vh(26), ...S.fx.slam(tp + 0.05, { size: 420, by: 'all', from: 1.8 }) }),
           light('نقطة', l(W('v5', 16)), { y: S.vh(35), x: S.px(780), size: 90 }),
-          light('في جسد كل لاعب', l(W('v5', 18)), { y: S.vh(46), x: S.px(780), size: 64 }),
+          light('في جسد كل لاعب', l(W('v5', 18)), { y: S.vh(15), x: S.px(720), size: 62 }),
           ];
       }, { z1: 1.06 }),
 
