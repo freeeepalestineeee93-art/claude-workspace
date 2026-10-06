@@ -41,7 +41,7 @@ export default async (S) => ({
 - الألوان بتتحرك بفضاء OKLab (تدرجات نضيفة بدون رمادي بالنص).
 
 ## خصائص مشتركة لكل طبقة
-`x y` · `scale` (رقم أو `[sx,sy]`) · `rotation` (درجات) · `skewX skewY` · `opacity` · `origin [ox,oy]` (نقطة الارتكاز) ·
+`x y` · `scale` (رقم أو `[sx,sy]`) · `rotation` (درجات) · `skewX skewY` · `opacity` · `origin [ox,oy]` (نقطة الارتكاز = **anchor point متل الأفتر**: `x,y` هي مكان نقطة الارتكاز، والمحتوى بينزاح بـ `-origin`. يعني شريط عرضه w بدك يكبر من طرفه اليمين: `origin: [w/2, 0]` **و** `x = مركز الشريط + w/2`. إذا غيّرت origin بدون ما تزيح x، العنصر كله بيتحرك) ·
 `z` (عمق 2.5D: موجب = أبعد) · `blur` · `glow { color, radius, strength }` · `shadow { color, blur, x, y }` ·
 `blend` (`screen` `multiply` `overlay` `add` `soft-light`…) · `mask` (طبقة/طبقات شكل بتقص) · `maskInvert` ·
 `matte { layer, invert }` · `in` `out` (ظهور/اختفاء) · `shift` (إزاحة زمن للمجموعة) · `sfx` (صوت يدوي/`false`) · `name`

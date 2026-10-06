@@ -91,6 +91,7 @@ export async function render(compPath, o = {}) {
       const enc = ffmpeg(['-f', 'rawvideo', '-pix_fmt', 'rgba', '-s', `${W}x${H}`, '-i', '-', '-vf', 'vflip', '-frames:v', '1', out], { input: true });
       enc.p.stdin.end(buf);
       await enc.done;
+      for (const e of new Set(first.errors)) if (e.includes('حرف ناقص')) console.warn('  ' + e);
       console.log(`✓ ${out}`);
       return { out };
     }
@@ -155,7 +156,10 @@ export async function render(compPath, o = {}) {
     }));
     clearInterval(tick);
     process.stdout.write('\n');
-    for (const p of pages) if (p.errors.length) console.warn('تحذيرات الصفحة:', [...new Set(p.errors)].slice(0, 5).join('\n'));
+    const allErr = [...new Set(pages.flatMap((p) => p.errors))];
+    for (const e of allErr.filter((e) => e.includes('حرف ناقص'))) console.warn('  ' + e);
+    const rest = allErr.filter((e) => !e.includes('حرف ناقص'));
+    if (rest.length) console.warn('تحذيرات الصفحة:', rest.slice(0, 5).join('\n'));
 
     const list = path.join(tmp, 'list.txt');
     await writeFile(list, parts.filter(Boolean).map((p) => `file '${path.resolve(p)}'`).join('\n'));
