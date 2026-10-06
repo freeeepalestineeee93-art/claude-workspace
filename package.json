@@ -97,5 +97,13 @@
     "wavefile": "^11.0.0",
     "web-audio-beat-detector": "^8.2.39",
     "zod": "^4.6.5"
+  },
+  "scripts": {
+    "studio": "node studio.mjs",
+    "render": "node engine/render.js",
+    "preview": "node engine/preview.js",
+    "critique": "node tools/critique.mjs",
+    "export-ae": "node tools/export-ae.mjs",
+    "setup": "bash scripts/setup.sh"
   }
 }

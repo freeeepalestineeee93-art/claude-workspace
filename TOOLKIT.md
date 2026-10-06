@@ -115,21 +115,21 @@ Lucide · Phosphor · Tabler · Iconoir · Remix Icon · Simple Icons (لوغو�
 
 ---
 
-## 🔨 المكتبات الخاصة (المرحلة الجاية)
-
-هون الفرق الحقيقي. هاي الأشياء ما بتنباع جاهزة، ولازم نبنيها:
+## ✅ المكتبات الخاصة (انبنت)
 
 | المكتبة | شو بتعمل |
 |---|---|
-| `lib/scene` | صيغة Scene Graph موحّدة: نفس المشهد بيطلع MP4 أو معاينة أو After Effects |
-| `lib/motion` | closed-form springs بـ 4 شخصيات + `track()` + overlap + secondary motion |
-| `lib/arabic-type` | تحريك عربي على مستوى الحرف والكلمة والسطر: كشيدة متحركة، رسم الحرف، morph، تحريك سماكة الخط |
-| `lib/transitions` | مكتبة انتقالات سينمائية (gl-transitions + انتقالاتنا) |
-| `lib/camera` | كاميرا 2.5D: parallax، dolly، shake، focus |
-| `lib/fx` | motion blur حقيقي (sub-frame)، grain، halation، light leaks، LUTs |
-| `lib/layout` | تكوين نسبي، فنفس المشهد بيطلع 9:16 و1:1 و16:9 |
-| `lib/audio` | beat grid، تصنيع whoosh/riser/impact، SFX تلقائي على الحركة، mastering |
-| `lib/brand` | نظام الهويات: ألوان، خطوط، شخصية حركة، صوت |
-| `lib/critique` | contact sheets + قائمة "علامات AI" + تقييم تلقائي |
-| `lib/export-ae` | تصدير المشهد لـ After Effects كطبقات |
-| `skills/` | `/براند-جديد` · `/موشن` · `/مرجع` · `/نقد` · `/صوت` · `/تصدير` |
+| `lib/anim.js` | 7 springs بمعادلة مغلقة + track بأهداف متعددة + 25 منحنى + ألوان OKLab + stagger عضوي + wiggle |
+| `lib/type.js` | HarfBuzz + bidi: تحريك عربي بالحرف/الكلمة/السطر بدون كسر الوصل، كشيدة مستمرة، أوزان متغيرة متحركة، أرقام ولاتيني صحيحين جوّا العربي |
+| `lib/text-fx.js` | maskRise · rise · blurIn · pop · slam · drop · cascade · type · draw · stretch · flip · assemble · خروج ×4 · wave · breathe |
+| `engine/runtime` | طبقات: أشكال، نص، صور، أيقونات، SVG/لوغو، جزيئات، 3D، Lottie، فيديو · masks · mattes · glow · blur · عمق 2.5D · كاميرا · علامات المصمم (تظليل، خط يدوي، دائرة) |
+| الانتقالات | 13 Canvas (whip، push، iris، zoom، glitch…) + 125 GLSL |
+| `post.js` | motion blur حقيقي (adaptive) · bloom · halation · chromatic · grade · LUT · grain · dither |
+| `lib/audio` | 19 مؤثر مصنّع · 6 أساليب موسيقى (عربي: حجاز + دربكة) · مؤثرات تلقائية من الحركة · ducking · −14 LUFS · 32 صوت عربي · Whisper + محاذاة للسكربت · تحليل BPM/beats/drops |
+| `lib/captions.js` | كابشن karaoke/pop/line متزامن |
+| `tools/critique.mjs` | contact sheet + منطقة آمنة + تباين + تراكب + جمود + hook + علامات AI |
+| `lib/export-ae.js` | After Effects: precomps، shape/text layers، keyframes مضغوطة من الحركة الفعلية |
+| `tools/analyze-ref.py` | تحليل مراجع: لقطات، إيقاع، ألوان، BPM، القطع على الإيقاع |
+| `tools/brand-from-logo.py` | ألوان + SVG نظيف من اللوغو |
+| `engine/preview.js` | معاينة حية بتايملاين وتحديث تلقائي |
+| `.claude/skills/` | motion · motion-brand · motion-reference · motion-critique · motion-voiceover · motion-export-ae |

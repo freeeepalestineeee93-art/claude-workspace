@@ -578,6 +578,15 @@ const lerpNum = (a, b, p, k) => (k === 'opacity' || k === 'draw' || k === 'fill'
 
 function drawText(ctx, L, t, env) {
   const lay = textLayout(L, t);
+  // anchor: وين x بالنسبة للنص — start = بداية القراءة (يمين بالعربي)، end = نهايتها
+  if (L.anchor && L.anchor !== 'center') {
+    const half = lay.box.w / 2, cxOff = lay.box.cx;
+    const startSide = lay.rtl ? 1 : -1; // جهة بداية القراءة
+    const k = L.anchor === 'start' ? startSide : -startSide;
+    ctx.translate(-cxOff - k * half, 0);
+  }
+  if (L.vAnchor === 'top') ctx.translate(0, -lay.box.y);
+  else if (L.vAnchor === 'bottom') ctx.translate(0, -(lay.box.y + lay.box.h));
   const s = lay.scale;
   const fill = L.fill ?? L.color ?? '#ffffff';
   const by = L.reveal?.by ?? L.exit?.by ?? L.loop?.by ?? 'all';
@@ -604,7 +613,7 @@ function drawText(ctx, L, t, env) {
     ctx.globalAlpha *= st.opacity;
     // نقطة الارتكاز: منتصف الوحدة على خط القاعدة (طبيعي أكتر للحروف)
     const ox = u.box.cx, oy = L.reveal?.pivot === 'center' ? u.box.cy : u.box.y + u.box.h;
-    if (st.clip > 0.001 || L.reveal?.mask) {
+    if (st.clip > 0.001 || L.reveal?.mask || (L.exit?.mask && t >= L.exit.at)) {
       // قص على مستوى السطر/الكلمة: الحرف بيطلع من ورا خط وهمي
       const pad = lay.size * 0.35;
       ctx.beginPath();

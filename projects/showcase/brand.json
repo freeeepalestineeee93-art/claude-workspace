@@ -1,0 +1,12 @@
+{
+  "name": "استوديو الموشن",
+  "colors": { "bg": "#0b0b0f", "surface": "#17171d", "text": "#f2ede4", "muted": "#8d8a85", "primary": "#ff5a36", "accent": "#ffc24b", "cool": "#3fd0c9" },
+  "fonts": {
+    "display": { "family": "Noto Kufi Arabic", "weight": 800 },
+    "body": { "family": "IBM Plex Sans Arabic", "weight": 500 },
+    "accent": { "family": "Aref Ruqaa", "weight": 700 },
+    "latin": { "family": "Space Grotesk", "weight": 600 }
+  },
+  "motion": { "energy": "confident", "springs": { "enter": "default", "hero": "heavy", "ui": "snappy", "fun": "playful" } },
+  "audio": { "bpm": 100, "music": { "style": "arabic", "bpm": 100, "key": "D", "gain_db": -7 } }
+}

@@ -173,5 +173,8 @@ export async function render(compPath, o = {}) {
 if (import.meta.url === `file://${process.argv[1]}`) {
   const a = parseArgs(process.argv.slice(2));
   if (!a._[0]) { console.log('الاستعمال: node engine/render.js <path/main.js> [--aspect 9:16] [--quality draft] ...'); process.exit(1); }
-  render(a._[0], a).catch((e) => { console.error('✗', e.message); process.exit(1); });
+  // أكتر من مقاس بأمر واحد: --aspect 9:16,1:1,16:9
+  const aspects = String(a.aspect ?? '9:16').split(',');
+  (async () => { for (const asp of aspects) await render(a._[0], { ...a, aspect: asp, out: aspects.length > 1 ? undefined : a.out }); })()
+    .catch((e) => { console.error('✗', e.message); process.exit(1); });
 }
