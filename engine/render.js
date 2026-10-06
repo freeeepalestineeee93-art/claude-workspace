@@ -116,14 +116,24 @@ export async function render(compPath, o = {}) {
     let doneFrames = 0;
     const tick = setInterval(() => process.stdout.write(`\r  فريمات: ${doneFrames}/${total}  (${((Date.now() - t0) / 1000).toFixed(0)}s)   `), 1000);
 
-    const parts = await Promise.all(pages.map(async ({ page }, w) => {
+    const parts = await Promise.all(pages.map(async (slot, w) => {
+      let page = slot.page;
       const a = from + w * chunk, b = Math.min(to, a + chunk);
       if (a >= b) return null;
       const file = path.join(tmp, `part-${w}.mkv`);
       // وسيط بدون فقدان (RGB) لحتى الترميز النهائي يكون مرة وحدة بس
       const enc = ffmpeg(['-f', 'rawvideo', '-pix_fmt', 'rgba', '-s', `${W}x${H}`, '-framerate', String(fps), '-i', '-', '-vf', 'vflip', '-c:v', 'libx264rgb', '-crf', '0', '-preset', 'ultrafast', file], { input: true });
       for (let f = a; f < b; f++) {
-        const buf = await grab(page, f / fps, `${w}-${f}`);
+        let buf;
+        for (let attempt = 0; ; attempt++) {
+          try { buf = await grab(page, f / fps, `${w}-${f}-${attempt}`); break; } catch (e) {
+            // تاب انهار (ذاكرة مثلاً): منفتح تاب جديد ومنكمّل من نفس الفريم
+            if (attempt >= 2) throw e;
+            console.warn(`\n  ⚠ العامل ${w} انهار عند فريم ${f} (${e.message.split('\n')[0]}) — عم كمّل بتاب جديد`);
+            await page.close().catch(() => {});
+            page = (await openPlayer(browser, base, compPath, opts)).page;
+          }
+        }
         if (!enc.p.stdin.write(buf)) await new Promise((r) => enc.p.stdin.once('drain', r));
         doneFrames++;
       }

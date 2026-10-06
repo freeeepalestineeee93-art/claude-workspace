@@ -16,7 +16,7 @@ let svgMeasure;
 
 export function P(d) {
   let p = path2d.get(d);
-  if (!p) { p = new Path2D(d); path2d.set(d, p); }
+  if (!p) { if (path2d.size > 20000) path2d.clear(); p = new Path2D(d); path2d.set(d, p); }
   return p;
 }
 
@@ -30,6 +30,7 @@ export function pathLength(d) {
       svg.appendChild(svgMeasure);
       document.body.appendChild(svg);
     }
+    if (pathLen.size > 20000) pathLen.clear();
     svgMeasure.setAttribute('d', d);
     l = svgMeasure.getTotalLength();
     pathLen.set(d, l);
