@@ -1,0 +1,7 @@
+{
+  "name": "كشاف — عينك على الحقيقة",
+  "fps": 30,
+  "colors": { "bg": "#070B2A", "navy": "#10184F", "royal": "#1F299C", "text": "#FFFFFF", "cyan": "#4FDCFF", "blue": "#0373FF", "muted": "#C9CDF0", "dim": "#9AA0D6", "red": "#FF4F5E", "green": "#3EE08F" },
+  "fonts": { "display": { "family": "IBM Plex Sans Arabic", "weight": 700 }, "body": { "family": "IBM Plex Sans Arabic", "weight": 500 } },
+  "motion": { "energy": "crafted", "springs": { "enter": "default", "hero": "heavy", "ui": "snappy", "fun": "playful" } }
+}

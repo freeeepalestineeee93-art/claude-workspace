@@ -496,7 +496,7 @@ function drawContent(ctx, L, t, env) {
       break;
     }
     case 'rect': strokeAndFill(ctx, L, t, rectPath(v(L.w, t), v(L.h, t), v(L.radius ?? 0, t))); break;
-    case 'ellipse': { const w = v(L.w ?? L.r * 2, t); strokeAndFill(ctx, L, t, ellipsePath(w, v(L.h ?? w, t))); break; }
+    case 'ellipse': { const w = L.w != null ? v(L.w, t) : v(L.r, t) * 2; strokeAndFill(ctx, L, t, ellipsePath(w, v(L.h ?? w, t))); break; }
     case 'polygon': strokeAndFill(ctx, L, t, polygonPath(L.sides ?? 3, v(L.r ?? 50, t), L.inner != null ? v(L.inner, t) : null, v(L.angle ?? 0, t))); break;
     case 'line': strokeAndFill(ctx, { fill: null, ...L }, t, linePath(v(L.points, t), L.closed)); break;
     case 'path': strokeAndFill(ctx, L, t, v(L.d, t)); break;
@@ -993,7 +993,7 @@ export function exportGeometry(L, t) {
   const base = { fill: fillC(L.fill), stroke: L.stroke ? fillC(L.stroke) : null, strokeWidth: v(L.strokeWidth ?? 2, t), trim: L.trim ? v(L.trim, t) : null };
   switch (L.type) {
     case 'rect': return { ...base, paths: [rectPath(v(L.w, t), v(L.h, t), v(L.radius ?? 0, t))] };
-    case 'ellipse': { const w = v(L.w ?? L.r * 2, t); return { ...base, paths: [ellipsePath(w, v(L.h ?? w, t))] }; }
+    case 'ellipse': { const w = L.w != null ? v(L.w, t) : v(L.r, t) * 2; return { ...base, paths: [ellipsePath(w, v(L.h ?? w, t))] }; }
     case 'polygon': return { ...base, paths: [polygonPath(L.sides ?? 3, v(L.r ?? 50, t), L.inner != null ? v(L.inner, t) : null, v(L.angle ?? 0, t))] };
     case 'line': return { ...base, fill: null, paths: [linePath(v(L.points, t), L.closed)] };
     case 'path': return { ...base, paths: [v(L.d, t)] };

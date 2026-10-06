@@ -16,3 +16,8 @@ projects/references/refs/*.log
 assets/fonts/private/
 projects/references/mg/*.mp4
 __pycache__/
+projects/kashaf/refs/*.mp4
+projects/kashaf/refs/*.wav
+projects/kashaf/refs/sep/
+projects/kashaf/assets/music.wav
+projects/kashaf/refs/f/
