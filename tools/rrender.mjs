@@ -31,7 +31,7 @@ const server = await serve(0);
 const base = `http://localhost:${server.address().port}`;
 try {
   process.stdout.write('  📦 bundle… ');
-  const serveUrl = await bundle({ entryPoint: path.join(ROOT, 'remotion/src/index.js'), onProgress: () => {} });
+  const serveUrl = await bundle({ entryPoint: path.join(ROOT, 'remotion/src/index.js'), onProgress: () => {}, enableCaching: false }); // الكاش كان بيكبر لـ 9GB ويعبّي القرص
   console.log(`${((Date.now() - t0) / 1000).toFixed(0)}s`);
   const inputProps = { base };
   const composition = await selectComposition({ serveUrl, id, inputProps, browserExecutable: SHELL, chromiumOptions, logLevel: 'error' });
