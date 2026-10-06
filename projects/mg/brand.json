@@ -1,0 +1,7 @@
+{
+  "name": "موشن غرافيك (فاتح)",
+  "fps": 30,
+  "colors": { "bg": "#F3F2EE", "text": "#1C1E2B", "muted": "#7B7F93", "primary": "#2747F0", "accent": "#F0433A", "yellow": "#FFC531", "lavender": "#E8E6F8", "green": "#23B07D" },
+  "fonts": { "display": { "family": "thmanyah sans", "weight": 900 }, "body": { "family": "thmanyah sans", "weight": 500 } },
+  "motion": { "energy": "crafted", "springs": { "enter": "default", "hero": "heavy", "ui": "snappy", "fun": "playful" } }
+}
