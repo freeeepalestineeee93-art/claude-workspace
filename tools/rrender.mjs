@@ -44,7 +44,7 @@ try {
     const ts = String(opt('still')).split(',').map(Number);
     for (const t of ts) {
       const output = path.join(outDir, `still-${t}.png`);
-      await renderStill({ composition, serveUrl, output, frame: Math.min(N - 1, Math.round(t * fps)), inputProps, browserExecutable: SHELL, chromiumOptions, logLevel: 'error', onBrowserLog });
+      await renderStill({ composition, serveUrl, output, frame: Math.min(N - 1, Math.round(t * fps)), inputProps, browserExecutable: SHELL, chromiumOptions, logLevel: 'error', onBrowserLog, timeoutInMilliseconds: 120000 });
       console.log(`✓ ${path.relative(ROOT, output)}`);
     }
     for (const f of flags) console.warn('  ' + f);
@@ -57,7 +57,7 @@ try {
   let last = 0;
   await renderMedia({
     composition, serveUrl, codec: 'h264', outputLocation: silent, inputProps, browserExecutable: SHELL, chromiumOptions, logLevel: 'error',
-    onBrowserLog, frameRange: [from, to], concurrency: +opt('concurrency', 4), crf: draft ? 26 : 16, imageFormat: 'jpeg', jpegQuality: draft ? 80 : 95, muted: true,
+    onBrowserLog, timeoutInMilliseconds: 120000, frameRange: [from, to], concurrency: +opt('concurrency', 4), crf: draft ? 26 : 16, imageFormat: 'jpeg', jpegQuality: draft ? 80 : 95, muted: true,
     scale: draft ? 0.5 : 1,
     onProgress: ({ renderedFrames }) => { if (renderedFrames !== last && (renderedFrames - last >= 15 || renderedFrames === to - from + 1)) { last = renderedFrames; process.stdout.write(`\r  🎞️  ${renderedFrames}/${to - from + 1} (${((Date.now() - t0) / 1000).toFixed(0)}s)   `); } },
   });
