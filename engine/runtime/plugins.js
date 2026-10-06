@@ -173,7 +173,10 @@ function video(ctx, L, t) {
   const ir = img.naturalWidth / img.naturalHeight, br = w / h;
   let sw = img.naturalWidth, sh = img.naturalHeight, sx = 0, sy = 0;
   if ((L.fit ?? 'cover') === 'cover') { if (ir > br) { sw = sh * br; sx = (img.naturalWidth - sw) / 2; } else { sh = sw / br; sy = (img.naturalHeight - sh) / 2; } }
+  const r = v(L.radius ?? 0, t);
+  if (r) { ctx.save(); ctx.beginPath(); ctx.roundRect(-w / 2, -h / 2, w, h, r); ctx.clip(); }
   ctx.drawImage(img, sx, sy, sw, sh, -w / 2, -h / 2, w, h);
+  if (r) ctx.restore();
 }
 
 export const plugins = { particles, three, lottie, video };

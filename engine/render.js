@@ -9,7 +9,7 @@ import { mkdir, writeFile, rm, stat } from 'node:fs/promises';
 import path from 'node:path';
 import os from 'node:os';
 import express from 'express';
-import { serve } from './server.js';
+import { serve, ROOT } from './server.js';
 import { launch } from './browser.js';
 
 export function parseArgs(argv) {
@@ -92,6 +92,26 @@ export async function render(compPath, o = {}) {
     const outDir = path.dirname(opts.out ?? path.join(path.dirname(compPath), 'renders', 'x'));
     const tmp = path.join(outDir, `.tmp-${process.pid}`);
     await mkdir(tmp, { recursive: true });
+
+    // الصوت بينبنى بالتوازي مع الفريمات
+    let audioJob = null;
+    if (!opts['no-audio'] && !opts.audio) {
+      const plan = await first.page.evaluate(() => studio.audioPlan());
+      if (opts.from || opts.to) plan.duration = total / fps;
+      if (plan.music || plan.voice.length || plan.sfx.length) {
+        const planFile = path.join(tmp, 'audio-plan.json');
+        await writeFile(planFile, JSON.stringify(plan, null, 1));
+        await writeFile(path.join(outDir, 'audio-plan.json'), JSON.stringify(plan, null, 1));
+        const wav = path.join(tmp, 'audio.wav');
+        audioJob = new Promise((res, rej) => {
+          const py = spawn(path.join(ROOT, '.venv/bin/python'), ['-m', 'lib.audio.build', planFile, wav], { cwd: ROOT, stdio: ['ignore', 'pipe', 'inherit'] });
+          let outTxt = '';
+          py.stdout.on('data', (d) => (outTxt += d));
+          py.on('close', (c) => (c === 0 ? res({ wav, info: JSON.parse(outTxt.trim().split('\n').pop()) }) : rej(new Error('فشل بناء الصوت'))));
+        });
+        audioJob.catch(() => {});
+      }
+    }
     const chunk = Math.ceil(total / nW);
     let doneFrames = 0;
     const tick = setInterval(() => process.stdout.write(`\r  فريمات: ${doneFrames}/${total}  (${((Date.now() - t0) / 1000).toFixed(0)}s)   `), 1000);
@@ -121,7 +141,14 @@ export async function render(compPath, o = {}) {
     const out = opts.out ?? path.join(path.dirname(compPath), 'renders', `${path.basename(path.dirname(compPath))}-${opts.aspect.replace(':', 'x')}${opts.quality === 'draft' ? '-draft' : ''}.${ext}`);
     await mkdir(path.dirname(out), { recursive: true });
 
-    const audio = opts.audio && !opts['no-audio'] ? opts.audio : null;
+    let audio = opts.audio && !opts['no-audio'] ? opts.audio : null;
+    if (audioJob) {
+      try {
+        const { wav, info } = await audioJob;
+        audio = wav;
+        console.log(`  🔊 صوت: ${info.sfx} مؤثر${info.music?.style ? ' + موسيقى ' + info.music.style : ''} · ${info.lufs} LUFS`);
+      } catch (e) { console.warn('  ⚠ الصوت فشل، الفيديو رح يطلع بدون صوت:', e.message); }
+    }
     const vcodec = {
       mp4: ['-c:v', 'libx264', '-preset', opts.quality === 'draft' ? 'veryfast' : 'slow', '-crf', String(opts.crf), '-pix_fmt', 'yuv420p', '-profile:v', 'high', '-tune', 'animation', '-movflags', '+faststart'],
       prores: ['-c:v', 'prores_ks', '-profile:v', '3', '-pix_fmt', 'yuv422p10le'],

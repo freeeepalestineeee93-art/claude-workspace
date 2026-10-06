@@ -399,6 +399,10 @@ function textLayout(L, t) {
   return lay;
 }
 
+export function textUnitCount(L, by) {
+  return units(textLayout(L, L.reveal?.at ?? 0), by).length;
+}
+
 // وحدات التحريك: glyph | char (الحرف مع نقاطه) | word | line | all
 function units(lay, by) {
   if (by === 'all') return [{ glyphs: lay.glyphs, box: lay.box, i: 0 }];
@@ -426,7 +430,7 @@ function ubox(gs) {
 const IDENT = { opacity: 1, x: 0, y: 0, scale: 1, scaleX: 1, scaleY: 1, rotation: 0, blur: 0, skewX: 0, draw: 1, fill: 1, clip: 0 };
 
 function animProgress(an, u, n, t) {
-  const delay = an.order === 'random'
+  const delay = an.times ? (an.times[u.i] ?? an.times[an.times.length - 1]) - an.at : an.order === 'random'
     ? (an.stagger?.each ?? 0.05) * (n - 1) * fract(Math.sin((u.i + 1) * 12.9898) * 43758.5453)
     : staggerFn(u.i, n, an.stagger || {});
   const lt = t - an.at - delay;

@@ -4,6 +4,7 @@
 import { createStudio } from '../../lib/studio.js';
 import { buildTimeline, renderFrame, preloadAll, prepareFrame } from './timeline.js';
 import { plugins } from './plugins.js';
+import { computeCues } from './cues.js';
 import { Post } from './post.js';
 
 const q = new URLSearchParams(location.search);
@@ -109,7 +110,18 @@ async function boot() {
       };
     },
     audio: comp.audio ?? null,
-    cues: () => comp.__cues ?? [],
+    cues: () => computeCues(comp, env),
+    // خطة الصوت الكاملة (بتنبنى بـ Python): موسيقى + صوت + مؤثرات تلقائية ويدوية
+    audioPlan() {
+      const a = comp.audio ?? {};
+      const bm = brand.audio?.music;
+      let music = a.music === false ? null : a.music ?? (bm ? { ...bm } : null);
+      if (music && !music.src) music = { bpm: brand.audio?.bpm, sections: comp.scenes.slice(1).map((s) => s.start + (s.overlap || 0) / 2), ...music };
+      if (music?.src) music = { ...music, src: S.asset(music.src) };
+      const voice = [].concat(a.voice ?? []).map((x) => ({ ...x, src: S.asset(x.src) }));
+      const sfx = [...computeCues(comp, env), ...(a.sfx ?? []).map((x) => (x.src ? { ...x, src: S.asset(x.src) } : x))];
+      return { duration: comp.duration, music, voice, sfx, duck: a.duck, master: a.master ?? { lufs: -14, ceiling_db: -1 } };
+    },
   };
   window.ready = true;
 }

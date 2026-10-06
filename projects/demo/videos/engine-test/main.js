@@ -9,6 +9,7 @@ export default async (S) => {
   const T = 140;
   return {
     background: C.bg,
+    audio: { music: { style: 'tech', gain_db: -8 } },
     post: { bloom: { strength: 0.5, threshold: 0.7 }, grain: { amount: 0.045 }, vignette: { strength: 0.4 }, chromatic: 0.0012, grade: { contrast: 1.06 } },
     scenes: [
       {
