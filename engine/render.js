@@ -187,6 +187,14 @@ export async function render(compPath, o = {}) {
     const s = await stat(out);
     const secs = (Date.now() - t0) / 1000;
     console.log(`✓ ${out}  ${W}x${H} ${fps}fps ${(total / fps).toFixed(1)}s  ${(s.size / 1e6).toFixed(1)}MB  بـ ${secs.toFixed(0)}s (${(total / secs).toFixed(1)} فريم/ث)`);
+    if (opts.format !== 'gif' && !opts['no-audit']) {
+      // فحص بصري للنتيجة: ظهور مفاجئ جامد + كوادر فاضية (ملاحظات المستخدم، VISION.md)
+      await new Promise((r) => {
+        const py = spawn(path.join(ROOT, '.venv/bin/python'), ['tools/videoaudit.py', out, '--json', path.join(outDir, 'video-audit.json')], { cwd: ROOT, stdio: ['ignore', 'pipe', 'inherit'] });
+        let o = ''; py.stdout.on('data', (d) => (o += d));
+        py.on('close', () => { console.log(o.trim().split('\n').map((l) => '  ' + l).join('\n')); r(); });
+      });
+    }
     return { out, W, H, fps, duration: total / fps };
   } finally {
     await browser.close();
