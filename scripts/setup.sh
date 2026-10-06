@@ -22,6 +22,13 @@ from rembg import new_session; new_session('u2net'); new_session('isnet-general-
 from faster_whisper import WhisperModel; WhisperModel('small', device='cpu', compute_type='int8')
 PY
 
+echo "▸ طبقة الفهم البصري-الحركي (torch CPU، SAM 2، عمق، RAFT، Demucs، CLIP، TransNetV2)"
+.venv/bin/python -c "import torch, sam2, demucs, open_clip" 2>/dev/null || {
+  .venv/bin/pip install -q -r requirements-vision.txt
+  .venv/bin/pip install -q "git+https://github.com/facebookresearch/sam2.git" || true
+}
+.venv/bin/python tools/vision_models.py all >/dev/null 2>&1 || true
+
 echo "▸ تسجيل الخطوط بالنظام (لـ Chromium وffmpeg)"
 mkdir -p "$HOME/.local/share/fonts"
 ln -sfn "$ROOT/assets/fonts" "$HOME/.local/share/fonts/motion-studio"

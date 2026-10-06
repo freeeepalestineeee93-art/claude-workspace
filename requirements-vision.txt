@@ -1,0 +1,15 @@
+# طبقة الفهم البصري-الحركي (Creative DNA): CPU
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch
+torchvision
+torchaudio
+transformers
+timm
+kornia
+einops
+safetensors
+huggingface_hub
+demucs
+open_clip_torch
+transnetv2-pytorch
+mediapipe
