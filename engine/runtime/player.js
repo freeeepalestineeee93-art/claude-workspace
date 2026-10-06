@@ -2,8 +2,10 @@
 // الرابط: /engine/player.html?comp=projects/x/videos/y/main.js&aspect=9:16&fps=30&scale=1
 
 import { createStudio } from '../../lib/studio.js';
-import { buildTimeline, renderFrame, preloadAll, prepareFrame } from './timeline.js';
+import { buildTimeline, renderFrame, preloadAll, prepareFrame, allLayers } from './timeline.js';
+import { exportGeometry } from './runtime.js';
 import { plugins } from './plugins.js';
+const v = (x, t) => (typeof x === 'number' ? x : x?.kf ? x.kf[0][1] : typeof x === 'object' && x && 'from' in x ? x.to : x);
 import { computeCues } from './cues.js';
 import { parseColor } from '../../lib/anim.js';
 const parseColorSafe = (c) => { try { return parseColor(c); } catch { return [255, 255, 255, 1]; } };
@@ -155,6 +157,64 @@ async function boot() {
         prev = d;
       }
       return out;
+    },
+    // تسجيل كل عنصر فريم فريم (للتصدير لـ After Effects): مصفوفة التحويل + الشفافية + الشكل
+    async bake(step) {
+      step = step ?? 1 / fps;
+      let id = 0;
+      for (const L of allLayers(comp)) if (!L.__id) L.__id = ++id;
+      const els = new Map();
+      const mul = (A, B) => [A[0] * B[0] + A[2] * B[1], A[1] * B[0] + A[3] * B[1], A[0] * B[2] + A[2] * B[3], A[1] * B[2] + A[3] * B[3], A[0] * B[4] + A[2] * B[5] + A[4], A[1] * B[4] + A[3] * B[5] + A[5]];
+      const M = (m) => [m.a, m.b, m.c, m.d, m.e, m.f];
+      const sceneIdx = (e) => (e.scene ? comp.scenes.indexOf(e.scene) : -1);
+      const nF = Math.round(comp.duration / step);
+      for (let f = 0; f <= nF; f++) {
+        const t = f * step;
+        await prepareFrame(comp, t);
+        renderFrame(wctx, comp, t, { ...env, rec: {
+          layer(L, m, alpha, lt, e) {
+            if (L.type === 'group' || L.type === 'text') return;
+            const key = 'L' + L.__id;
+            let el = els.get(key);
+            if (!el) { el = { key, kind: 'layer', type: L.type, name: L.name ?? L.id ?? `${L.type}-${L.__id}`, scene: sceneIdx(e), blend: L.blend ?? null, frames: {} }; els.set(key, el); }
+            const geo = exportGeometry(L, lt);
+            const gs = JSON.stringify(geo);
+            const fr = { m: M(m), o: alpha, blur: e.recBlur ?? 0 };
+            if (gs !== el._last) { fr.geo = geo; el._last = gs; }
+            el.frames[f] = fr;
+          },
+          text(r) {
+            const L = r.L, m = M(r.matrix), lay = r.lay;
+            const words = String(r.text).split(/\s+/).filter(Boolean);
+            const shapes = r.by === 'char' || r.by === 'glyph';
+            for (const u of r.units) {
+              const st = r.state(u);
+              const key = `T${L.__id}:${r.by}:${u.i}`;
+              const ox = u.box.cx, oy = L.reveal?.pivot === 'center' ? u.box.cy : u.box.y + u.box.h;
+              const rot = (st.rotation * Math.PI) / 180, c = Math.cos(rot), sn = Math.sin(rot);
+              const sx = st.scale * st.scaleX, sy = st.scale * st.scaleY;
+              let U = mul(m, [1, 0, 0, 1, ox + st.x, oy + st.y]);
+              U = mul(U, [c, sn, -sn, c, 0, 0]);
+              if (st.skewX) U = mul(U, [1, 0, Math.tan((st.skewX * Math.PI) / 180), 1, 0, 0]);
+              U = mul(U, [sx, 0, 0, sy, -ox * sx, -oy * sy].map((x, i) => (i < 4 ? x : 0)));
+              U = mul(U, [1, 0, 0, 1, -ox, -oy]);
+              let el = els.get(key);
+              if (!el) {
+                const line = lay.lines[u.glyphs[0]?.line ?? 0];
+                const txt = r.by === 'word' ? words[u.word ?? u.i] : r.by === 'line' ? words.filter((_, wi) => lay.words.find((w) => w.index === wi)?.line === u.i).join(' ') : r.by === 'all' ? String(r.text) : null;
+                el = { key, kind: shapes ? 'glyphs' : 'text', name: (txt ?? u.glyphs.map((g) => g.char).join('')).slice(0, 40), scene: sceneIdx(r.env), frames: {},
+                  text: txt, family: L.family, weight: v(L.weight ?? 400, 0), size: lay.size, fill: r.fill, anchor: [u.box.cx, line?.y ?? oy], rtl: lay.rtl,
+                  glyphs: shapes ? u.glyphs.map((g) => ({ d: g.d, m: [lay.scale * g.sx, 0, 0, -lay.scale, g.x, g.y] })) : null, lines: r.by === 'all' ? lay.lines.length : 1, lineHeight: (L.lineHeight ?? 1.25) * lay.size };
+                els.set(key, el);
+              }
+              el.frames[f] = { m: U, o: r.alpha * st.opacity, blur: st.blur };
+            }
+          },
+        } });
+      }
+      const unsupported = [...new Set(allLayers(comp).filter((L) => ['particles', 'three', 'lottie', 'video', 'custom', 'canvas'].includes(L.type)).map((L) => L.type))];
+      return { W: S.W, H: S.H, fps: 1 / step, duration: comp.duration, background: comp.background, post: comp.post ?? null,
+        scenes: comp.scenes.map((sc) => ({ start: sc.start, end: sc.end, transition: sc.transition ?? null })), elements: [...els.values()].map(({ _last, ...e }) => e), unsupported };
     },
     audio: comp.audio ?? null,
     cues: () => computeCues(comp, env),

@@ -319,7 +319,7 @@ export function drawLayer(ctx, L, t, env) {
     ctx.shadowOffsetY = s.y ?? 12;
   }
   applyTransform(ctx, L, t, env);
-  if (env.rec) env.rec.layer?.(L, ctx.getTransform(), ctx.globalAlpha, lt);
+  if (env.rec) env.rec.layer?.(L, ctx.getTransform(), ctx.globalAlpha * (env.recOpacity ?? 1), lt, env);
   drawContent(ctx, L, lt, env);
   ctx.restore();
 }
@@ -331,7 +331,7 @@ function drawIsolated(ctx, L, t, env, op) {
   const cx = c.getContext('2d');
   cx.setTransform(ctx.getTransform());
   const inner = { ...L, opacity: 1, blur: 0, glow: null, mask: null, matte: null, blend: null, isolate: false, fx: null };
-  drawLayer(cx, inner, t, env);
+  drawLayer(cx, inner, t, env.rec ? { ...env, recOpacity: (env.recOpacity ?? 1) * op, recBlur: v(L.blur ?? 0, t) } : env);
 
   if (L.mask) {
     // القناع: شكل بيقص الطبقة (بيتحرك لحاله)
@@ -589,7 +589,7 @@ function drawText(ctx, L, t, env) {
     const pts = [[b.x, b.y], [b.x + b.w, b.y], [b.x, b.y + b.h], [b.x + b.w, b.y + b.h]].map(([x, y]) => [m.a * x + m.c * y + m.e, m.b * x + m.d * y + m.f]);
     const xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]);
     env.rec.text({ L, scene: env.scene?.start ?? -1, text: v(L.text, t), box: { x: Math.min(...xs), y: Math.min(...ys), w: Math.max(...xs) - Math.min(...xs), h: Math.max(...ys) - Math.min(...ys) },
-      size: lay.size * Math.hypot(m.a, m.b), fill: solidOf(v(fill, t)), alpha: ctx.globalAlpha, lay, matrix: m, units: us, state: (u) => unitState(L, u, n, t) });
+      size: lay.size * Math.hypot(m.a, m.b), fill: solidOf(v(fill, t)), alpha: ctx.globalAlpha * (env.recOpacity ?? 1), lay, matrix: m, units: us, by, state: (u) => unitState(L, u, n, t), env });
   }
 
   // علامات تحت النص (تظليل كلمة) — بتنرسم قبل النص
@@ -713,6 +713,31 @@ function drawMark(ctx, lay, mk, t) {
     strokeAndFill(ctx, { stroke: color, strokeWidth: mk.width ?? lay.size * 0.05, trim: [0, clamp(p)] }, t, d);
   }
   ctx.restore();
+}
+
+// ───────────────────────── معلومات التصدير (After Effects) ─────────────────────────
+// شكل الطبقة بلحظة t بإحداثياتها المحلية: مسارات + ألوان
+export function exportGeometry(L, t) {
+  const fillC = (f) => { const x = v(f, t); return x == null ? null : typeof x === 'string' || Array.isArray(x) ? parseColor(x) : parseColor(x.stops?.[0]?.[1] ?? '#fff'); };
+  const base = { fill: fillC(L.fill), stroke: L.stroke ? fillC(L.stroke) : null, strokeWidth: v(L.strokeWidth ?? 2, t), trim: L.trim ? v(L.trim, t) : null };
+  switch (L.type) {
+    case 'rect': return { ...base, paths: [rectPath(v(L.w, t), v(L.h, t), v(L.radius ?? 0, t))] };
+    case 'ellipse': { const w = v(L.w ?? L.r * 2, t); return { ...base, paths: [ellipsePath(w, v(L.h ?? w, t))] }; }
+    case 'polygon': return { ...base, paths: [polygonPath(L.sides ?? 3, v(L.r ?? 50, t), L.inner != null ? v(L.inner, t) : null, v(L.angle ?? 0, t))] };
+    case 'line': return { ...base, fill: null, paths: [linePath(v(L.points, t), L.closed)] };
+    case 'path': return { ...base, paths: [v(L.d, t)] };
+    case 'icon': {
+      const ic = icons.get(L.icon); const size = v(L.size ?? 96, t); const [vx, vy, vw, vh] = ic.vb; const k = size / Math.max(vw, vh);
+      const col = parseColor(L.color ?? '#fff');
+      return { local: [k, 0, 0, k, -k * (vx + vw / 2), -k * (vy + vh / 2)], fill: ic.stroke ? null : col, stroke: ic.stroke ? col : null, strokeWidth: v(L.strokeWidth ?? 2, t) * (Math.max(vw, vh) / 24) * k, trim: base.trim, paths: ic.parts.map((p) => p.d) };
+    }
+    case 'svg': {
+      const art = arts.get(L.src); const [vx, vy, vw, vh] = art.vb; const k = v(L.size ?? vw, t) / vw;
+      return { local: [k, 0, 0, k, -k * (vx + vw / 2), -k * (vy + vh / 2)], parts: art.parts.map((p) => ({ d: p.d, m: p.m, fill: p.fill ? parseColor(L.recolor?.[p.fill.toLowerCase()] ?? p.fill) : null })) };
+    }
+    case 'image': return { src: L.src, w: v(L.w, t), h: v(L.h, t) };
+    default: return null;
+  }
 }
 
 // ───────────────────────── تحميل الموارد ─────────────────────────

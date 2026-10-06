@@ -8,3 +8,5 @@ renders/
 .DS_Store
 tools/smoke/frame.png
 .cache/
+export-ae/
+**/export-ae/

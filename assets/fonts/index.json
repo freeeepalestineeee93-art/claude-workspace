@@ -14,7 +14,73 @@
       900.0
      ]
     },
-    "color": false
+    "color": false,
+    "ps": "Alexandria-Regular",
+    "instances": [
+     {
+      "name": "Thin",
+      "ps": "Alexandria-Thin",
+      "coords": {
+       "wght": 100.0
+      }
+     },
+     {
+      "name": "ExtraLight",
+      "ps": "Alexandria-ExtraLight",
+      "coords": {
+       "wght": 200.0
+      }
+     },
+     {
+      "name": "Light",
+      "ps": "Alexandria-Light",
+      "coords": {
+       "wght": 300.0
+      }
+     },
+     {
+      "name": "Regular",
+      "ps": "Alexandria-Regular",
+      "coords": {
+       "wght": 400.0
+      }
+     },
+     {
+      "name": "Medium",
+      "ps": "Alexandria-Medium",
+      "coords": {
+       "wght": 500.0
+      }
+     },
+     {
+      "name": "SemiBold",
+      "ps": "Alexandria-SemiBold",
+      "coords": {
+       "wght": 600.0
+      }
+     },
+     {
+      "name": "Bold",
+      "ps": "Alexandria-Bold",
+      "coords": {
+       "wght": 700.0
+      }
+     },
+     {
+      "name": "ExtraBold",
+      "ps": "Alexandria-ExtraBold",
+      "coords": {
+       "wght": 800.0
+      }
+     },
+     {
+      "name": "Black",
+      "ps": "Alexandria-Black",
+      "coords": {
+       "wght": 900.0
+      }
+     }
+    ]
    }
   ]
  },
@@ -27,7 +93,9 @@
     "weight": 700,
     "italic": false,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "Almarai-Bold",
+    "instances": []
    },
    {
     "path": "assets/fonts/almarai/Almarai-ExtraBold.ttf",
@@ -35,7 +103,9 @@
     "weight": 800,
     "italic": false,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "Almarai-ExtraBold",
+    "instances": []
    },
    {
     "path": "assets/fonts/almarai/Almarai-Light.ttf",
@@ -43,7 +113,9 @@
     "weight": 300,
     "italic": false,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "Almarai-Light",
+    "instances": []
    },
    {
     "path": "assets/fonts/almarai/Almarai-Regular.ttf",
@@ -51,7 +123,9 @@
     "weight": 400,
     "italic": false,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "Almarai-Regular",
+    "instances": []
    }
   ]
  },
@@ -64,7 +138,9 @@
     "weight": 700,
     "italic": false,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "Amiri-Bold",
+    "instances": []
    },
    {
     "path": "assets/fonts/amiri/Amiri-BoldItalic.ttf",
@@ -72,7 +148,9 @@
     "weight": 700,
     "italic": true,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "Amiri-BoldItalic",
+    "instances": []
    },
    {
     "path": "assets/fonts/amiri/Amiri-Italic.ttf",
@@ -80,7 +158,9 @@
     "weight": 400,
     "italic": true,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "Amiri-Italic",
+    "instances": []
    },
    {
     "path": "assets/fonts/amiri/Amiri-Regular.ttf",
@@ -88,7 +168,9 @@
     "weight": 400,
     "italic": false,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "Amiri-Regular",
+    "instances": []
    }
   ]
  },
@@ -112,7 +194,82 @@
       125.0
      ]
     },
-    "color": false
+    "color": false,
+    "ps": "Archivo-SemiBoldItalic",
+    "instances": [
+     {
+      "name": "Thin Italic",
+      "ps": "ArchivoItalic-Thin",
+      "coords": {
+       "wght": 100.0,
+       "wdth": 100.0
+      }
+     },
+     {
+      "name": "ExtraLight Italic",
+      "ps": "ArchivoItalic-ExtraLight",
+      "coords": {
+       "wght": 200.0,
+       "wdth": 100.0
+      }
+     },
+     {
+      "name": "Light Italic",
+      "ps": "ArchivoItalic-Light",
+      "coords": {
+       "wght": 300.0,
+       "wdth": 100.0
+      }
+     },
+     {
+      "name": "Italic",
+      "ps": "ArchivoItalic-Regular",
+      "coords": {
+       "wght": 400.0,
+       "wdth": 100.0
+      }
+     },
+     {
+      "name": "Medium Italic",
+      "ps": "ArchivoItalic-Medium",
+      "coords": {
+       "wght": 500.0,
+       "wdth": 100.0
+      }
+     },
+     {
+      "name": "SemiBold Italic",
+      "ps": "ArchivoItalic-SemiBold",
+      "coords": {
+       "wght": 600.0,
+       "wdth": 100.0
+      }
+     },
+     {
+      "name": "Bold Italic",
+      "ps": "ArchivoItalic-Bold",
+      "coords": {
+       "wght": 700.0,
+       "wdth": 100.0
+      }
+     },
+     {
+      "name": "ExtraBold Italic",
+      "ps": "ArchivoItalic-ExtraBold",
+      "coords": {
+       "wght": 800.0,
+       "wdth": 100.0
+      }
+     },
+     {
+      "name": "Black Italic",
+      "ps": "ArchivoItalic-Black",
+      "coords": {
+       "wght": 900.0,
+       "wdth": 100.0
+      }
+     }
+    ]
    },
    {
     "path": "assets/fonts/archivo/Archivo[wdth,wght].ttf",
@@ -131,7 +288,82 @@
       125.0
      ]
     },
-    "color": false
+    "color": false,
+    "ps": "Archivo-SemiBold",
+    "instances": [
+     {
+      "name": "Thin",
+      "ps": "ArchivoRoman-Thin",
+      "coords": {
+       "wght": 100.0,
+       "wdth": 100.0
+      }
+     },
+     {
+      "name": "ExtraLight",
+      "ps": "ArchivoRoman-ExtraLight",
+      "coords": {
+       "wght": 200.0,
+       "wdth": 100.0
+      }
+     },
+     {
+      "name": "Light",
+      "ps": "ArchivoRoman-Light",
+      "coords": {
+       "wght": 300.0,
+       "wdth": 100.0
+      }
+     },
+     {
+      "name": "Regular",
+      "ps": "ArchivoRoman-Regular",
+      "coords": {
+       "wght": 400.0,
+       "wdth": 100.0
+      }
+     },
+     {
+      "name": "Medium",
+      "ps": "ArchivoRoman-Medium",
+      "coords": {
+       "wght": 500.0,
+       "wdth": 100.0
+      }
+     },
+     {
+      "name": "SemiBold",
+      "ps": "ArchivoRoman-SemiBold",
+      "coords": {
+       "wght": 600.0,
+       "wdth": 100.0
+      }
+     },
+     {
+      "name": "Bold",
+      "ps": "ArchivoRoman-Bold",
+      "coords": {
+       "wght": 700.0,
+       "wdth": 100.0
+      }
+     },
+     {
+      "name": "ExtraBold",
+      "ps": "ArchivoRoman-ExtraBold",
+      "coords": {
+       "wght": 800.0,
+       "wdth": 100.0
+      }
+     },
+     {
+      "name": "Black",
+      "ps": "ArchivoRoman-Black",
+      "coords": {
+       "wght": 900.0,
+       "wdth": 100.0
+      }
+     }
+    ]
    }
   ]
  },
@@ -144,7 +376,9 @@
     "weight": 700,
     "italic": false,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "ArefRuqaa-Bold",
+    "instances": []
    },
    {
     "path": "assets/fonts/arefruqaa/ArefRuqaa-Regular.ttf",
@@ -152,7 +386,9 @@
     "weight": 400,
     "italic": false,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "ArefRuqaa-Regular",
+    "instances": []
    }
   ]
  },
@@ -165,7 +401,9 @@
     "weight": 700,
     "italic": false,
     "axes": {},
-    "color": true
+    "color": true,
+    "ps": "ArefRuqaaInk-Bold",
+    "instances": []
    },
    {
     "path": "assets/fonts/arefruqaaink/ArefRuqaaInk-Regular.ttf",
@@ -173,7 +411,9 @@
     "weight": 400,
     "italic": false,
     "axes": {},
-    "color": true
+    "color": true,
+    "ps": "ArefRuqaaInk-Regular",
+    "instances": []
    }
   ]
  },
@@ -192,7 +432,45 @@
       800.0
      ]
     },
-    "color": false
+    "color": false,
+    "ps": "BalooBhaijaan2-Regular",
+    "instances": [
+     {
+      "name": "Regular",
+      "ps": "BalooBhaijaan2-Regular",
+      "coords": {
+       "wght": 400.0
+      }
+     },
+     {
+      "name": "Medium",
+      "ps": "BalooBhaijaan2-Medium",
+      "coords": {
+       "wght": 500.0
+      }
+     },
+     {
+      "name": "SemiBold",
+      "ps": "BalooBhaijaan2-SemiBold",
+      "coords": {
+       "wght": 600.0
+      }
+     },
+     {
+      "name": "Bold",
+      "ps": "BalooBhaijaan2-Bold",
+      "coords": {
+       "wght": 700.0
+      }
+     },
+     {
+      "name": "ExtraBold",
+      "ps": "BalooBhaijaan2-ExtraBold",
+      "coords": {
+       "wght": 800.0
+      }
+     }
+    ]
    }
   ]
  },
@@ -205,7 +483,9 @@
     "weight": 400,
     "italic": false,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "BebasNeue-Regular",
+    "instances": []
    }
   ]
  },
@@ -218,7 +498,9 @@
     "weight": 400,
     "italic": false,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "Blaka-Regular",
+    "instances": []
    }
   ]
  },
@@ -231,7 +513,9 @@
     "weight": 400,
     "italic": false,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "BlakaHollow-Regular",
+    "instances": []
    }
   ]
  },
@@ -244,7 +528,9 @@
     "weight": 400,
     "italic": false,
     "axes": {},
-    "color": true
+    "color": true,
+    "ps": "BlakaInk-Regular",
+    "instances": []
    }
   ]
  },
@@ -268,7 +554,74 @@
       11.0
      ]
     },
-    "color": false
+    "color": false,
+    "ps": "Cairo-Regular",
+    "instances": [
+     {
+      "name": "ExtraLight",
+      "ps": "Cairo-ExtraLight",
+      "coords": {
+       "wght": 200.0,
+       "slnt": 0.0
+      }
+     },
+     {
+      "name": "Light",
+      "ps": "Cairo-Light",
+      "coords": {
+       "wght": 300.0,
+       "slnt": 0.0
+      }
+     },
+     {
+      "name": "Regular",
+      "ps": "Cairo-Regular",
+      "coords": {
+       "wght": 400.0,
+       "slnt": 0.0
+      }
+     },
+     {
+      "name": "Medium",
+      "ps": "Cairo-Medium",
+      "coords": {
+       "wght": 500.0,
+       "slnt": 0.0
+      }
+     },
+     {
+      "name": "SemiBold",
+      "ps": "Cairo-SemiBold",
+      "coords": {
+       "wght": 600.0,
+       "slnt": 0.0
+      }
+     },
+     {
+      "name": "Bold",
+      "ps": "Cairo-Bold",
+      "coords": {
+       "wght": 700.0,
+       "slnt": 0.0
+      }
+     },
+     {
+      "name": "ExtraBold",
+      "ps": "Cairo-ExtraBold",
+      "coords": {
+       "wght": 800.0,
+       "slnt": 0.0
+      }
+     },
+     {
+      "name": "Black",
+      "ps": "Cairo-Black",
+      "coords": {
+       "wght": 900.0,
+       "slnt": 0.0
+      }
+     }
+    ]
    }
   ]
  },
@@ -287,7 +640,59 @@
       800.0
      ]
     },
-    "color": false
+    "color": false,
+    "ps": "Changa-Regular",
+    "instances": [
+     {
+      "name": "ExtraLight",
+      "ps": "Changa-ExtraLight",
+      "coords": {
+       "wght": 200.0
+      }
+     },
+     {
+      "name": "Light",
+      "ps": "Changa-Light",
+      "coords": {
+       "wght": 300.0
+      }
+     },
+     {
+      "name": "Regular",
+      "ps": "Changa-Regular",
+      "coords": {
+       "wght": 400.0
+      }
+     },
+     {
+      "name": "Medium",
+      "ps": "Changa-Medium",
+      "coords": {
+       "wght": 500.0
+      }
+     },
+     {
+      "name": "SemiBold",
+      "ps": "Changa-SemiBold",
+      "coords": {
+       "wght": 600.0
+      }
+     },
+     {
+      "name": "Bold",
+      "ps": "Changa-Bold",
+      "coords": {
+       "wght": 700.0
+      }
+     },
+     {
+      "name": "ExtraBold",
+      "ps": "Changa-ExtraBold",
+      "coords": {
+       "wght": 800.0
+      }
+     }
+    ]
    }
   ]
  },
@@ -311,7 +716,82 @@
       1000.0
      ]
     },
-    "color": false
+    "color": false,
+    "ps": "DMSans-9ptItalic",
+    "instances": [
+     {
+      "name": "Thin Italic",
+      "ps": "DMSans-ThinItalic",
+      "coords": {
+       "opsz": 14.0,
+       "wght": 100.0
+      }
+     },
+     {
+      "name": "ExtraLight Italic",
+      "ps": "DMSans-ExtraLightItalic",
+      "coords": {
+       "opsz": 14.0,
+       "wght": 200.0
+      }
+     },
+     {
+      "name": "Light Italic",
+      "ps": "DMSans-LightItalic",
+      "coords": {
+       "opsz": 14.0,
+       "wght": 300.0
+      }
+     },
+     {
+      "name": "Italic",
+      "ps": "DMSans-Italic",
+      "coords": {
+       "opsz": 14.0,
+       "wght": 400.0
+      }
+     },
+     {
+      "name": "Medium Italic",
+      "ps": "DMSans-MediumItalic",
+      "coords": {
+       "opsz": 14.0,
+       "wght": 500.0
+      }
+     },
+     {
+      "name": "SemiBold Italic",
+      "ps": "DMSans-SemiBoldItalic",
+      "coords": {
+       "opsz": 14.0,
+       "wght": 600.0
+      }
+     },
+     {
+      "name": "Bold Italic",
+      "ps": "DMSans-BoldItalic",
+      "coords": {
+       "opsz": 14.0,
+       "wght": 700.0
+      }
+     },
+     {
+      "name": "ExtraBold Italic",
+      "ps": "DMSans-ExtraBoldItalic",
+      "coords": {
+       "opsz": 14.0,
+       "wght": 800.0
+      }
+     },
+     {
+      "name": "Black Italic",
+      "ps": "DMSans-BlackItalic",
+      "coords": {
+       "opsz": 14.0,
+       "wght": 900.0
+      }
+     }
+    ]
    },
    {
     "path": "assets/fonts/dmsans/DMSans[opsz,wght].ttf",
@@ -330,7 +810,82 @@
       1000.0
      ]
     },
-    "color": false
+    "color": false,
+    "ps": "DMSans-9ptRegular",
+    "instances": [
+     {
+      "name": "Thin",
+      "ps": "DMSans-Thin",
+      "coords": {
+       "opsz": 14.0,
+       "wght": 100.0
+      }
+     },
+     {
+      "name": "ExtraLight",
+      "ps": "DMSans-ExtraLight",
+      "coords": {
+       "opsz": 14.0,
+       "wght": 200.0
+      }
+     },
+     {
+      "name": "Light",
+      "ps": "DMSans-Light",
+      "coords": {
+       "opsz": 14.0,
+       "wght": 300.0
+      }
+     },
+     {
+      "name": "Regular",
+      "ps": "DMSans-Regular",
+      "coords": {
+       "opsz": 14.0,
+       "wght": 400.0
+      }
+     },
+     {
+      "name": "Medium",
+      "ps": "DMSans-Medium",
+      "coords": {
+       "opsz": 14.0,
+       "wght": 500.0
+      }
+     },
+     {
+      "name": "SemiBold",
+      "ps": "DMSans-SemiBold",
+      "coords": {
+       "opsz": 14.0,
+       "wght": 600.0
+      }
+     },
+     {
+      "name": "Bold",
+      "ps": "DMSans-Bold",
+      "coords": {
+       "opsz": 14.0,
+       "wght": 700.0
+      }
+     },
+     {
+      "name": "ExtraBold",
+      "ps": "DMSans-ExtraBold",
+      "coords": {
+       "opsz": 14.0,
+       "wght": 800.0
+      }
+     },
+     {
+      "name": "Black",
+      "ps": "DMSans-Black",
+      "coords": {
+       "opsz": 14.0,
+       "wght": 900.0
+      }
+     }
+    ]
    }
   ]
  },
@@ -349,7 +904,38 @@
       700.0
      ]
     },
-    "color": false
+    "color": false,
+    "ps": "ElMessiri-Regular",
+    "instances": [
+     {
+      "name": "Regular",
+      "ps": "ElMessiri-Regular",
+      "coords": {
+       "wght": 400.0
+      }
+     },
+     {
+      "name": "Medium",
+      "ps": "ElMessiri-Medium",
+      "coords": {
+       "wght": 500.0
+      }
+     },
+     {
+      "name": "SemiBold",
+      "ps": "ElMessiri-SemiBold",
+      "coords": {
+       "wght": 600.0
+      }
+     },
+     {
+      "name": "Bold",
+      "ps": "ElMessiri-Bold",
+      "coords": {
+       "wght": 700.0
+      }
+     }
+    ]
    }
   ]
  },
@@ -362,7 +948,9 @@
     "weight": 400,
     "italic": false,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "Gulzar-Regular",
+    "instances": []
    }
   ]
  },
@@ -391,7 +979,91 @@
       16.0
      ]
     },
-    "color": false
+    "color": false,
+    "ps": "Handjet-Regular",
+    "instances": [
+     {
+      "name": "Thin",
+      "ps": "Handjet-Thin",
+      "coords": {
+       "wght": 100.0,
+       "ELGR": 1.0,
+       "ELSH": 2.0
+      }
+     },
+     {
+      "name": "ExtraLight",
+      "ps": "Handjet-ExtraLight",
+      "coords": {
+       "wght": 200.0,
+       "ELGR": 1.0,
+       "ELSH": 2.0
+      }
+     },
+     {
+      "name": "Light",
+      "ps": "Handjet-Light",
+      "coords": {
+       "wght": 300.0,
+       "ELGR": 1.0,
+       "ELSH": 2.0
+      }
+     },
+     {
+      "name": "Regular",
+      "ps": "Handjet-Regular",
+      "coords": {
+       "wght": 400.0,
+       "ELGR": 1.0,
+       "ELSH": 2.0
+      }
+     },
+     {
+      "name": "Medium",
+      "ps": "Handjet-Medium",
+      "coords": {
+       "wght": 500.0,
+       "ELGR": 1.0,
+       "ELSH": 2.0
+      }
+     },
+     {
+      "name": "SemiBold",
+      "ps": "Handjet-SemiBold",
+      "coords": {
+       "wght": 600.0,
+       "ELGR": 1.0,
+       "ELSH": 2.0
+      }
+     },
+     {
+      "name": "Bold",
+      "ps": "Handjet-Bold",
+      "coords": {
+       "wght": 700.0,
+       "ELGR": 1.0,
+       "ELSH": 2.0
+      }
+     },
+     {
+      "name": "ExtraBold",
+      "ps": "Handjet-ExtraBold",
+      "coords": {
+       "wght": 800.0,
+       "ELGR": 1.0,
+       "ELSH": 2.0
+      }
+     },
+     {
+      "name": "Black",
+      "ps": "Handjet-Black",
+      "coords": {
+       "wght": 900.0,
+       "ELGR": 1.0,
+       "ELSH": 2.0
+      }
+     }
+    ]
    }
   ]
  },
@@ -404,7 +1076,9 @@
     "weight": 700,
     "italic": false,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "Harmattan-Bold",
+    "instances": []
    },
    {
     "path": "assets/fonts/harmattan/Harmattan-Medium.ttf",
@@ -412,7 +1086,9 @@
     "weight": 500,
     "italic": false,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "Harmattan-Medium",
+    "instances": []
    },
    {
     "path": "assets/fonts/harmattan/Harmattan-Regular.ttf",
@@ -420,7 +1096,9 @@
     "weight": 400,
     "italic": false,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "Harmattan-Regular",
+    "instances": []
    },
    {
     "path": "assets/fonts/harmattan/Harmattan-SemiBold.ttf",
@@ -428,7 +1106,9 @@
     "weight": 600,
     "italic": false,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "Harmattan-SemiBold",
+    "instances": []
    }
   ]
  },
@@ -441,7 +1121,9 @@
     "weight": 700,
     "italic": false,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "IBMPlexSansArabic-Bold",
+    "instances": []
    },
    {
     "path": "assets/fonts/ibmplexsansarabic/IBMPlexSansArabic-ExtraLight.ttf",
@@ -449,7 +1131,9 @@
     "weight": 200,
     "italic": false,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "IBMPlexSansArabic-ExtraLight",
+    "instances": []
    },
    {
     "path": "assets/fonts/ibmplexsansarabic/IBMPlexSansArabic-Light.ttf",
@@ -457,7 +1141,9 @@
     "weight": 300,
     "italic": false,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "IBMPlexSansArabic-Light",
+    "instances": []
    },
    {
     "path": "assets/fonts/ibmplexsansarabic/IBMPlexSansArabic-Medium.ttf",
@@ -465,7 +1151,9 @@
     "weight": 500,
     "italic": false,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "IBMPlexSansArabic-Medium",
+    "instances": []
    },
    {
     "path": "assets/fonts/ibmplexsansarabic/IBMPlexSansArabic-Regular.ttf",
@@ -473,7 +1161,9 @@
     "weight": 400,
     "italic": false,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "IBMPlexSansArabic-Regular",
+    "instances": []
    },
    {
     "path": "assets/fonts/ibmplexsansarabic/IBMPlexSansArabic-SemiBold.ttf",
@@ -481,7 +1171,9 @@
     "weight": 600,
     "italic": false,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "IBMPlexSansArabic-SemiBold",
+    "instances": []
    },
    {
     "path": "assets/fonts/ibmplexsansarabic/IBMPlexSansArabic-Thin.ttf",
@@ -489,7 +1181,9 @@
     "weight": 100,
     "italic": false,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "IBMPlexSansArabic-Thin",
+    "instances": []
    }
   ]
  },
@@ -502,7 +1196,9 @@
     "weight": 400,
     "italic": true,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "InstrumentSerif-Italic",
+    "instances": []
    },
    {
     "path": "assets/fonts/instrumentserif/InstrumentSerif-Regular.ttf",
@@ -510,7 +1206,9 @@
     "weight": 400,
     "italic": false,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "InstrumentSerif-Regular",
+    "instances": []
    }
   ]
  },
@@ -534,7 +1232,82 @@
       900.0
      ]
     },
-    "color": false
+    "color": false,
+    "ps": "Inter-Italic",
+    "instances": [
+     {
+      "name": "Thin Italic",
+      "ps": "Inter-ThinItalic",
+      "coords": {
+       "opsz": 14.0,
+       "wght": 100.0
+      }
+     },
+     {
+      "name": "ExtraLight Italic",
+      "ps": "Inter-ExtraLightItalic",
+      "coords": {
+       "opsz": 14.0,
+       "wght": 200.0
+      }
+     },
+     {
+      "name": "Light Italic",
+      "ps": "Inter-LightItalic",
+      "coords": {
+       "opsz": 14.0,
+       "wght": 300.0
+      }
+     },
+     {
+      "name": "Italic",
+      "ps": "Inter-Italic",
+      "coords": {
+       "opsz": 14.0,
+       "wght": 400.0
+      }
+     },
+     {
+      "name": "Medium Italic",
+      "ps": "Inter-MediumItalic",
+      "coords": {
+       "opsz": 14.0,
+       "wght": 500.0
+      }
+     },
+     {
+      "name": "SemiBold Italic",
+      "ps": "Inter-SemiBoldItalic",
+      "coords": {
+       "opsz": 14.0,
+       "wght": 600.0
+      }
+     },
+     {
+      "name": "Bold Italic",
+      "ps": "Inter-BoldItalic",
+      "coords": {
+       "opsz": 14.0,
+       "wght": 700.0
+      }
+     },
+     {
+      "name": "ExtraBold Italic",
+      "ps": "Inter-ExtraBoldItalic",
+      "coords": {
+       "opsz": 14.0,
+       "wght": 800.0
+      }
+     },
+     {
+      "name": "Black Italic",
+      "ps": "Inter-BlackItalic",
+      "coords": {
+       "opsz": 14.0,
+       "wght": 900.0
+      }
+     }
+    ]
    },
    {
     "path": "assets/fonts/inter/Inter[opsz,wght].ttf",
@@ -553,7 +1326,82 @@
       900.0
      ]
     },
-    "color": false
+    "color": false,
+    "ps": "Inter-Regular",
+    "instances": [
+     {
+      "name": "Thin",
+      "ps": "Inter-Thin",
+      "coords": {
+       "opsz": 14.0,
+       "wght": 100.0
+      }
+     },
+     {
+      "name": "ExtraLight",
+      "ps": "Inter-ExtraLight",
+      "coords": {
+       "opsz": 14.0,
+       "wght": 200.0
+      }
+     },
+     {
+      "name": "Light",
+      "ps": "Inter-Light",
+      "coords": {
+       "opsz": 14.0,
+       "wght": 300.0
+      }
+     },
+     {
+      "name": "Regular",
+      "ps": "Inter-Regular",
+      "coords": {
+       "opsz": 14.0,
+       "wght": 400.0
+      }
+     },
+     {
+      "name": "Medium",
+      "ps": "Inter-Medium",
+      "coords": {
+       "opsz": 14.0,
+       "wght": 500.0
+      }
+     },
+     {
+      "name": "SemiBold",
+      "ps": "Inter-SemiBold",
+      "coords": {
+       "opsz": 14.0,
+       "wght": 600.0
+      }
+     },
+     {
+      "name": "Bold",
+      "ps": "Inter-Bold",
+      "coords": {
+       "opsz": 14.0,
+       "wght": 700.0
+      }
+     },
+     {
+      "name": "ExtraBold",
+      "ps": "Inter-ExtraBold",
+      "coords": {
+       "opsz": 14.0,
+       "wght": 800.0
+      }
+     },
+     {
+      "name": "Black",
+      "ps": "Inter-Black",
+      "coords": {
+       "opsz": 14.0,
+       "wght": 900.0
+      }
+     }
+    ]
    }
   ]
  },
@@ -572,7 +1420,59 @@
       800.0
      ]
     },
-    "color": false
+    "color": false,
+    "ps": "JetBrainsMono-Italic",
+    "instances": [
+     {
+      "name": "Thin Italic",
+      "ps": "JetBrainsMonoItalic-Thin",
+      "coords": {
+       "wght": 100.0
+      }
+     },
+     {
+      "name": "ExtraLight Italic",
+      "ps": "JetBrainsMonoItalic-ExtraLight",
+      "coords": {
+       "wght": 200.0
+      }
+     },
+     {
+      "name": "Light Italic",
+      "ps": "JetBrainsMonoItalic-Light",
+      "coords": {
+       "wght": 300.0
+      }
+     },
+     {
+      "name": "Italic",
+      "ps": "JetBrainsMonoItalic-Regular",
+      "coords": {
+       "wght": 400.0
+      }
+     },
+     {
+      "name": "Medium Italic",
+      "ps": "JetBrainsMonoItalic-Medium",
+      "coords": {
+       "wght": 500.0
+      }
+     },
+     {
+      "name": "Bold Italic",
+      "ps": "JetBrainsMonoItalic-Bold",
+      "coords": {
+       "wght": 700.0
+      }
+     },
+     {
+      "name": "ExtraBold Italic",
+      "ps": "JetBrainsMonoItalic-ExtraBold",
+      "coords": {
+       "wght": 800.0
+      }
+     }
+    ]
    },
    {
     "path": "assets/fonts/jetbrainsmono/JetBrainsMono[wght].ttf",
@@ -586,7 +1486,59 @@
       800.0
      ]
     },
-    "color": false
+    "color": false,
+    "ps": "JetBrainsMono-Regular",
+    "instances": [
+     {
+      "name": "Thin",
+      "ps": "JetBrainsMonoRoman-Thin",
+      "coords": {
+       "wght": 100.0
+      }
+     },
+     {
+      "name": "ExtraLight",
+      "ps": "JetBrainsMonoRoman-ExtraLight",
+      "coords": {
+       "wght": 200.0
+      }
+     },
+     {
+      "name": "Light",
+      "ps": "JetBrainsMonoRoman-Light",
+      "coords": {
+       "wght": 300.0
+      }
+     },
+     {
+      "name": "Regular",
+      "ps": "JetBrainsMonoRoman-Regular",
+      "coords": {
+       "wght": 400.0
+      }
+     },
+     {
+      "name": "Medium",
+      "ps": "JetBrainsMonoRoman-Medium",
+      "coords": {
+       "wght": 500.0
+      }
+     },
+     {
+      "name": "Bold",
+      "ps": "JetBrainsMonoRoman-Bold",
+      "coords": {
+       "wght": 700.0
+      }
+     },
+     {
+      "name": "ExtraBold",
+      "ps": "JetBrainsMonoRoman-ExtraBold",
+      "coords": {
+       "wght": 800.0
+      }
+     }
+    ]
    }
   ]
  },
@@ -599,7 +1551,9 @@
     "weight": 400,
     "italic": false,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "Jomhuria-Regular",
+    "instances": []
    }
   ]
  },
@@ -612,7 +1566,9 @@
     "weight": 400,
     "italic": false,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "Katibeh-Regular",
+    "instances": []
    }
   ]
  },
@@ -631,7 +1587,45 @@
       900.0
      ]
     },
-    "color": false
+    "color": false,
+    "ps": "Kufam-Italic",
+    "instances": [
+     {
+      "name": "Italic",
+      "ps": "KufamItalic-Regular",
+      "coords": {
+       "wght": 400.0
+      }
+     },
+     {
+      "name": "Medium Italic",
+      "ps": "KufamItalic-Medium",
+      "coords": {
+       "wght": 500.0
+      }
+     },
+     {
+      "name": "SemiBold Italic",
+      "ps": "KufamItalic-SemiBold",
+      "coords": {
+       "wght": 600.0
+      }
+     },
+     {
+      "name": "Bold Italic",
+      "ps": "KufamItalic-Bold",
+      "coords": {
+       "wght": 700.0
+      }
+     },
+     {
+      "name": "Black Italic",
+      "ps": "KufamItalic-Black",
+      "coords": {
+       "wght": 900.0
+      }
+     }
+    ]
    },
    {
     "path": "assets/fonts/kufam/Kufam[wght].ttf",
@@ -645,7 +1639,45 @@
       900.0
      ]
     },
-    "color": false
+    "color": false,
+    "ps": "Kufam-Regular",
+    "instances": [
+     {
+      "name": "Regular",
+      "ps": "KufamRoman-Regular",
+      "coords": {
+       "wght": 400.0
+      }
+     },
+     {
+      "name": "Medium",
+      "ps": "KufamRoman-Medium",
+      "coords": {
+       "wght": 500.0
+      }
+     },
+     {
+      "name": "SemiBold",
+      "ps": "KufamRoman-SemiBold",
+      "coords": {
+       "wght": 600.0
+      }
+     },
+     {
+      "name": "Bold",
+      "ps": "KufamRoman-Bold",
+      "coords": {
+       "wght": 700.0
+      }
+     },
+     {
+      "name": "Black",
+      "ps": "KufamRoman-Black",
+      "coords": {
+       "wght": 900.0
+      }
+     }
+    ]
    }
   ]
  },
@@ -658,7 +1690,9 @@
     "weight": 400,
     "italic": false,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "Lalezar-Regular",
+    "instances": []
    }
   ]
  },
@@ -677,7 +1711,45 @@
       700.0
      ]
     },
-    "color": false
+    "color": false,
+    "ps": "Lemonada-Regular",
+    "instances": [
+     {
+      "name": "Light",
+      "ps": "Lemonada-Light",
+      "coords": {
+       "wght": 300.0
+      }
+     },
+     {
+      "name": "Regular",
+      "ps": "Lemonada-Regular",
+      "coords": {
+       "wght": 400.0
+      }
+     },
+     {
+      "name": "Medium",
+      "ps": "Lemonada-Medium",
+      "coords": {
+       "wght": 500.0
+      }
+     },
+     {
+      "name": "SemiBold",
+      "ps": "Lemonada-SemiBold",
+      "coords": {
+       "wght": 600.0
+      }
+     },
+     {
+      "name": "Bold",
+      "ps": "Lemonada-Bold",
+      "coords": {
+       "wght": 700.0
+      }
+     }
+    ]
    }
   ]
  },
@@ -696,7 +1768,66 @@
       900.0
      ]
     },
-    "color": false
+    "color": false,
+    "ps": "Mada-Regular",
+    "instances": [
+     {
+      "name": "ExtraLight",
+      "ps": "Mada-ExtraLight",
+      "coords": {
+       "wght": 200.0
+      }
+     },
+     {
+      "name": "Light",
+      "ps": "Mada-Light",
+      "coords": {
+       "wght": 300.0
+      }
+     },
+     {
+      "name": "Regular",
+      "ps": "Mada-Regular",
+      "coords": {
+       "wght": 400.0
+      }
+     },
+     {
+      "name": "Medium",
+      "ps": "Mada-Medium",
+      "coords": {
+       "wght": 500.0
+      }
+     },
+     {
+      "name": "SemiBold",
+      "ps": "Mada-SemiBold",
+      "coords": {
+       "wght": 600.0
+      }
+     },
+     {
+      "name": "Bold",
+      "ps": "Mada-Bold",
+      "coords": {
+       "wght": 700.0
+      }
+     },
+     {
+      "name": "ExtraBold",
+      "ps": "Mada-ExtraBold",
+      "coords": {
+       "wght": 800.0
+      }
+     },
+     {
+      "name": "Black",
+      "ps": "Mada-Black",
+      "coords": {
+       "wght": 900.0
+      }
+     }
+    ]
    }
   ]
  },
@@ -715,7 +1846,59 @@
       800.0
      ]
     },
-    "color": false
+    "color": false,
+    "ps": "Manrope-ExtraLight",
+    "instances": [
+     {
+      "name": "ExtraLight",
+      "ps": "Manrope-ExtraLight",
+      "coords": {
+       "wght": 200.0
+      }
+     },
+     {
+      "name": "Light",
+      "ps": "Manrope-Light",
+      "coords": {
+       "wght": 300.0
+      }
+     },
+     {
+      "name": "Regular",
+      "ps": "Manrope-Regular",
+      "coords": {
+       "wght": 400.0
+      }
+     },
+     {
+      "name": "Medium",
+      "ps": "Manrope-Medium",
+      "coords": {
+       "wght": 500.0
+      }
+     },
+     {
+      "name": "SemiBold",
+      "ps": "Manrope-SemiBold",
+      "coords": {
+       "wght": 600.0
+      }
+     },
+     {
+      "name": "Bold",
+      "ps": "Manrope-Bold",
+      "coords": {
+       "wght": 700.0
+      }
+     },
+     {
+      "name": "ExtraBold",
+      "ps": "Manrope-ExtraBold",
+      "coords": {
+       "wght": 800.0
+      }
+     }
+    ]
    }
   ]
  },
@@ -734,7 +1917,45 @@
       700.0
      ]
     },
-    "color": false
+    "color": false,
+    "ps": "Marhey-Light",
+    "instances": [
+     {
+      "name": "Light",
+      "ps": "Marhey-Light",
+      "coords": {
+       "wght": 300.0
+      }
+     },
+     {
+      "name": "Regular",
+      "ps": "Marhey-Regular",
+      "coords": {
+       "wght": 400.0
+      }
+     },
+     {
+      "name": "Medium",
+      "ps": "Marhey-Medium",
+      "coords": {
+       "wght": 500.0
+      }
+     },
+     {
+      "name": "SemiBold",
+      "ps": "Marhey-SemiBold",
+      "coords": {
+       "wght": 600.0
+      }
+     },
+     {
+      "name": "Bold",
+      "ps": "Marhey-Bold",
+      "coords": {
+       "wght": 700.0
+      }
+     }
+    ]
    }
   ]
  },
@@ -753,7 +1974,38 @@
       700.0
      ]
     },
-    "color": false
+    "color": false,
+    "ps": "MarkaziText-Regular",
+    "instances": [
+     {
+      "name": "Regular",
+      "ps": "MarkaziText-Regular",
+      "coords": {
+       "wght": 400.0
+      }
+     },
+     {
+      "name": "Medium",
+      "ps": "MarkaziText-Medium",
+      "coords": {
+       "wght": 500.0
+      }
+     },
+     {
+      "name": "SemiBold",
+      "ps": "MarkaziText-SemiBold",
+      "coords": {
+       "wght": 600.0
+      }
+     },
+     {
+      "name": "Bold",
+      "ps": "MarkaziText-Bold",
+      "coords": {
+       "wght": 700.0
+      }
+     }
+    ]
    }
   ]
  },
@@ -766,7 +2018,9 @@
     "weight": 700,
     "italic": false,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "Mirza-Bold",
+    "instances": []
    },
    {
     "path": "assets/fonts/mirza/Mirza-Medium.ttf",
@@ -774,7 +2028,9 @@
     "weight": 500,
     "italic": false,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "Mirza-Medium",
+    "instances": []
    },
    {
     "path": "assets/fonts/mirza/Mirza-Regular.ttf",
@@ -782,7 +2038,9 @@
     "weight": 400,
     "italic": false,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "Mirza-Regular",
+    "instances": []
    },
    {
     "path": "assets/fonts/mirza/Mirza-SemiBold.ttf",
@@ -790,7 +2048,9 @@
     "weight": 600,
     "italic": false,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "Mirza-SemiBold",
+    "instances": []
    }
   ]
  },
@@ -809,7 +2069,73 @@
       900.0
      ]
     },
-    "color": false
+    "color": false,
+    "ps": "Montserrat-ThinItalic",
+    "instances": [
+     {
+      "name": "Thin Italic",
+      "ps": "Montserrat-ThinItalic",
+      "coords": {
+       "wght": 100.0
+      }
+     },
+     {
+      "name": "ExtraLight Italic",
+      "ps": "Montserrat-ExtraLightItalic",
+      "coords": {
+       "wght": 200.0
+      }
+     },
+     {
+      "name": "Light Italic",
+      "ps": "Montserrat-LightItalic",
+      "coords": {
+       "wght": 300.0
+      }
+     },
+     {
+      "name": "Italic",
+      "ps": "Montserrat-Italic",
+      "coords": {
+       "wght": 400.0
+      }
+     },
+     {
+      "name": "Medium Italic",
+      "ps": "Montserrat-MediumItalic",
+      "coords": {
+       "wght": 500.0
+      }
+     },
+     {
+      "name": "SemiBold Italic",
+      "ps": "Montserrat-SemiBoldItalic",
+      "coords": {
+       "wght": 600.0
+      }
+     },
+     {
+      "name": "Bold Italic",
+      "ps": "Montserrat-BoldItalic",
+      "coords": {
+       "wght": 700.0
+      }
+     },
+     {
+      "name": "ExtraBold Italic",
+      "ps": "Montserrat-ExtraBoldItalic",
+      "coords": {
+       "wght": 800.0
+      }
+     },
+     {
+      "name": "Black Italic",
+      "ps": "Montserrat-BlackItalic",
+      "coords": {
+       "wght": 900.0
+      }
+     }
+    ]
    },
    {
     "path": "assets/fonts/montserrat/Montserrat[wght].ttf",
@@ -823,7 +2149,73 @@
       900.0
      ]
     },
-    "color": false
+    "color": false,
+    "ps": "Montserrat-Thin",
+    "instances": [
+     {
+      "name": "Thin",
+      "ps": "Montserrat-Thin",
+      "coords": {
+       "wght": 100.0
+      }
+     },
+     {
+      "name": "ExtraLight",
+      "ps": "Montserrat-ExtraLight",
+      "coords": {
+       "wght": 200.0
+      }
+     },
+     {
+      "name": "Light",
+      "ps": "Montserrat-Light",
+      "coords": {
+       "wght": 300.0
+      }
+     },
+     {
+      "name": "Regular",
+      "ps": "Montserrat-Regular",
+      "coords": {
+       "wght": 400.0
+      }
+     },
+     {
+      "name": "Medium",
+      "ps": "Montserrat-Medium",
+      "coords": {
+       "wght": 500.0
+      }
+     },
+     {
+      "name": "SemiBold",
+      "ps": "Montserrat-SemiBold",
+      "coords": {
+       "wght": 600.0
+      }
+     },
+     {
+      "name": "Bold",
+      "ps": "Montserrat-Bold",
+      "coords": {
+       "wght": 700.0
+      }
+     },
+     {
+      "name": "ExtraBold",
+      "ps": "Montserrat-ExtraBold",
+      "coords": {
+       "wght": 800.0
+      }
+     },
+     {
+      "name": "Black",
+      "ps": "Montserrat-Black",
+      "coords": {
+       "wght": 900.0
+      }
+     }
+    ]
    }
   ]
  },
@@ -842,7 +2234,73 @@
       900.0
      ]
     },
-    "color": false
+    "color": false,
+    "ps": "NotoKufiArabic-Regular",
+    "instances": [
+     {
+      "name": "Thin",
+      "ps": "NotoKufiArabic-Thin",
+      "coords": {
+       "wght": 100.0
+      }
+     },
+     {
+      "name": "ExtraLight",
+      "ps": "NotoKufiArabic-ExtraLight",
+      "coords": {
+       "wght": 200.0
+      }
+     },
+     {
+      "name": "Light",
+      "ps": "NotoKufiArabic-Light",
+      "coords": {
+       "wght": 300.0
+      }
+     },
+     {
+      "name": "Regular",
+      "ps": "NotoKufiArabic-Regular",
+      "coords": {
+       "wght": 400.0
+      }
+     },
+     {
+      "name": "Medium",
+      "ps": "NotoKufiArabic-Medium",
+      "coords": {
+       "wght": 500.0
+      }
+     },
+     {
+      "name": "SemiBold",
+      "ps": "NotoKufiArabic-SemiBold",
+      "coords": {
+       "wght": 600.0
+      }
+     },
+     {
+      "name": "Bold",
+      "ps": "NotoKufiArabic-Bold",
+      "coords": {
+       "wght": 700.0
+      }
+     },
+     {
+      "name": "ExtraBold",
+      "ps": "NotoKufiArabic-ExtraBold",
+      "coords": {
+       "wght": 800.0
+      }
+     },
+     {
+      "name": "Black",
+      "ps": "NotoKufiArabic-Black",
+      "coords": {
+       "wght": 900.0
+      }
+     }
+    ]
    }
   ]
  },
@@ -861,7 +2319,38 @@
       700.0
      ]
     },
-    "color": false
+    "color": false,
+    "ps": "NotoNaskhArabic-Regular",
+    "instances": [
+     {
+      "name": "Regular",
+      "ps": "NotoNaskhArabic-Regular",
+      "coords": {
+       "wght": 400.0
+      }
+     },
+     {
+      "name": "Medium",
+      "ps": "NotoNaskhArabic-Medium",
+      "coords": {
+       "wght": 500.0
+      }
+     },
+     {
+      "name": "SemiBold",
+      "ps": "NotoNaskhArabic-SemiBold",
+      "coords": {
+       "wght": 600.0
+      }
+     },
+     {
+      "name": "Bold",
+      "ps": "NotoNaskhArabic-Bold",
+      "coords": {
+       "wght": 700.0
+      }
+     }
+    ]
    }
   ]
  },
@@ -880,7 +2369,38 @@
       700.0
      ]
     },
-    "color": false
+    "color": false,
+    "ps": "NotoNastaliqUrdu-Regular",
+    "instances": [
+     {
+      "name": "Regular",
+      "ps": "NotoNastaliqUrdu-Regular",
+      "coords": {
+       "wght": 400.0
+      }
+     },
+     {
+      "name": "Medium",
+      "ps": "NotoNastaliqUrdu-Medium",
+      "coords": {
+       "wght": 500.0
+      }
+     },
+     {
+      "name": "SemiBold",
+      "ps": "NotoNastaliqUrdu-SemiBold",
+      "coords": {
+       "wght": 600.0
+      }
+     },
+     {
+      "name": "Bold",
+      "ps": "NotoNastaliqUrdu-Bold",
+      "coords": {
+       "wght": 700.0
+      }
+     }
+    ]
    }
   ]
  },
@@ -904,7 +2424,82 @@
       100.0
      ]
     },
-    "color": false
+    "color": false,
+    "ps": "NotoSansArabic-Regular",
+    "instances": [
+     {
+      "name": "Thin",
+      "ps": "NotoSansArabic-Thin",
+      "coords": {
+       "wght": 100.0,
+       "wdth": 100.0
+      }
+     },
+     {
+      "name": "ExtraLight",
+      "ps": "NotoSansArabic-ExtraLight",
+      "coords": {
+       "wght": 200.0,
+       "wdth": 100.0
+      }
+     },
+     {
+      "name": "Light",
+      "ps": "NotoSansArabic-Light",
+      "coords": {
+       "wght": 300.0,
+       "wdth": 100.0
+      }
+     },
+     {
+      "name": "Regular",
+      "ps": "NotoSansArabic-Regular",
+      "coords": {
+       "wght": 400.0,
+       "wdth": 100.0
+      }
+     },
+     {
+      "name": "Medium",
+      "ps": "NotoSansArabic-Medium",
+      "coords": {
+       "wght": 500.0,
+       "wdth": 100.0
+      }
+     },
+     {
+      "name": "SemiBold",
+      "ps": "NotoSansArabic-SemiBold",
+      "coords": {
+       "wght": 600.0,
+       "wdth": 100.0
+      }
+     },
+     {
+      "name": "Bold",
+      "ps": "NotoSansArabic-Bold",
+      "coords": {
+       "wght": 700.0,
+       "wdth": 100.0
+      }
+     },
+     {
+      "name": "ExtraBold",
+      "ps": "NotoSansArabic-ExtraBold",
+      "coords": {
+       "wght": 800.0,
+       "wdth": 100.0
+      }
+     },
+     {
+      "name": "Black",
+      "ps": "NotoSansArabic-Black",
+      "coords": {
+       "wght": 900.0,
+       "wdth": 100.0
+      }
+     }
+    ]
    }
   ]
  },
@@ -923,7 +2518,52 @@
       900.0
      ]
     },
-    "color": false
+    "color": false,
+    "ps": "PlayfairDisplay-Italic",
+    "instances": [
+     {
+      "name": "Italic",
+      "ps": "PlayfairDisplayItalic-Regular",
+      "coords": {
+       "wght": 400.0
+      }
+     },
+     {
+      "name": "Medium Italic",
+      "ps": "PlayfairDisplayItalic-Medium",
+      "coords": {
+       "wght": 500.0
+      }
+     },
+     {
+      "name": "SemiBold Italic",
+      "ps": "PlayfairDisplayItalic-SemiBold",
+      "coords": {
+       "wght": 600.0
+      }
+     },
+     {
+      "name": "Bold Italic",
+      "ps": "PlayfairDisplayItalic-Bold",
+      "coords": {
+       "wght": 700.0
+      }
+     },
+     {
+      "name": "ExtraBold Italic",
+      "ps": "PlayfairDisplayItalic-ExtraBold",
+      "coords": {
+       "wght": 800.0
+      }
+     },
+     {
+      "name": "Black Italic",
+      "ps": "PlayfairDisplayItalic-Black",
+      "coords": {
+       "wght": 900.0
+      }
+     }
+    ]
    },
    {
     "path": "assets/fonts/playfairdisplay/PlayfairDisplay[wght].ttf",
@@ -937,7 +2577,52 @@
       900.0
      ]
     },
-    "color": false
+    "color": false,
+    "ps": "PlayfairDisplay-Regular",
+    "instances": [
+     {
+      "name": "Regular",
+      "ps": "PlayfairDisplayRoman-Regular",
+      "coords": {
+       "wght": 400.0
+      }
+     },
+     {
+      "name": "Medium",
+      "ps": "PlayfairDisplayRoman-Medium",
+      "coords": {
+       "wght": 500.0
+      }
+     },
+     {
+      "name": "SemiBold",
+      "ps": "PlayfairDisplayRoman-SemiBold",
+      "coords": {
+       "wght": 600.0
+      }
+     },
+     {
+      "name": "Bold",
+      "ps": "PlayfairDisplayRoman-Bold",
+      "coords": {
+       "wght": 700.0
+      }
+     },
+     {
+      "name": "ExtraBold",
+      "ps": "PlayfairDisplayRoman-ExtraBold",
+      "coords": {
+       "wght": 800.0
+      }
+     },
+     {
+      "name": "Black",
+      "ps": "PlayfairDisplayRoman-Black",
+      "coords": {
+       "wght": 900.0
+      }
+     }
+    ]
    }
   ]
  },
@@ -956,7 +2641,66 @@
       800.0
      ]
     },
-    "color": false
+    "color": false,
+    "ps": "PlaypenSansArabic-Regular",
+    "instances": [
+     {
+      "name": "Thin",
+      "ps": "PlaypenSansArabic-Thin",
+      "coords": {
+       "wght": 100.0
+      }
+     },
+     {
+      "name": "ExtraLight",
+      "ps": "PlaypenSansArabic-ExtraLight",
+      "coords": {
+       "wght": 200.0
+      }
+     },
+     {
+      "name": "Light",
+      "ps": "PlaypenSansArabic-Light",
+      "coords": {
+       "wght": 300.0
+      }
+     },
+     {
+      "name": "Regular",
+      "ps": "PlaypenSansArabic-Regular",
+      "coords": {
+       "wght": 400.0
+      }
+     },
+     {
+      "name": "Medium",
+      "ps": "PlaypenSansArabic-Medium",
+      "coords": {
+       "wght": 500.0
+      }
+     },
+     {
+      "name": "SemiBold",
+      "ps": "PlaypenSansArabic-SemiBold",
+      "coords": {
+       "wght": 600.0
+      }
+     },
+     {
+      "name": "Bold",
+      "ps": "PlaypenSansArabic-Bold",
+      "coords": {
+       "wght": 700.0
+      }
+     },
+     {
+      "name": "ExtraBold",
+      "ps": "PlaypenSansArabic-ExtraBold",
+      "coords": {
+       "wght": 800.0
+      }
+     }
+    ]
    }
   ]
  },
@@ -969,7 +2713,9 @@
     "weight": 400,
     "italic": false,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "Qahiri-Regular",
+    "instances": []
    }
   ]
  },
@@ -982,7 +2728,9 @@
     "weight": 400,
     "italic": false,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "Rakkas-Regular",
+    "instances": []
    }
   ]
  },
@@ -1006,7 +2754,58 @@
       100.0
      ]
     },
-    "color": false
+    "color": false,
+    "ps": "ReadexPro-Regular",
+    "instances": [
+     {
+      "name": "ExtraLight",
+      "ps": "ReadexPro-ExtraLight",
+      "coords": {
+       "wght": 200.0,
+       "HEXP": 0.0
+      }
+     },
+     {
+      "name": "Light",
+      "ps": "ReadexPro-Light",
+      "coords": {
+       "wght": 300.0,
+       "HEXP": 0.0
+      }
+     },
+     {
+      "name": "Regular",
+      "ps": "ReadexPro-Regular",
+      "coords": {
+       "wght": 400.0,
+       "HEXP": 0.0
+      }
+     },
+     {
+      "name": "Medium",
+      "ps": "ReadexPro-Medium",
+      "coords": {
+       "wght": 500.0,
+       "HEXP": 0.0
+      }
+     },
+     {
+      "name": "SemiBold",
+      "ps": "ReadexPro-SemiBold",
+      "coords": {
+       "wght": 600.0,
+       "HEXP": 0.0
+      }
+     },
+     {
+      "name": "Bold",
+      "ps": "ReadexPro-Bold",
+      "coords": {
+       "wght": 700.0,
+       "HEXP": 0.0
+      }
+     }
+    ]
    }
   ]
  },
@@ -1025,7 +2824,38 @@
       700.0
      ]
     },
-    "color": false
+    "color": false,
+    "ps": "ReemKufi",
+    "instances": [
+     {
+      "name": "Regular",
+      "ps": "ReemKufi-Regular",
+      "coords": {
+       "wght": 400.0
+      }
+     },
+     {
+      "name": "Medium",
+      "ps": "ReemKufi-Medium",
+      "coords": {
+       "wght": 500.0
+      }
+     },
+     {
+      "name": "SemiBold",
+      "ps": "ReemKufi-SemiBold",
+      "coords": {
+       "wght": 600.0
+      }
+     },
+     {
+      "name": "Bold",
+      "ps": "ReemKufi-Bold",
+      "coords": {
+       "wght": 700.0
+      }
+     }
+    ]
    }
   ]
  },
@@ -1044,7 +2874,38 @@
       700.0
      ]
     },
-    "color": true
+    "color": true,
+    "ps": "ReemKufiFun-Regular",
+    "instances": [
+     {
+      "name": "Regular",
+      "ps": "ReemKufiFun-Regular",
+      "coords": {
+       "wght": 400.0
+      }
+     },
+     {
+      "name": "Medium",
+      "ps": "ReemKufiFun-Medium",
+      "coords": {
+       "wght": 500.0
+      }
+     },
+     {
+      "name": "SemiBold",
+      "ps": "ReemKufiFun-SemiBold",
+      "coords": {
+       "wght": 600.0
+      }
+     },
+     {
+      "name": "Bold",
+      "ps": "ReemKufiFun-Bold",
+      "coords": {
+       "wght": 700.0
+      }
+     }
+    ]
    }
   ]
  },
@@ -1057,7 +2918,9 @@
     "weight": 400,
     "italic": false,
     "axes": {},
-    "color": true
+    "color": true,
+    "ps": "ReemKufiInk-Regular",
+    "instances": []
    }
   ]
  },
@@ -1076,7 +2939,59 @@
       900.0
      ]
     },
-    "color": false
+    "color": false,
+    "ps": "Rubik-LightItalic",
+    "instances": [
+     {
+      "name": "Light Italic",
+      "ps": "Rubik-LightItalic",
+      "coords": {
+       "wght": 300.0
+      }
+     },
+     {
+      "name": "Italic",
+      "ps": "Rubik-Italic",
+      "coords": {
+       "wght": 400.0
+      }
+     },
+     {
+      "name": "Medium Italic",
+      "ps": "Rubik-MediumItalic",
+      "coords": {
+       "wght": 500.0
+      }
+     },
+     {
+      "name": "SemiBold Italic",
+      "ps": "Rubik-SemiBoldItalic",
+      "coords": {
+       "wght": 600.0
+      }
+     },
+     {
+      "name": "Bold Italic",
+      "ps": "Rubik-BoldItalic",
+      "coords": {
+       "wght": 700.0
+      }
+     },
+     {
+      "name": "ExtraBold Italic",
+      "ps": "Rubik-ExtraBoldItalic",
+      "coords": {
+       "wght": 800.0
+      }
+     },
+     {
+      "name": "Black Italic",
+      "ps": "Rubik-BlackItalic",
+      "coords": {
+       "wght": 900.0
+      }
+     }
+    ]
    },
    {
     "path": "assets/fonts/rubik/Rubik[wght].ttf",
@@ -1090,7 +3005,59 @@
       900.0
      ]
     },
-    "color": false
+    "color": false,
+    "ps": "Rubik-Light",
+    "instances": [
+     {
+      "name": "Light",
+      "ps": "Rubik-Light",
+      "coords": {
+       "wght": 300.0
+      }
+     },
+     {
+      "name": "Regular",
+      "ps": "Rubik-Regular",
+      "coords": {
+       "wght": 400.0
+      }
+     },
+     {
+      "name": "Medium",
+      "ps": "Rubik-Medium",
+      "coords": {
+       "wght": 500.0
+      }
+     },
+     {
+      "name": "SemiBold",
+      "ps": "Rubik-SemiBold",
+      "coords": {
+       "wght": 600.0
+      }
+     },
+     {
+      "name": "Bold",
+      "ps": "Rubik-Bold",
+      "coords": {
+       "wght": 700.0
+      }
+     },
+     {
+      "name": "ExtraBold",
+      "ps": "Rubik-ExtraBold",
+      "coords": {
+       "wght": 800.0
+      }
+     },
+     {
+      "name": "Black",
+      "ps": "Rubik-Black",
+      "coords": {
+       "wght": 900.0
+      }
+     }
+    ]
    }
   ]
  },
@@ -1109,7 +3076,59 @@
       800.0
      ]
     },
-    "color": false
+    "color": false,
+    "ps": "Sora-Regular",
+    "instances": [
+     {
+      "name": "Thin",
+      "ps": "Sora-Thin",
+      "coords": {
+       "wght": 100.0
+      }
+     },
+     {
+      "name": "ExtraLight",
+      "ps": "Sora-ExtraLight",
+      "coords": {
+       "wght": 200.0
+      }
+     },
+     {
+      "name": "Light",
+      "ps": "Sora-Light",
+      "coords": {
+       "wght": 300.0
+      }
+     },
+     {
+      "name": "Regular",
+      "ps": "Sora-Regular",
+      "coords": {
+       "wght": 400.0
+      }
+     },
+     {
+      "name": "SemiBold",
+      "ps": "Sora-SemiBold",
+      "coords": {
+       "wght": 600.0
+      }
+     },
+     {
+      "name": "Bold",
+      "ps": "Sora-Bold",
+      "coords": {
+       "wght": 700.0
+      }
+     },
+     {
+      "name": "ExtraBold",
+      "ps": "Sora-ExtraBold",
+      "coords": {
+       "wght": 800.0
+      }
+     }
+    ]
    }
   ]
  },
@@ -1128,7 +3147,38 @@
       700.0
      ]
     },
-    "color": false
+    "color": false,
+    "ps": "SpaceGrotesk-Light",
+    "instances": [
+     {
+      "name": "Light",
+      "ps": "SpaceGrotesk-Light",
+      "coords": {
+       "wght": 300.0
+      }
+     },
+     {
+      "name": "Regular",
+      "ps": "SpaceGrotesk-Regular",
+      "coords": {
+       "wght": 400.0
+      }
+     },
+     {
+      "name": "Medium",
+      "ps": "SpaceGrotesk-Medium",
+      "coords": {
+       "wght": 500.0
+      }
+     },
+     {
+      "name": "Bold",
+      "ps": "SpaceGrotesk-Bold",
+      "coords": {
+       "wght": 700.0
+      }
+     }
+    ]
    }
   ]
  },
@@ -1147,7 +3197,45 @@
       800.0
      ]
     },
-    "color": false
+    "color": false,
+    "ps": "Syne-Regular",
+    "instances": [
+     {
+      "name": "Regular",
+      "ps": "Syne-Regular",
+      "coords": {
+       "wght": 400.0
+      }
+     },
+     {
+      "name": "Medium",
+      "ps": "Syne-Medium",
+      "coords": {
+       "wght": 500.0
+      }
+     },
+     {
+      "name": "SemiBold",
+      "ps": "Syne-SemiBold",
+      "coords": {
+       "wght": 600.0
+      }
+     },
+     {
+      "name": "Bold",
+      "ps": "Syne-Bold",
+      "coords": {
+       "wght": 700.0
+      }
+     },
+     {
+      "name": "ExtraBold",
+      "ps": "Syne-ExtraBold",
+      "coords": {
+       "wght": 800.0
+      }
+     }
+    ]
    }
   ]
  },
@@ -1160,7 +3248,9 @@
     "weight": 900,
     "italic": false,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "Tajawal-Black",
+    "instances": []
    },
    {
     "path": "assets/fonts/tajawal/Tajawal-Bold.ttf",
@@ -1168,7 +3258,9 @@
     "weight": 700,
     "italic": false,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "Tajawal-Bold",
+    "instances": []
    },
    {
     "path": "assets/fonts/tajawal/Tajawal-ExtraBold.ttf",
@@ -1176,7 +3268,9 @@
     "weight": 800,
     "italic": false,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "Tajawal-ExtraBold",
+    "instances": []
    },
    {
     "path": "assets/fonts/tajawal/Tajawal-ExtraLight.ttf",
@@ -1184,7 +3278,9 @@
     "weight": 275,
     "italic": false,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "Tajawal-ExtraLight",
+    "instances": []
    },
    {
     "path": "assets/fonts/tajawal/Tajawal-Light.ttf",
@@ -1192,7 +3288,9 @@
     "weight": 300,
     "italic": false,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "Tajawal-Light",
+    "instances": []
    },
    {
     "path": "assets/fonts/tajawal/Tajawal-Medium.ttf",
@@ -1200,7 +3298,9 @@
     "weight": 500,
     "italic": false,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "Tajawal-Medium",
+    "instances": []
    },
    {
     "path": "assets/fonts/tajawal/Tajawal-Regular.ttf",
@@ -1208,7 +3308,9 @@
     "weight": 400,
     "italic": false,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "Tajawal-Regular",
+    "instances": []
    }
   ]
  },
@@ -1227,7 +3329,66 @@
       900.0
      ]
     },
-    "color": false
+    "color": false,
+    "ps": "Unbounded-Regular",
+    "instances": [
+     {
+      "name": "ExtraLight",
+      "ps": "Unbounded-ExtraLight",
+      "coords": {
+       "wght": 200.0
+      }
+     },
+     {
+      "name": "Light",
+      "ps": "Unbounded-Light",
+      "coords": {
+       "wght": 300.0
+      }
+     },
+     {
+      "name": "Regular",
+      "ps": "Unbounded-Regular",
+      "coords": {
+       "wght": 400.0
+      }
+     },
+     {
+      "name": "Medium",
+      "ps": "Unbounded-Medium",
+      "coords": {
+       "wght": 500.0
+      }
+     },
+     {
+      "name": "SemiBold",
+      "ps": "Unbounded-SemiBold",
+      "coords": {
+       "wght": 600.0
+      }
+     },
+     {
+      "name": "Bold",
+      "ps": "Unbounded-Bold",
+      "coords": {
+       "wght": 700.0
+      }
+     },
+     {
+      "name": "ExtraBold",
+      "ps": "Unbounded-ExtraBold",
+      "coords": {
+       "wght": 800.0
+      }
+     },
+     {
+      "name": "Black",
+      "ps": "Unbounded-Black",
+      "coords": {
+       "wght": 900.0
+      }
+     }
+    ]
    }
   ]
  },
@@ -1240,7 +3401,9 @@
     "weight": 400,
     "italic": false,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "Vibes-Regular",
+    "instances": []
    }
   ]
  },
@@ -1253,7 +3416,9 @@
     "weight": 900,
     "italic": false,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "Zain-Black",
+    "instances": []
    },
    {
     "path": "assets/fonts/zain/Zain-Bold.ttf",
@@ -1261,7 +3426,9 @@
     "weight": 700,
     "italic": false,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "Zain-Bold",
+    "instances": []
    },
    {
     "path": "assets/fonts/zain/Zain-ExtraBold.ttf",
@@ -1269,7 +3436,9 @@
     "weight": 800,
     "italic": false,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "Zain-ExtraBold",
+    "instances": []
    },
    {
     "path": "assets/fonts/zain/Zain-ExtraLight.ttf",
@@ -1277,7 +3446,9 @@
     "weight": 200,
     "italic": false,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "Zain-ExtraLight",
+    "instances": []
    },
    {
     "path": "assets/fonts/zain/Zain-Italic.ttf",
@@ -1285,7 +3456,9 @@
     "weight": 400,
     "italic": true,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "Zain-Italic",
+    "instances": []
    },
    {
     "path": "assets/fonts/zain/Zain-Light.ttf",
@@ -1293,7 +3466,9 @@
     "weight": 300,
     "italic": false,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "Zain-Light",
+    "instances": []
    },
    {
     "path": "assets/fonts/zain/Zain-LightItalic.ttf",
@@ -1301,7 +3476,9 @@
     "weight": 300,
     "italic": true,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "Zain-LightItalic",
+    "instances": []
    },
    {
     "path": "assets/fonts/zain/Zain-Regular.ttf",
@@ -1309,7 +3486,9 @@
     "weight": 400,
     "italic": false,
     "axes": {},
-    "color": false
+    "color": false,
+    "ps": "Zain-Regular",
+    "instances": []
    }
   ]
  }
