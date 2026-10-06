@@ -211,8 +211,8 @@ export default async (S) => {
           S.text({ text: '3', family: HEAD, weight: 900, size: S.px(360), fill: C.white, x: S.px(330), y: S.vh(56), opacity: { kf: [[t2 - 0.1, 1], [t2 + 0.4, 0.35]] }, scale: { kf: [[t2 - 0.1, 1], [t2 + 0.4, 0.8, 'quartOut']] } }),
           S.path({ d: `M${S.px(420)},${S.vh(50)} C${S.px(560)},${S.vh(40)} ${S.px(700)},${S.vh(44)} ${S.px(760)},${S.vh(53)}`, fill: null, stroke: C.white, strokeWidth: S.px(8), lineCap: 'round', trim: { at: t2 - 0.45, from: [0, 0], to: [0, 1], dur: 0.45, ease: 'quartOut' }, sfx: { kind: 'swish', at: t2 - 0.45 } }),
           S.polygon({ sides: 3, r: S.px(22), fill: C.white, x: S.px(765), y: S.vh(54), rotation: 200, scale: { at: t2 - 0.02, from: 0, to: 1, spring: 'snappy' } }),
-          S.text({ text: '2', family: HEAD, weight: 900, size: S.px(460), fill: C.white, x: S.px(800), y: S.vh(66), ...S.fx.slam(t2, { size: 460, by: 'all', from: 2 }), sfx: { kind: 'impact', at: t2, gain_db: -8 } }),
-          heavy('اثنين فقط', t2 + 0.3, { y: S.vh(72.5), size: 105 }),
+          S.text({ text: '2', family: HEAD, weight: 900, size: S.px(440), fill: C.white, x: S.px(790), y: S.vh(62), ...S.fx.slam(t2, { size: 460, by: 'all', from: 2 }), sfx: { kind: 'impact', at: t2, gain_db: -8 } }),
+          heavy('اثنين فقط', t2 + 0.3, { y: S.vh(74), x: S.px(380), size: 100 }),
           ];
       }, { z0: 1.04, z1: 1.12 }),
 
@@ -281,7 +281,7 @@ export default async (S) => {
           ...keys.map((k, n) => S.circle({ r: S.px(10), x: P(k)[0], y: P(k)[1], fill: C.lime, stroke: C.ink, strokeWidth: S.px(2), glow: { color: C.lime, blur: 12 }, scale: { at: tp + n * 0.03 + (n % 3) * 0.012, from: 0, to: 1, spring: 'snappy' }, sfx: n % 6 === 0 ? { kind: 'tick', at: tp + n * 0.03 } : false })),
           S.text({ text: '29', family: HEAD, weight: 900, size: S.px(340), fill: C.white, x: S.px(740), y: S.vh(26), ...S.fx.slam(tp + 0.05, { size: 420, by: 'all', from: 1.8 }) }),
           light('نقطة', l(W('v5', 16)), { y: S.vh(35), x: S.px(780), size: 90 }),
-          light('في جسد كل لاعب', l(W('v5', 18)), { y: S.vh(76.5), size: 72 }),
+          light('في جسد كل لاعب', l(W('v5', 18)), { y: S.vh(46), x: S.px(780), size: 64 }),
           ];
       }, { z1: 1.06 }),
 
