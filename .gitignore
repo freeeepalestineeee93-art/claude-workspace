@@ -15,3 +15,4 @@ projects/references/refs/*.mp4
 projects/references/refs/*.log
 assets/fonts/private/
 projects/references/mg/*.mp4
+__pycache__/
