@@ -12,6 +12,24 @@ from pathlib import Path
 import numpy as np
 
 
+def pushpull(rgb, hole):
+    """تعبئة ناعمة بدون خطوط (pull-push هرمي): كل مستوى بيتعبّى من المتوسط الموزون للمستوى الأصغر."""
+    import cv2
+    img = rgb.astype(np.float32)
+    w = (1 - hole).astype(np.float32)
+    pyr = []
+    cur_i, cur_w = img * w[..., None], w
+    while min(cur_w.shape) > 4:
+        pyr.append((cur_i, cur_w))
+        cur_i = cv2.pyrDown(cur_i); cur_w = cv2.pyrDown(cur_w)
+    fill = cur_i / np.maximum(cur_w[..., None], 1e-6)
+    for ci, cw in reversed(pyr):
+        up = cv2.resize(fill, (cw.shape[1], cw.shape[0]), interpolation=cv2.INTER_LINEAR)
+        a = np.clip(cw * 1.5, 0, 1)[..., None]
+        fill = ci / np.maximum(cw[..., None], 1e-6) * a + up * (1 - a)
+    return np.clip(fill, 0, 255)
+
+
 def main(src, out, n=4, feather=6):
     import cv2
     from PIL import Image
@@ -46,11 +64,7 @@ def main(src, out, n=4, feather=6):
         # تعبئة اللي ورا العناصر الأقرب (inpaint) — على نسخة مصغّرة للسرعة
         fill = rgb.copy()
         if nearer.any() and k < n - 1:
-            s = 0.5
-            small = cv2.resize(rgb, None, fx=s, fy=s)
-            m = cv2.resize(cv2.dilate(nearer, np.ones((9, 9), np.uint8)) * 255, (small.shape[1], small.shape[0]), interpolation=cv2.INTER_NEAREST)
-            inp = cv2.inpaint(cv2.cvtColor(small, cv2.COLOR_RGB2BGR), m, 7, cv2.INPAINT_TELEA)
-            inp = cv2.cvtColor(cv2.resize(inp, (W, H), interpolation=cv2.INTER_CUBIC), cv2.COLOR_BGR2RGB)
+            inp = pushpull(rgb, cv2.dilate(nearer, np.ones((9, 9), np.uint8)))
             nb = cv2.GaussianBlur(cv2.dilate(nearer, np.ones((5, 5), np.uint8)).astype(np.float32), (0, 0), 2)[..., None]
             fill = (rgb * (1 - nb) + inp * nb).astype(np.uint8)
         rgba = np.dstack([fill, (alpha * 255).clip(0, 255).astype(np.uint8)])

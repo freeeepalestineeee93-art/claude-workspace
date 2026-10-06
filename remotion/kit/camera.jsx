@@ -98,7 +98,8 @@ export function World({ camera, perspective = 1400, focus = 0, dof = 0, style, c
   const { width: W, height: H } = useVideoConfig();
   const value = useMemo(() => {
     const f = perspective;
-    const scaleAt = (z) => { const d = f + z - camera.z; return d <= 1 ? 0 : (f / d) * camera.zoom; };
+    // cam.z سالب = الكاميرا أقرب (dolly in)
+    const scaleAt = (z) => { const d = f + z + camera.z; return d <= 1 ? 0 : (f / d) * camera.zoom; };
     const project = (X, Y, z = 0) => {
       const s = scaleAt(z), r = (-camera.roll * Math.PI) / 180;
       const dx = (X - camera.x) * s, dy = (Y - camera.y) * s;

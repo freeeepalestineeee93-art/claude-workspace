@@ -1,0 +1,23 @@
+{
+ "w": 752,
+ "h": 1344,
+ "layers": [
+  {
+   "src": "layer-0.png",
+   "depth": 0.015
+  },
+  {
+   "src": "layer-1.png",
+   "depth": 0.047
+  },
+  {
+   "src": "layer-2.png",
+   "depth": 0.196
+  },
+  {
+   "src": "layer-3.png",
+   "depth": 0.705
+  }
+ ],
+ "source": "projects/sport/assets/cards/stadium1966.png"
+}

@@ -59,7 +59,7 @@ async function tile(src, z, x, y) {
 
 export function serve(port = 0, extra) {
   const app = express();
-  app.use((req, res, next) => { res.set('Cache-Control', 'no-store'); next(); });
+  app.use((req, res, next) => { res.set('Cache-Control', 'no-store'); res.set('Access-Control-Allow-Origin', '*'); next(); }); // CORS: صفحة Remotion على origin تاني
   app.get('/__video/info', async (req, res) => {
     try { res.json(await videoInfo(req.query.src, req.query.fps || 30)); } catch (e) { res.status(500).send(String(e.message)); }
   });
