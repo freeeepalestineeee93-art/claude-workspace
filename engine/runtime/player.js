@@ -116,7 +116,7 @@ async function boot() {
     // فحص فريم: صناديق النصوص على الشاشة + التباين مع الخلفية
     audit(t) {
       const texts = [];
-      renderFrame(wctx, comp, t, { ...env, rec: { text: (r) => { if (r.alpha * r.visible > 0.5 && r.box.w > 2) texts.push(r); } } });
+      renderFrame(wctx, comp, t, { ...env, rec: { text: (r) => { if (r.alpha * r.visible > 0.5 && r.box.w > 2 && !r.L.decor && r.L.fill !== 'transparent') texts.push(r); } } });
       renderFrame(wctx, comp, t, { ...env, hideText: true });
       const lum = ([r, g, b]) => { const f = (c) => { c /= 255; return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4; }; return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b); };
       return texts.map((r) => {
@@ -142,8 +142,8 @@ async function boot() {
       const walk = (ls, sc) => (ls || []).forEach((L) => { if (!L) return; if (L.type === 'text') texts.push({ sc, x: typeof L.x === 'number' ? L.x : null, reveal: L.reveal, exit: L.exit, family: L.family, size: L.size }); if (L.children) walk(L.children, sc); });
       comp.scenes.forEach((s, i) => walk(s.layers, i));
       walk(comp.layers, -1); walk(comp.overlay, -1);
-      return { W: S.W, H: S.H, safe: S.safe, duration: comp.duration, scenes: comp.scenes.map((s) => ({ start: s.start, duration: s.duration, transition: s.transition?.type ?? null })),
-        texts: texts.map((x) => ({ ...x, reveal: x.reveal ? { by: x.reveal.by, from: Object.keys(x.reveal.from || {}), spring: x.reveal.spring ?? null, ease: x.reveal.ease ?? null, jitter: x.reveal.stagger?.jitter ?? 0.15 } : null, exit: !!x.exit })),
+      return { W: S.W, H: S.H, safe: S.safe, duration: comp.duration, scenes: comp.scenes.map((s) => ({ start: s.start, duration: s.duration, overlap: s.overlap ?? 0, transition: s.transition?.type ?? null })),
+        texts: texts.map((x) => ({ ...x, reveal: x.reveal ? { by: x.reveal.by, times: !!x.reveal.times, from: Object.keys(x.reveal.from || {}), spring: x.reveal.spring ?? null, ease: x.reveal.ease ?? null, jitter: x.reveal.stagger?.jitter ?? 0.15 } : null, exit: !!x.exit })),
         post: Object.keys(comp.post || {}), motionBlur: comp.motionBlur !== false, audio: !!(comp.audio || brand.audio?.music) };
     },
     // منحنى الحركة: كم بيتغير الفريم كل step (لكشف الجمود والزحمة)

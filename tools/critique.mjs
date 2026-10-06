@@ -39,7 +39,7 @@ try {
   for (let i = 0; i < N; i++) times.add(+((duration * (i + 0.5)) / N).toFixed(2));
   style.scenes.forEach((s) => times.add(+Math.min(duration - 0.05, s.start + Math.min(0.9, s.duration * 0.4)).toFixed(2)));
   times.add(0.25);
-  const ts = [...times].sort((x, y) => x - y).slice(0, 24);
+  const ts = [...times].sort((x, y) => x - y);
   const tmp = path.join(outDir, '.frames');
   await mkdir(tmp, { recursive: true });
   for (const [i, t] of ts.entries()) {
@@ -53,13 +53,20 @@ try {
     await run('convert', [f, '-gravity', 'south', '-background', '#111', '-fill', '#ddd', '-pointsize', '16', '-splice', '0x24', '-annotate', '+0+3', `${t.toFixed(2)}s`, f]);
   }
   const cols = W > H ? 4 : 6;
-  await run('montage', [path.join(tmp, '*.png'), '-tile', `${cols}x`, '-geometry', '+4+4', '-background', '#0a0a0a', path.join(outDir, 'sheet.png')]);
+  // 24 لقطة بكل صفحة: sheet.png، sheet-2.png، …
+  const pages = Math.ceil(ts.length / 24);
+  for (let pg = 0; pg < pages; pg++) {
+    const files = ts.slice(pg * 24, pg * 24 + 24).map((_, j) => path.join(tmp, `${String(pg * 24 + j).padStart(2, '0')}.png`));
+    await run('montage', [...files, '-tile', `${cols}x`, '-geometry', '+4+4', '-background', '#0a0a0a', path.join(outDir, pg ? `sheet-${pg + 1}.png` : 'sheet.png')]);
+  }
   await rm(tmp, { recursive: true, force: true });
 
   // ── 2. فحص النصوص كل نص ثانية ──
   const textStats = { minSize: Infinity, minContrast: Infinity };
   for (let t = 0.1; t < duration; t += 0.5) {
     const texts = await page.evaluate((tt) => studio.audit(tt), t);
+    // أثناء الانتقال الخلفية خليط من مشهدين، فالتباين المقاس مضلّل
+    const inTransition = style.scenes.some((s) => s.overlap && t >= s.start && t < s.start + s.overlap);
     const onScreen = texts.filter((x) => x.box.x + x.box.w > 4 && x.box.x < W - 4 && x.box.y + x.box.h > 4 && x.box.y < H - 4);
     texts.length = 0; texts.push(...onScreen);
     for (const x of texts) {
@@ -67,7 +74,7 @@ try {
       if (b.x < s.left - 2 || b.x + b.w > s.right + 2 || b.y < s.top - 2 || b.y + b.h > s.bottom + 2)
         warn(2, 'المنطقة الآمنة', `"${x.text.slice(0, 30)}" طالع برا المنطقة الآمنة (رح تغطيه واجهة التطبيق)`, t, `x ${Math.round(b.x)}→${Math.round(b.x + b.w)} · y ${Math.round(b.y)}→${Math.round(b.y + b.h)}`);
       if (x.size < W * 0.035) warn(1, 'الحجم', `"${x.text.slice(0, 30)}" صغير (${x.size.toFixed(0)}px) — صعب ينقرا على الموبايل`, t);
-      if (x.contrast < 3) warn(3, 'التباين', `"${x.text.slice(0, 30)}" تباينه ${x.contrast} (أقل من 3 = صعب القراءة)`, t);
+      if (inTransition) { /* skip contrast */ } else if (x.contrast < 3) warn(3, 'التباين', `"${x.text.slice(0, 30)}" تباينه ${x.contrast} (أقل من 3 = صعب القراءة)`, t);
       else if (x.contrast < 4.5 && x.size < W * 0.06) warn(1, 'التباين', `"${x.text.slice(0, 30)}" تباينه ${x.contrast} لنص صغير`, t);
       textStats.minSize = Math.min(textStats.minSize, x.size);
       textStats.minContrast = Math.min(textStats.minContrast, x.contrast);
@@ -118,8 +125,8 @@ try {
   const seen = new Set();
   // نفس المشكلة بأكتر من لحظة = مشكلة وحدة (مع أول وقت وعدد المرات)
   for (const x of issues.sort((p, q) => q.sev - p.sev || (p.t ?? 0) - (q.t ?? 0))) {
-    const k = x.area + x.msg;
-    if (!seen.has(k)) { seen.add(k); dedup.push({ ...x, count: 1 }); } else dedup.find((d) => d.area + d.msg === k).count++;
+    const k = x.area + (x.msg.match(/"[^"]*"/)?.[0] ?? x.msg); // نفس النص = نفس المشكلة حتى لو اختلف الرقم
+    if (!seen.has(k)) { seen.add(k); dedup.push({ ...x, count: 1 }); } else dedup.find((d) => d.area + (d.msg.match(/"[^"]*"/)?.[0] ?? d.msg) === k).count++;
   }
   const pen = dedup.reduce((s, x) => s + [0, 0.25, 0.6, 1.2][x.sev], 0);
   const score = Math.max(0, Math.min(10, 10 - pen)).toFixed(1);
