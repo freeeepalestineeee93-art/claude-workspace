@@ -73,7 +73,7 @@ async def _edge(text, out_mp3, voice, rate, pitch):
     return words
 
 
-def say(text, out_wav, voice="ar-SA-HamedNeural", provider="edge", rate="+0%", pitch="+0Hz"):
+def say(text, out_wav, voice="ar-SA-HamedNeural", provider="edge", rate="+0%", pitch="+0Hz", style=None):
     load_env()
     out_wav = Path(out_wav)
     out_wav.parent.mkdir(parents=True, exist_ok=True)
@@ -92,8 +92,10 @@ def say(text, out_wav, voice="ar-SA-HamedNeural", provider="edge", rate="+0%", p
         import base64
         import urllib.request
         key = os.environ["GEMINI_API_KEY"]
-        model = os.environ.get("GEMINI_TTS_MODEL", "gemini-2.5-flash-preview-tts")
-        body = json.dumps({"contents": [{"parts": [{"text": text}]}], "generationConfig": {"responseModalities": ["AUDIO"], "speechConfig": {"voiceConfig": {"prebuiltVoiceConfig": {"voiceName": voice if not voice.startswith("ar-") else "Kore"}}}}}).encode()
+        model = os.environ.get("GEMINI_TTS_MODEL") or gemini_tts_model(key)
+        # الأسلوب بيتحط كتعليمات قبل النص (Gemini TTS بيفهم توجيه الإلقاء باللغة الطبيعية)
+        prompt = f"{style}:\n{text}" if style else text
+        body = json.dumps({"contents": [{"parts": [{"text": prompt}]}], "generationConfig": {"responseModalities": ["AUDIO"], "speechConfig": {"voiceConfig": {"prebuiltVoiceConfig": {"voiceName": voice if not voice.startswith("ar-") else "Charon"}}}}}).encode()
         req = urllib.request.Request(f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={key}", body, {"Content-Type": "application/json"})
         data = json.loads(urllib.request.urlopen(req, context=_ssl_ctx()).read())
         pcm = base64.b64decode(data["candidates"][0]["content"]["parts"][0]["inlineData"]["data"])
@@ -109,6 +111,35 @@ def say(text, out_wav, voice="ar-SA-HamedNeural", provider="edge", rate="+0%", p
         words = align(out_wav, script=text)
     Path(str(out_wav).replace(".wav", ".words.json")).write_text(json.dumps(words, ensure_ascii=False, indent=1))
     return {"wav": str(out_wav), "words": words, "duration": words[-1]["end"] if words else 0}
+
+
+_GEM_MODEL = None
+
+
+def gemini_tts_model(key):
+    """أحدث موديل TTS متاح على المفتاح (pro قبل flash)."""
+    global _GEM_MODEL
+    if _GEM_MODEL:
+        return _GEM_MODEL
+    import urllib.request
+    try:
+        data = json.loads(urllib.request.urlopen(f"https://generativelanguage.googleapis.com/v1beta/models?key={key}&pageSize=1000", context=_ssl_ctx()).read())
+        names = [m["name"].split("/")[-1] for m in data.get("models", []) if "tts" in m["name"]]
+        names.sort(key=lambda n: (("pro" in n), n), reverse=True)
+        _GEM_MODEL = names[0] if names else "gemini-2.5-flash-preview-tts"
+    except Exception:
+        _GEM_MODEL = "gemini-2.5-flash-preview-tts"
+    return _GEM_MODEL
+
+
+def say_script(script_json, out_dir, **opts):
+    """سكربت كامل [{id, text}] → id.wav + id.words.json لكل مقطع."""
+    out = []
+    for item in json.loads(Path(script_json).read_text()):
+        r = say(item["text"], Path(out_dir) / f"{item['id']}.wav", **opts)
+        out.append({"id": item["id"], "duration": round(r["duration"], 2)})
+        print(item["id"], out[-1]["duration"], flush=True)
+    return out
 
 
 def _norm(w):
@@ -169,6 +200,14 @@ if __name__ == "__main__":
             args = args[:-2]
         res = say(args[0], args[1], **opts)
         print(json.dumps({k: res[k] for k in ("wav", "duration")} | {"words": len(res["words"])}, ensure_ascii=False))
+    elif cmd == "script":
+        # python -m lib.audio.tts script vo/script.json vo/ --provider gemini --voice Charon --style "..."
+        args = sys.argv[2:]
+        opts = {}
+        while len(args) > 2 and args[-2].startswith("--"):
+            opts[args[-2][2:]] = args[-1]
+            args = args[:-2]
+        say_script(args[0], args[1], **opts)
     elif cmd == "align":
         words = align(sys.argv[2], script=sys.argv[3] if len(sys.argv) > 3 else None)
         out = Path(sys.argv[2]).with_suffix(".words.json")
