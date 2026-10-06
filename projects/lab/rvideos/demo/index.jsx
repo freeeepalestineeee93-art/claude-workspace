@@ -12,8 +12,8 @@ export const meta = {
   duration: 8,
   audio: { sfx: [
     { kind: 'swell', at: 0.2, params: { dur: 1.2 }, gain_db: -26 },
-    { kind: 'whoosh', at: 4.3, align: 'peak', params: { dur: 1.4, brightness: 0.6 }, gain_db: -24 },
-    { kind: 'pop', at: 5.2, gain_db: -27 }, { kind: 'pop', at: 5.45, params: { pitch: 1.2 }, gain_db: -28 },
+    { kind: 'whoosh', at: 3.95, align: 'peak', params: { dur: 1.2, brightness: 0.7 }, gain_db: -23 },
+    { kind: 'pop', at: 4.3, gain_db: -27 }, { kind: 'pop', at: 4.5, params: { pitch: 1.2 }, gain_db: -28 },
   ], master: { lufs: -24 } },
 };
 
@@ -30,24 +30,24 @@ const Card = ({ year, place, img, t, at }) => {
 
 function Scene() {
   const f = useCurrentFrame(), { fps } = useVideoConfig(), t = f / fps;
-  // مسار كاميرا واحد: دفع لجوّا الملعب (منحنى push-pan المتعلّم من الجزيرة) ← طيران متصل لعالم الكروت
+  // كاميرا وحدة: drift هادي جوّا الصورة (منحنى push-pan المتعلّم) ← غطسة جوّا الصورة بـ ease الأفتر (80/85)
+  // ← عالم الكروت اللي كان ورا الصورة، و drift هادي. الصورة ما بتطلع حدودها أبداً: بتكبر وبتعدّي من جنب الكاميرا.
   const cam = useCamera({
     keys: [
       { t: 0, x: 0, y: 40, z: 0, roll: 0 },
-      { t: 3.6, x: 60, y: -20, z: -380, roll: -1.2, profile: 'push-pan' },
-      { t: 5.6, x: 1450, y: -160, z: -120, roll: 1.5 },
-      { t: 8, x: 1620, y: -60, z: -330, roll: 0, hold: true },
+      { t: 3.3, x: 50, y: -10, z: -300, roll: -1, profile: 'push-pan' },
+      { t: 4.55, x: 40, y: -60, z: -2420, roll: 1.2, ease: [80, 85] },
+      { t: 8, x: 70, y: -40, z: -2600, roll: 0, profile: 'push-pan' },
     ],
     handheld: { amp: 3, freq: 0.3 },
   });
   return <World camera={cam} perspective={1500}>
     <AbsoluteFill style={{ background: 'linear-gradient(#050827, #10184F)' }} />
-    <DepthImage dir="projects/lab/assets/stadium-depth" x={0} y={0} w={1180} z={0} depth={700} />
-    <Layer z={500}>{Array.from({ length: 40 }, (_, i) => <At key={i} x={900 + (i % 8) * 260} y={-1100 + Math.floor(i / 8) * 520}><div style={{ width: 10, height: 10, borderRadius: 5, background: 'rgba(130,160,255,.35)' }} /></At>)}</Layer>
-    <Layer z={-60}>
-      <At x={1330} y={-200}><Card year="1966" place="ويمبلي، لندن" img="projects/sport/assets/cards/stadium1966.png" t={t} at={4.9} /></At>
-      <At x={1820} y={120}><Card year="1970" place="أزتيكا، مكسيكو" img="projects/sport/assets/cards/azteca.png" t={t} at={5.25} /></At>
-    </Layer>
+    {/* عالم الكروت: ورا الصورة (z أبعد)، بيبيّن لما الكاميرا تغطس */}
+    <Layer z={3600}>{Array.from({ length: 48 }, (_, i) => <At key={i} x={-1400 + (i % 8) * 400} y={-1500 + Math.floor(i / 8) * 520}><div style={{ width: 12, height: 12, borderRadius: 6, background: 'rgba(130,160,255,.35)' }} /></At>)}</Layer>
+    <Layer z={2850}><At x={300} y={190}><Card year="1970" place="أزتيكا، مكسيكو" img="projects/sport/assets/cards/azteca.png" t={t} at={4.05} /></At></Layer>
+    <Layer z={2600}><At x={-180} y={-260}><Card year="1966" place="ويمبلي، لندن" img="projects/sport/assets/cards/stadium1966.png" t={t} at={3.85} /></At></Layer>
+    <DepthImage dir="projects/lab/assets/stadium-depth" x={0} y={0} w={1320} z={0} depth={700} />
   </World>;
 }
 
@@ -56,12 +56,12 @@ export default function Demo() {
   return <AbsoluteFill>
     <CameraMotionBlur shutterAngle={180} samples={6}><Scene /></CameraMotionBlur>
     {/* عنوان بطبقة الشاشة: كلمة كلمة بقناع، وبيطلع قبل الطيران */}
-    <AbsoluteFill style={{ background: 'linear-gradient(transparent 55%, rgba(5,8,39,.75))', opacity: interpolate(t, [3.9, 4.4], [1, 0], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }) }} />
+    <AbsoluteFill style={{ background: 'linear-gradient(transparent 55%, rgba(5,8,39,.75))', opacity: interpolate(t, [3.2, 3.6], [1, 0], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }) }} />
     <ArabicText text="ذاكرة الملاعب" size={128} x={540} y={1480} words={{ 1: { fill: '#4FDCFF' } }}
       reveal={{ by: 'word', at: 0.5, dur: 0.7, stagger: 0.14, mask: true, from: { y: 140, opacity: 0 } }}
-      exit={{ by: 'word', at: 3.9, dur: 0.4, stagger: 0.05, ease: 'in', to: { y: -60, opacity: 0, blur: 8 } }} />
+      exit={{ by: 'word', at: 3.15, dur: 0.35, stagger: 0.05, ease: 'in', to: { y: -60, opacity: 0, blur: 8 } }} />
     <ArabicText text="من الأرشيف إلى الشاشة" size={50} weight={500} x={540} y={1590} fill="#C9CDF0"
       reveal={{ by: 'word', at: 1.0, dur: 0.5, stagger: 0.07, from: { y: 24, opacity: 0, blur: 6 } }}
-      exit={{ by: 'all', at: 3.85, dur: 0.3, to: { opacity: 0 } }} />
+      exit={{ by: 'all', at: 3.1, dur: 0.3, to: { opacity: 0 } }} />
   </AbsoluteFill>;
 }

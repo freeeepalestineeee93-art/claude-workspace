@@ -1,6 +1,7 @@
 // نظام الكاميرا: عالم 2.5D بعمق حقيقي + مسار كاميرا متصل السرعة + لحاق عنصر + اهتزاز يد.
 //
-//   const cam = useCamera({ keys: [{ t: 0, x: 0, y: 0 }, { t: 2, x: 400, y: 120, z: -300 }, { t: 4, x: 900, y: 0, hold: true }], handheld: { amp: 5 } });
+//   const cam = useCamera({ keys: [{ t: 0, x: 0, y: 0 }, { t: 2, x: 400, y: 120, z: -300, profile: 'push-pan' }, { t: 3, x: 900, y: 0, ease: 80 }], handheld: { amp: 5 } });
+//   أنواع المقاطع: (افتراضي) منحنى متصل السرعة · profile: منحنى متعلّم (drift للثبات) · ease: influence الأفتر (للانتقالات)
 //   <World camera={cam}>
 //     <Layer z={900}> خلفية بعيدة (بتتحرك أبطأ) </Layer>
 //     <Layer z={0}>   <At x={400} y={300}>…</At> </Layer>
@@ -48,10 +49,32 @@ export function spline(keys, t, ch) {
     return (s0 * (n.t - q.t) + s1 * (q.t - p.t)) / (n.t - p.t);
   };
   const h = b.t - a.t, u = (t - a.t) / h;
-  if (b.profile) return a[ch] + (b[ch] - a[ch]) * profileAt(b.profile, u); // المقطع بيمشي على منحنى سرعة متعلّم
+  if (b.profile) return a[ch] + (b[ch] - a[ch]) * profileAt(b.profile, u); // المقطع بيمشي على منحنى سرعة متعلّم (للثبات/drift)
+  if (b.ease != null) { const [o, n] = Array.isArray(b.ease) ? b.ease : [b.ease, b.ease]; return a[ch] + (b[ch] - a[ch]) * aeEase(o, n)(u); } // انتقال بأسلوب الأفتر
   const m0 = tan(i) * h, m1 = tan(i + 1) * h;
   const u2 = u * u, u3 = u2 * u;
   return (2 * u3 - 3 * u2 + 1) * a[ch] + (u3 - 2 * u2 + u) * m0 + (-2 * u3 + 3 * u2) * b[ch] + (u3 - u2) * m1;
+}
+
+// Ease بأرقام الأفتر: influence الخروج من المفتاح السابق والدخول للمفتاح الحالي (0–100).
+// easy ease بالأفتر = 33/33؛ الانتقالات السلسة القوية عادة 70–90. ease: 80 أو ease: [70, 90]
+const bezCache = new Map();
+export function aeEase(outInf = 33, inInf = 33) {
+  const key = `${outInf}:${inInf}`;
+  if (bezCache.has(key)) return bezCache.get(key);
+  const x1 = outInf / 100, x2 = 1 - inInf / 100; // y1 = 0، y2 = 1 (سرعة صفر بالطرفين)
+  const bx = (t) => 3 * (1 - t) ** 2 * t * x1 + 3 * (1 - t) * t * t * x2 + t ** 3;
+  const by = (t) => 3 * (1 - t) * t * t + t ** 3;
+  const dbx = (t) => 3 * (1 - t) ** 2 * x1 + 6 * (1 - t) * t * (x2 - x1) + 3 * t * t * (1 - x2);
+  const f = (u) => {
+    if (u <= 0) return 0; if (u >= 1) return 1;
+    let t = u;
+    for (let i = 0; i < 8; i++) { const d = dbx(t); if (Math.abs(d) < 1e-6) break; t -= (bx(t) - u) / d; t = Math.max(0, Math.min(1, t)); }
+    let lo = 0, hi = 1; for (let i = 0; i < 20 && Math.abs(bx(t) - u) > 1e-5; i++) { t = (lo + hi) / 2; if (bx(t) < u) lo = t; else hi = t; }
+    return by(t);
+  };
+  bezCache.set(key, f);
+  return f;
 }
 
 // لحاق عنصر بـ spring مخمّد حرجياً (حتمي: محاكاة من الصفر ومخزّنة)

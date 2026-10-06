@@ -34,6 +34,9 @@ try {
   const serveUrl = await bundle({ entryPoint: path.join(ROOT, 'remotion/src/index.js'), onProgress: () => {}, enableCaching: false }); // الكاش كان بيكبر لـ 9GB ويعبّي القرص
   console.log(`${((Date.now() - t0) / 1000).toFixed(0)}s`);
   const inputProps = { base };
+  // رسائل الفحص من جوّا الصفحة (حرف ناقص، حافة صورة ظاهرة…) — منجمعها ومنطبعها مرة وحدة
+  const flags = new Set();
+  const onBrowserLog = (l) => { if (/✗|⚠/.test(l.text)) flags.add(l.text.replace(/^\[[^\]]*\]\s*/, '')); };
   const composition = await selectComposition({ serveUrl, id, inputProps, browserExecutable: SHELL, chromiumOptions, logLevel: 'error' });
   const { fps, durationInFrames: N, width: W, height: H } = composition;
 
@@ -41,9 +44,10 @@ try {
     const ts = String(opt('still')).split(',').map(Number);
     for (const t of ts) {
       const output = path.join(outDir, `still-${t}.png`);
-      await renderStill({ composition, serveUrl, output, frame: Math.min(N - 1, Math.round(t * fps)), inputProps, browserExecutable: SHELL, chromiumOptions, logLevel: 'error' });
+      await renderStill({ composition, serveUrl, output, frame: Math.min(N - 1, Math.round(t * fps)), inputProps, browserExecutable: SHELL, chromiumOptions, logLevel: 'error', onBrowserLog });
       console.log(`✓ ${path.relative(ROOT, output)}`);
     }
+    for (const f of flags) console.warn('  ' + f);
     process.exit(0);
   }
 
@@ -53,11 +57,12 @@ try {
   let last = 0;
   await renderMedia({
     composition, serveUrl, codec: 'h264', outputLocation: silent, inputProps, browserExecutable: SHELL, chromiumOptions, logLevel: 'error',
-    frameRange: [from, to], concurrency: +opt('concurrency', 4), crf: draft ? 26 : 16, imageFormat: 'jpeg', jpegQuality: draft ? 80 : 95, muted: true,
+    onBrowserLog, frameRange: [from, to], concurrency: +opt('concurrency', 4), crf: draft ? 26 : 16, imageFormat: 'jpeg', jpegQuality: draft ? 80 : 95, muted: true,
     scale: draft ? 0.5 : 1,
     onProgress: ({ renderedFrames }) => { if (renderedFrames !== last && (renderedFrames - last >= 15 || renderedFrames === to - from + 1)) { last = renderedFrames; process.stdout.write(`\r  🎞️  ${renderedFrames}/${to - from + 1} (${((Date.now() - t0) / 1000).toFixed(0)}s)   `); } },
   });
   process.stdout.write('\n');
+  for (const f of flags) console.warn('  ' + f);
 
   // ── الصوت: نفس خطة محركنا (موسيقى + مؤثرات + تعليق) وبنفس الماستر والفحص ──
   const out = path.join(outDir, `${m[2]}${draft ? '-draft' : ''}.mp4`);
