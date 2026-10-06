@@ -119,6 +119,23 @@ try {
   if (!style.motionBlur) warn(1, 'حركة', 'motion blur مطفي');
   if (!style.audio) warn(1, 'صوت', 'ما في موسيقى (المؤثرات التلقائية لحالها ممكن ما تكفي)');
 
+  // ── 5. علو الصوت: المؤثرات ما بتطغى على التعليق، وبدون تعليق بتضل هادية (ملاحظة المستخدم، VISION.md) ──
+  const plan = await page.evaluate(() => studio.audioPlan());
+  if (plan.voice.length || plan.sfx.length || plan.music) {
+    const adir = path.join(outDir, '.audio');
+    await mkdir(adir, { recursive: true });
+    const pf = path.join(adir, 'audio-plan.json'), wav = path.join(adir, 'audio.wav');
+    await writeFile(pf, JSON.stringify(plan));
+    const res = await new Promise((r) => {
+      const py = spawn(path.resolve('.venv/bin/python'), ['-m', 'lib.audio.build', pf, wav], { stdio: ['ignore', 'pipe', 'ignore'] });
+      let o = ''; py.stdout.on('data', (d) => (o += d));
+      py.on('close', (c) => { try { r(c === 0 ? JSON.parse(o.trim().split('\n').pop()) : null); } catch { r(null); } });
+    });
+    await rm(adir, { recursive: true, force: true });
+    if (!res) warn(2, 'صوت', 'ما قدرت ابني الصوت لفحص العلو');
+    else for (const x of res.audit ?? []) warn(x.sev, 'علو الصوت', x.msg, x.t);
+  }
+
   // ── تقييم ──
   const sevName = ['', 'ملاحظة', 'متوسط', 'مهم'];
   const dedup = [];

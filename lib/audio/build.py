@@ -94,6 +94,53 @@ def limit(x, ceiling, lookahead=0.005, release=0.08):
     return np.clip(x * g, -ceiling, ceiling).astype(np.float32)
 
 
+def _loud(x, win=0.4, hop=0.1):
+    """loudness لحظي تقريبي (RMS بنافذة 400ms ≈ momentary) بالـ dB، نقطة كل 100ms."""
+    m = x.mean(axis=0) if x.ndim == 2 else x
+    w, h = int(win * SR), int(hop * SR)
+    if len(m) < w:
+        return np.full(1, -120.0)
+    k = (len(m) - w) // h + 1
+    idx = np.arange(w)[None, :] + h * np.arange(k)[:, None]
+    return 10 * np.log10((m[idx] ** 2).mean(axis=1) + 1e-12) - 0.691
+
+
+def audit_levels(plan, fx, voice, music, master_gain_db):
+    """فحص تلقائي لقاعدة: المؤثرات صوتها عادي، وأبداً ما بتطغى على التعليق (VISION.md).
+    بيرجع قائمة {sev, t, msg} — sev 3 = مرفوض قبل التسليم."""
+    out = []
+    lf = _loud(fx)
+    has_voice = bool(np.abs(voice).max() > 1e-4)
+    hot = [e for e in plan.get("sfx", []) if e.get("gain_db", -6) > (-16 if has_voice else -14)]
+    if hot:
+        top = max(hot, key=lambda e: e.get("gain_db", -6))
+        out.append({"sev": 2, "t": round(float(top.get("at", 0)), 2), "msg": f"{len(hot)} مؤثر فوق الحد (أعلاها {top.get('kind', '?')} على {top.get('gain_db', -6)}dB) — القاعدة: −18 لـ −26 لكل مؤثر"})
+    if has_voice:
+        lv = _loud(voice)
+        n = min(len(lf), len(lv))
+        # مستوى الكلام المرجعي = متوسط الأجزاء اللي فيها كلام فعلاً
+        speech = lv[:n][lv[:n] > lv[:n].max() - 20]
+        ref = float(np.median(speech)) if len(speech) else -20.0
+        bad = np.where((lf[:n] > ref - 6) & (lf[:n] > -45))[0]
+        worst = {}
+        for i in bad:
+            sec = int(i * 0.1)
+            worst[sec] = max(worst.get(sec, -99), float(lf[i] - ref))
+        for sec, d in sorted(worst.items(), key=lambda kv: -kv[1])[:6]:
+            out.append({"sev": 3 if d > -2 else 2, "t": float(sec), "msg": f"المؤثرات {d:+.1f}dB نسبةً للتعليق (لازم ≤ −6) — بتطغى على الصوت"})
+    else:
+        if master_gain_db > 9:
+            out.append({"sev": 2, "t": None, "msg": f"الماستر رفع المؤثرات +{master_gain_db:.1f}dB ليوصل للـ LUFS — بدون تعليق خلّي master.lufs ≈ −24"})
+        tgt = plan.get("master", {}).get("lufs", -14)
+        if tgt > -20 and not np.abs(music).max() > 1e-4:
+            out.append({"sev": 3, "t": None, "msg": f"مؤثرات بس بدون موسيقى/تعليق والماستر على {tgt} LUFS — رح تطلع عالية. خليه ≈ −24"})
+        pk = float(lf.max())
+        if pk > -12:
+            t = float(np.argmax(lf) * 0.1)
+            out.append({"sev": 3, "t": round(t, 1), "msg": f"أعلى مؤثر لحظي {pk:.1f} LUFS — عالي (حد المؤثرات بدون تعليق ≈ −14)"})
+    return out
+
+
 def build(plan, out_path):
     dur = float(plan["duration"])
     tail = 2.5
@@ -161,6 +208,7 @@ def build(plan, out_path):
             break
         gain_db += target - cur
     mix = limit(base * db(gain_db), ceiling)
+    audit = audit_levels(plan, fx * db(gain_db), voice * db(gain_db), music * db(gain_db), gain_db)
     # قص الصمت بالذيل
     env = np.abs(mix).max(axis=0)
     last = np.where(env > 1e-4)[0]
@@ -169,7 +217,7 @@ def build(plan, out_path):
     mix = mix[:, :end]
     sf.write(out_path, mix.T, SR, subtype="PCM_24")
     final = meter.integrated_loudness(mix.T)
-    return {"out": str(out_path), "lufs": round(float(final), 1), "sfx": count, "duration": end / SR, "music": info}
+    return {"out": str(out_path), "lufs": round(float(final), 1), "sfx": count, "duration": end / SR, "music": info, "audit": audit}
 
 
 if __name__ == "__main__":

@@ -169,6 +169,8 @@ export async function render(compPath, o = {}) {
         const { wav, info } = await audioJob;
         audio = wav;
         console.log(`  🔊 صوت: ${info.sfx} مؤثر${info.music?.style ? ' + موسيقى ' + info.music.style : ''} · ${info.lufs} LUFS`);
+        for (const x of info.audit ?? []) console.warn(`  ${x.sev >= 3 ? '✗' : '⚠'} صوت${x.t != null ? ` @${x.t}s` : ''}: ${x.msg}`);
+        await writeFile(path.join(outDir, 'audio-audit.json'), JSON.stringify(info.audit ?? [], null, 1));
       } catch (e) { console.warn('  ⚠ الصوت فشل، الفيديو رح يطلع بدون صوت:', e.message); }
     }
     const vcodec = {
