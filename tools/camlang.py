@@ -121,7 +121,9 @@ def moves_of(src):
     near_cut = np.zeros(len(dv), bool)
     for c in cuts[1:]:
         near_cut[max(0, c - 4):c + 4] = True
-    dv = np.where(near_cut, 0, dv)
+    # فريمات ضاع فيها التتبّع (blur، ذوبان) = قياس مش موثوق، منتجاهلها هي وجيرانها
+    bad = np.convolve((ok[:len(dv) + 1] == 0).astype(float), np.ones(5), mode="same")[:len(dv)] > 0
+    dv = np.where(near_cut | bad, 0, dv)
     tracked = float(ok.mean()) if len(ok) else 0
     return {"dv": {"p50": round(float(np.percentile(dv, 50)), 4), "p95": round(float(np.percentile(dv, 95)), 4), "p99": round(float(np.percentile(dv, 99)), 4)}, "dv_series": [round(float(x), 4) for x in dv],"src": str(src), "fps": fps, "duration": info["duration"], "tracked": round(tracked, 3), "cuts": [round(c / fps, 3) for c in cuts], "moves": moves}
 
@@ -166,10 +168,13 @@ def audit(src):
     res = moves_of(src)
     out = []
     dv = np.array(res["dv_series"])
-    thr = max(0.08, std["dv_p99"] * 1.8)
+    thr = max(0.15, std["dv_p99"] * 0.5)  # الحد المطلق واطي؛ الشرط الأساسي "مفاجئ مقارنة باللي قبله"
     i = 0
     while i < len(dv):
-        if dv[i] > thr:
+        # نتعة = تغيّر سرعة كبير ومفاجئ مقارنة بالفريمات اللي قبله (مش تسارع قوي ناعم متل ease 80%)
+        prev = dv[max(0, i - 4):i]
+        sudden = dv[i] > 2.5 * (np.median(prev) if len(prev) else 0) + 0.05
+        if dv[i] > thr and sudden:
             j = i
             while j < len(dv) and dv[j] > thr * 0.6:
                 j += 1

@@ -41,7 +41,8 @@ export function DepthImage({ dir, x = 0, y = 0, w, z = 0, depth = 400, focusAt, 
     const cx = ax + (x - ax) * k, cy = ay + (y - ay) * k;
     const s = world.scaleAt(lz);
     // الطبقة اللي صارت قريبة كتير من الكاميرا (غطسة) بتذوب قبل ما تتبكسل
-    const near = s > 4 ? Math.max(0, Math.min(1, (7 - s) / 3)) : 1;
+    // (بلّش الذوبان بكير: بعد ×2.2 التكبير بيصير أُسّي والعين بتشوفه نتعة — مقاس بـ camlang)
+    const near = s > 2.2 ? Math.max(0, Math.min(1, (3.6 - s) / 1.4)) : 1;
     if (s <= 0 || near <= 0) return null;
     if (cover && i === 0 && opacity * near > 0.05) {
       const W2 = w * k / 2, H2 = h * k / 2;

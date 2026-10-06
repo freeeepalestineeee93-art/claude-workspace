@@ -50,7 +50,16 @@ export function spline(keys, t, ch) {
   };
   const h = b.t - a.t, u = (t - a.t) / h;
   if (b.profile) return a[ch] + (b[ch] - a[ch]) * profileAt(b.profile, u); // المقطع بيمشي على منحنى سرعة متعلّم (للثبات/drift)
-  if (b.ease != null) { const [o, n] = Array.isArray(b.ease) ? b.ease : [b.ease, b.ease]; return a[ch] + (b[ch] - a[ch]) * aeEase(o, n)(u); } // انتقال بأسلوب الأفتر
+  if (b.ease != null) {
+    const [o, n] = Array.isArray(b.ease) ? b.ease : [b.ease, b.ease];
+    const e = aeEase(o, n)(u);
+    // dolly: العين بتشوف الزووم (1/المسافة) مش المسافة، فالـ ease بينطبق على log المسافة لمستوى الهدف (dollyRef = z المستوى)
+    if (ch === 'z' && b.dollyRef != null) {
+      const f = b.perspective ?? 1400, d0 = f + b.dollyRef + a.z, d1 = f + b.dollyRef + b.z;
+      if (d0 > 0 && d1 > 0) return d0 * Math.pow(d1 / d0, e) - f - b.dollyRef;
+    }
+    return a[ch] + (b[ch] - a[ch]) * e;
+  } // انتقال بأسلوب الأفتر
   const m0 = tan(i) * h, m1 = tan(i + 1) * h;
   const u2 = u * u, u3 = u2 * u;
   return (2 * u3 - 3 * u2 + 1) * a[ch] + (u3 - 2 * u2 + u) * m0 + (-2 * u3 + 3 * u2) * b[ch] + (u3 - u2) * m1;

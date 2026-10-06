@@ -36,7 +36,7 @@ function Scene() {
     keys: [
       { t: 0, x: 0, y: 40, z: 0, roll: 0 },
       { t: 3.3, x: 50, y: -10, z: -300, roll: -1, profile: 'push-pan' },
-      { t: 4.55, x: 40, y: -60, z: -2420, roll: 1.2, ease: [80, 85] },
+      { t: 4.55, x: 40, y: -60, z: -2420, roll: 1.2, ease: [80, 85], dollyRef: 2600, perspective: 1500 },
       { t: 8, x: 70, y: -40, z: -2600, roll: 0, profile: 'push-pan' },
     ],
     handheld: { amp: 3, freq: 0.3 },
