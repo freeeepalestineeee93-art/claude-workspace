@@ -5,6 +5,8 @@ import { createStudio } from '../../lib/studio.js';
 import { buildTimeline, renderFrame, preloadAll, prepareFrame } from './timeline.js';
 import { plugins } from './plugins.js';
 import { computeCues } from './cues.js';
+import { parseColor } from '../../lib/anim.js';
+const parseColorSafe = (c) => { try { return parseColor(c); } catch { return [255, 255, 255, 1]; } };
 import { Post } from './post.js';
 
 const q = new URLSearchParams(location.search);
@@ -109,6 +111,51 @@ async function boot() {
         })(),
       };
     },
+    // فحص فريم: صناديق النصوص على الشاشة + التباين مع الخلفية
+    audit(t) {
+      const texts = [];
+      renderFrame(wctx, comp, t, { ...env, rec: { text: (r) => { if (r.alpha > 0.5 && r.box.w > 2) texts.push(r); } } });
+      renderFrame(wctx, comp, t, { ...env, hideText: true });
+      const lum = ([r, g, b]) => { const f = (c) => { c /= 255; return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4; }; return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b); };
+      return texts.map((r) => {
+        const x = Math.max(0, Math.floor(r.box.x)), y = Math.max(0, Math.floor(r.box.y));
+        const w = Math.max(1, Math.min(S.W - x, Math.ceil(r.box.w))), h = Math.max(1, Math.min(S.H - y, Math.ceil(r.box.h)));
+        let bgL = 0;
+        try {
+          const d = wctx.getImageData(x, y, w, h).data;
+          const ls = [];
+          for (let i = 0; i < d.length; i += 4 * 7) ls.push(lum([d[i], d[i + 1], d[i + 2]]));
+          ls.sort((a, b) => a - b);
+          bgL = ls[Math.floor(ls.length / 2)] ?? 0;
+        } catch { /* خارج الكانفاس */ }
+        const fg = lum(parseColorSafe(r.fill));
+        const contrast = (Math.max(fg, bgL) + 0.05) / (Math.min(fg, bgL) + 0.05);
+        return { text: r.text, box: r.box, size: r.size, contrast: +contrast.toFixed(2), layer: r.L.id ?? null, scene: r.scene };
+      });
+    },
+    // ملخص أسلوب التحريك (لكشف "علامات AI")
+    styleReport() {
+      const texts = [], moves = [];
+      const walk = (ls, sc) => (ls || []).forEach((L) => { if (!L) return; if (L.type === 'text') texts.push({ sc, x: typeof L.x === 'number' ? L.x : null, reveal: L.reveal, exit: L.exit, family: L.family, size: L.size }); if (L.children) walk(L.children, sc); });
+      comp.scenes.forEach((s, i) => walk(s.layers, i));
+      walk(comp.layers, -1); walk(comp.overlay, -1);
+      return { W: S.W, H: S.H, safe: S.safe, duration: comp.duration, scenes: comp.scenes.map((s) => ({ start: s.start, duration: s.duration, transition: s.transition?.type ?? null })),
+        texts: texts.map((x) => ({ ...x, reveal: x.reveal ? { by: x.reveal.by, from: Object.keys(x.reveal.from || {}), spring: x.reveal.spring ?? null, ease: x.reveal.ease ?? null, jitter: x.reveal.stagger?.jitter ?? 0.15 } : null, exit: !!x.exit })),
+        post: Object.keys(comp.post || {}), motionBlur: comp.motionBlur !== false, audio: !!(comp.audio || brand.audio?.music) };
+    },
+    // منحنى الحركة: كم بيتغير الفريم كل step (لكشف الجمود والزحمة)
+    motion(step = 0.1) {
+      const out = [];
+      let prev = null;
+      for (let t = 0; t <= comp.duration; t += step) {
+        renderFrame(wctx, comp, t, env);
+        pctx.drawImage(work, 0, 0, probe.width, probe.height);
+        const d = pctx.getImageData(0, 0, probe.width, probe.height).data;
+        if (prev) { let s = 0; for (let i = 0; i < d.length; i += 4) s += Math.abs(d[i] - prev[i]) + Math.abs(d[i + 1] - prev[i + 1]) + Math.abs(d[i + 2] - prev[i + 2]); out.push(+(s / (d.length / 4) / 3).toFixed(3)); }
+        prev = d;
+      }
+      return out;
+    },
     audio: comp.audio ?? null,
     cues: () => computeCues(comp, env),
     // خطة الصوت الكاملة (بتنبنى بـ Python): موسيقى + صوت + مؤثرات تلقائية ويدوية
@@ -124,6 +171,7 @@ async function boot() {
     },
   };
   window.ready = true;
+  if (q.get('ui')) (await import('./preview-ui.js')).mountPreview(window.studio, { aspect, quality });
 }
 
 boot().catch((e) => { console.error(e); window.bootError = String(e.stack || e); });

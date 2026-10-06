@@ -1,0 +1,55 @@
+{
+  "name": "logo-test",
+  "colors": {
+    "bg": "#1d3456",
+    "surface": "#2b4264",
+    "text": "#f9f9f9",
+    "muted": "#8b8f98",
+    "primary": "#e43845",
+    "accent": "#768497"
+  },
+  "fonts": {
+    "display": {
+      "family": "Noto Kufi Arabic",
+      "weight": 800
+    },
+    "body": {
+      "family": "IBM Plex Sans Arabic",
+      "weight": 500
+    },
+    "accent": {
+      "family": "Aref Ruqaa",
+      "weight": 700
+    },
+    "latin": {
+      "family": "Inter",
+      "weight": 700
+    }
+  },
+  "logo": {
+    "svg": "assets/logo.svg",
+    "png": "assets/logo-clean.png"
+  },
+  "motion": {
+    "energy": "confident",
+    "springs": {
+      "enter": "default",
+      "hero": "heavy",
+      "ui": "snappy"
+    }
+  },
+  "audio": {
+    "music": {
+      "style": "tech",
+      "gain_db": -8
+    }
+  },
+  "palette_extracted": [
+    "#e43845",
+    "#1d3456",
+    "#f9f9f9",
+    "#e63946",
+    "#c83742",
+    "#768497"
+  ]
+}

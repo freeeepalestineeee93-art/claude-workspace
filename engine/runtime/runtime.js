@@ -106,6 +106,111 @@ function shiftPath(d, dx, dy) {
   });
 }
 
+// ── رسومات SVG كاملة (لوغو، illustration) بألوانها وتحويلاتها ──
+const arts = new Map();
+function parseTransform(tr) {
+  let m = [1, 0, 0, 1, 0, 0];
+  const mul = (a, b) => [a[0] * b[0] + a[2] * b[1], a[1] * b[0] + a[3] * b[1], a[0] * b[2] + a[2] * b[3], a[1] * b[2] + a[3] * b[3], a[0] * b[4] + a[2] * b[5] + a[4], a[1] * b[4] + a[3] * b[5] + a[5]];
+  for (const [, fn, args] of (tr || '').matchAll(/(\w+)\(([^)]*)\)/g)) {
+    const n = args.split(/[\s,]+/).filter(Boolean).map(Number);
+    if (fn === 'translate') m = mul(m, [1, 0, 0, 1, n[0], n[1] ?? 0]);
+    else if (fn === 'scale') m = mul(m, [n[0], 0, 0, n[1] ?? n[0], 0, 0]);
+    else if (fn === 'matrix') m = mul(m, n);
+    else if (fn === 'rotate') { const a = (n[0] * Math.PI) / 180, c = Math.cos(a), si = Math.sin(a); m = mul(m, [c, si, -si, c, 0, 0]); }
+  }
+  return m;
+}
+async function loadArt(src) {
+  if (arts.has(src)) return arts.get(src);
+  const doc = new DOMParser().parseFromString(await (await fetch(src)).text(), 'image/svg+xml');
+  const svg = doc.documentElement;
+  const vb = (svg.getAttribute('viewBox') || `0 0 ${parseFloat(svg.getAttribute('width')) || 100} ${parseFloat(svg.getAttribute('height')) || 100}`).split(/[ ,]+/).map(Number);
+  const parts = [];
+  const visit = (el, m) => {
+    const own = parseTransform(el.getAttribute?.('transform'));
+    const M = [m[0] * own[0] + m[2] * own[1], m[1] * own[0] + m[3] * own[1], m[0] * own[2] + m[2] * own[3], m[1] * own[2] + m[3] * own[3], m[0] * own[4] + m[2] * own[5] + m[4], m[1] * own[4] + m[3] * own[5] + m[5]];
+    if (el.tagName === 'path' && el.getAttribute('d')) {
+      const fill = el.getAttribute('fill') ?? (el.getAttribute('style') || '').match(/fill:\s*([^;]+)/)?.[1] ?? '#000';
+      const stroke = el.getAttribute('stroke');
+      parts.push({ d: el.getAttribute('d'), m: M, fill: fill === 'none' ? null : fill, stroke: stroke && stroke !== 'none' ? stroke : null, sw: +(el.getAttribute('stroke-width') || 1), op: +(el.getAttribute('opacity') ?? 1) });
+    }
+    for (const c of el.children || []) visit(c, M);
+  };
+  visit(svg, [1, 0, 0, 1, 0, 0]);
+  // مركز كل قطعة (لتحريكها من مكانها)
+  const meas = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  meas.style.cssText = 'position:absolute;visibility:hidden';
+  document.body.appendChild(meas);
+  for (const p of parts) {
+    const e = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    e.setAttribute('d', p.d);
+    meas.appendChild(e);
+    const b = e.getBBox();
+    p.c = [p.m[0] * (b.x + b.width / 2) + p.m[2] * (b.y + b.height / 2) + p.m[4], p.m[1] * (b.x + b.width / 2) + p.m[3] * (b.y + b.height / 2) + p.m[5]];
+    p.area = b.width * b.height;
+  }
+  meas.remove();
+  const res = { vb, parts };
+  arts.set(src, res);
+  return res;
+}
+
+// { type:'svg', src, size (العرض), reveal: { mode:'draw'|'pop'|'rise'|'fade'|'assemble', at, each, dur, spring, order:'area'|'doc'|'x'|'random' }, recolor: { '#e43946': '#fff' } }
+function drawArt(ctx, L, t) {
+  const art = arts.get(L.src);
+  if (!art) throw new Error(`الرسمة ما انحمّلت: ${L.src}`);
+  const [vx, vy, vw, vh] = art.vb;
+  const k = v(L.size ?? vw, t) / vw;
+  ctx.save();
+  ctx.scale(k, k);
+  ctx.translate(-vx - vw / 2, -vy - vh / 2);
+  const rv = L.reveal;
+  let order = art.parts.map((p, i) => i);
+  if (rv?.order === 'area') order.sort((a, b) => art.parts[b].area - art.parts[a].area);
+  else if (rv?.order === 'x') order.sort((a, b) => art.parts[b].c[0] - art.parts[a].c[0]);
+  else if (rv?.order === 'random') order.sort((a, b) => Math.sin(a * 91.7) - Math.sin(b * 91.7));
+  const rank = new Map(order.map((idx, r) => [idx, r]));
+  art.parts.forEach((p, i) => {
+    let prog = 1;
+    if (rv) {
+      const lt = t - rv.at - rank.get(i) * (rv.each ?? 0.06);
+      prog = lt <= 0 ? 0 : rv.spring ? cachedSp(rv.spring)(lt) : resolveEase(rv.ease ?? 'glide')(clamp(lt / (rv.dur ?? 0.7)));
+    }
+    if (prog <= 0.001 && rv?.mode !== 'draw') return;
+    ctx.save();
+    const mode = rv?.mode ?? 'fade';
+    const [cx, cy] = p.c;
+    if (mode === 'pop' || mode === 'assemble' || mode === 'rise') {
+      ctx.translate(cx, cy);
+      if (mode === 'pop') ctx.scale(prog, prog);
+      if (mode === 'rise') ctx.translate(0, (1 - prog) * vh * 0.12);
+      if (mode === 'assemble') { const a = Math.sin(i * 12.9898) * 43758.5453 % 1; ctx.translate((1 - prog) * vw * 0.5 * Math.cos(a * 6.28), (1 - prog) * vh * 0.5 * Math.sin(a * 6.28)); ctx.rotate((1 - prog) * a * 2); }
+      ctx.translate(-cx, -cy);
+    }
+    ctx.globalAlpha *= p.op * (mode === 'draw' ? 1 : clamp(prog * 1.6));
+    ctx.transform(...p.m);
+    const path = P(p.d);
+    const col = (c) => colorToCss(L.recolor?.[c?.toLowerCase()] ?? L.recolor?.[c] ?? c);
+    if (mode === 'draw') {
+      // حدود بتنرسم أولاً، بعدين بتتعبّى
+      const len = pathLength(p.d);
+      const dp = clamp(prog * 1.6);
+      ctx.lineWidth = (L.drawWidth ?? 2) / k;
+      ctx.strokeStyle = col(p.stroke ?? p.fill ?? '#fff');
+      ctx.setLineDash([len * dp, len * 2]);
+      if (dp > 0) ctx.stroke(path);
+      ctx.setLineDash([]);
+      const fa = clamp(prog * 2 - 1);
+      if (p.fill && fa > 0) { ctx.globalAlpha *= fa; ctx.fillStyle = col(p.fill); ctx.fill(path); }
+    } else {
+      if (p.fill) { ctx.fillStyle = col(p.fill); ctx.fill(path); }
+      if (p.stroke) { ctx.strokeStyle = col(p.stroke); ctx.lineWidth = p.sw; ctx.stroke(path); }
+    }
+    ctx.restore();
+  });
+  ctx.restore();
+}
+
 // ───────────────────────── canvases مؤقتة ─────────────────────────
 
 const pool = [];
@@ -196,6 +301,7 @@ export function drawLayers(ctx, layers, t, env) {
 }
 
 export function drawLayer(ctx, L, t, env) {
+  if (env.hideText && L.type === 'text') return;
   const op = clamp(v(L.opacity ?? 1, t));
   if (op <= 0.001) return;
   const lt = t - (L.shift ?? 0); // زمن محلي (precomp)
@@ -213,6 +319,7 @@ export function drawLayer(ctx, L, t, env) {
     ctx.shadowOffsetY = s.y ?? 12;
   }
   applyTransform(ctx, L, t, env);
+  if (env.rec) env.rec.layer?.(L, ctx.getTransform(), ctx.globalAlpha, lt);
   drawContent(ctx, L, lt, env);
   ctx.restore();
 }
@@ -321,6 +428,7 @@ function drawContent(ctx, L, t, env) {
     case 'text': drawText(ctx, L, t, env); break;
     case 'image': drawImageLayer(ctx, L, t); break;
     case 'icon': drawIcon(ctx, L, t); break;
+    case 'svg': drawArt(ctx, L, t); break;
     case 'custom': L.draw(ctx, t, env, L); break;
     case 'canvas': { const src = L.source(t, env); if (src) ctx.drawImage(src, -v(L.w, t) / 2, -v(L.h, t) / 2, v(L.w, t), v(L.h, t)); break; }
     default:
@@ -475,6 +583,14 @@ function drawText(ctx, L, t, env) {
   const by = L.reveal?.by ?? L.exit?.by ?? L.loop?.by ?? 'all';
   const us = units(lay, by);
   const n = us.length;
+  if (env.rec?.text) {
+    const m = ctx.getTransform();
+    const b = lay.box;
+    const pts = [[b.x, b.y], [b.x + b.w, b.y], [b.x, b.y + b.h], [b.x + b.w, b.y + b.h]].map(([x, y]) => [m.a * x + m.c * y + m.e, m.b * x + m.d * y + m.f]);
+    const xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]);
+    env.rec.text({ L, scene: env.scene?.start ?? -1, text: v(L.text, t), box: { x: Math.min(...xs), y: Math.min(...ys), w: Math.max(...xs) - Math.min(...xs), h: Math.max(...ys) - Math.min(...ys) },
+      size: lay.size * Math.hypot(m.a, m.b), fill: solidOf(v(fill, t)), alpha: ctx.globalAlpha, lay, matrix: m, units: us, state: (u) => unitState(L, u, n, t) });
+  }
 
   // علامات تحت النص (تظليل كلمة) — بتنرسم قبل النص
   for (const mk of L.marks || []) if (mk.layer !== 'over') drawMark(ctx, lay, mk, t);
@@ -614,7 +730,7 @@ function walk(layers, fn) {
 export async function preload(comp) {
   await initType();
   const fontsNeeded = new Map();
-  const imgs = new Set(), ics = new Set();
+  const imgs = new Set(), ics = new Set(), arts_ = new Set();
   const all = [...(comp.layers || []), ...(comp.overlay || []), ...(comp.underlay || []), ...(comp.scenes || []).flatMap((s) => s.layers || [])];
   walk(all, (L) => {
     if (L.type === 'text') {
@@ -628,7 +744,9 @@ export async function preload(comp) {
     }
     if (L.type === 'image') imgs.add(L.src);
     if (L.type === 'icon') ics.add(L.icon);
+    if (L.type === 'svg') arts_.add(L.src);
   });
+  await Promise.all([...arts_].map(loadArt));
   for (const [fam, ws] of fontsNeeded) await preloadFont(fam, [...ws]);
   await Promise.all([...imgs].map(loadImage));
   await Promise.all([...ics].map(loadIcon));
