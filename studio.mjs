@@ -4,7 +4,8 @@ import { spawnSync } from 'node:child_process';
 
 const PY = '.venv/bin/python';
 const cmds = {
-  render: ['node', 'engine/render.js'], // <main.js> [--aspect 9:16] [--quality draft|final] [--still t]
+  render: ['node', 'engine/render.js'],
+  rrender: ['node', 'tools/rrender.mjs'], // projects/<p>/rvideos/<v> [--still t] [--from a --to b] [--draft]  (Remotion) // <main.js> [--aspect 9:16] [--quality draft|final] [--still t]
   preview: ['node', 'engine/preview.js'], // <main.js> [--port 5173]
   critique: ['node', 'tools/critique.mjs'], // <main.js>
   'export-ae': ['node', 'tools/export-ae.mjs'], // <main.js>
@@ -23,6 +24,7 @@ const [cmd, ...rest] = process.argv.slice(2);
 if (!cmds[cmd]) {
   console.log(`استوديو الموشن — الأوامر:
   render <main.js> [--aspect 9:16|1:1|4:5|16:9] [--quality draft|final] [--still 1.5]   رندر فيديو/صورة
+  rrender <projects/x/rvideos/y> [--still t] [--draft]   رندر فيديو Remotion عبر نفس خط الصوت والفحوصات
   preview <main.js>          معاينة حية بالمتصفح مع تحديث تلقائي
   critique <main.js>         نقد: contact sheet + فحوصات + علامات AI
   export-ae <main.js>        تصدير لـ After Effects كطبقات
