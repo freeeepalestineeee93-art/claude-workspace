@@ -1,5 +1,6 @@
 // نص عربي بمستوى الحرف/الكلمة جوّا Remotion — عبر محرك HarfBuzz تبعنا (lib/type.js)، فالوصل ما بينكسر أبداً.
 //
+//   anchor: center | start | end | right | left
 //   <ArabicText text="الحقيقة أولاً" size={120} weight={700} fill="#fff" x={540} y={800}
 //     reveal={{ by: 'word', at: 0.4, dur: 0.6, ease: 'out', stagger: 0.08, from: { y: 60, opacity: 0, blur: 8 }, mask: true }}
 //     exit={{ by: 'word', at: 3.2, dur: 0.35, to: { y: -40, opacity: 0 } }}
@@ -73,7 +74,8 @@ export function ArabicText({ text, family = 'IBM Plex Sans Arabic', weight = 700
   const W = B.w + pad * 2, Hh = B.h + pad * 2;
   // anchor: center = مركز الحبر على x · start = حافة بداية القراءة (يمين بالعربي) على x · end = حافة النهاية
   const right = -(B.x + B.w), left = -B.x;
-  const dx = anchor === 'center' ? -B.cx : anchor === 'start' ? (lay.rtl ? right : left) : (lay.rtl ? left : right);
+  // right/left صريحين (مفيدين للأرقام: اتجاهها LTR حتى جوّا تصميم عربي)
+  const dx = anchor === 'center' ? -B.cx : anchor === 'right' ? right : anchor === 'left' ? left : anchor === 'start' ? (lay.rtl ? right : left) : (lay.rtl ? left : right);
   const n = units.length;
   const drawP = draw ? (EASE[draw.ease ?? 'inOut'])(clamp((t - draw.at) / (draw.dur ?? 1))) : 1;
 

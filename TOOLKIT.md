@@ -14,7 +14,10 @@
 | ffmpeg 6.1 | ترميز MP4/ProRes/WebM، فلاتر، دمج الصوت |
 | @napi-rs/canvas, skia-canvas | رسم Canvas بسرعة جوّا Node بدون متصفح |
 | sharp, ImageMagick | معالجة صور سريعة |
-| Remotion (+ transitions, shapes, paths, noise, motion-blur, three, lottie, captions, rive, gif, layout-utils) | المسار البديل بـ React، ومفيد للتايم لاين لاحقاً |
+| Remotion (+ transitions, shapes, paths, noise, motion-blur, three, lottie, captions, rive, gif, layout-utils) | **الأساس الجديد** (`docs/remotion.md`): `node studio.mjs rrender` + kit الكاميرا/العمق/النص العربي، عبر نفس خط الصوت والفحوصات |
+| `tools/camlang.py` | لغة الكاميرا: بيتعلّم حركات الكاميرا من المراجع (`library/camera`) وبيفحص انسيابية كاميرتنا |
+| `tools/depth_layers.py` | صورة مسطحة → طبقات عمق (Depth Anything) لـ parallax حقيقي |
+| `tools/videoaudit.py` | فحص بصري: عنصر بيظهر جامد، كادر فاضي |
 | HyperFrames | المسار البديل بـ HTML |
 | express, vite, chokidar | سيرفر المعاينة الحية وإعادة التحميل |
 | zod | التحقق من صيغة المشاهد (Scene Graph) |

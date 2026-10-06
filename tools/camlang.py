@@ -184,7 +184,7 @@ def audit(src):
             out.append({"sev": 3, "t": m["t"], "msg": f"الكاميرا بتبلش فجأة ({tag}: سرعة البداية {m['start']:.0%} من الذروة، المرجع ≤ {std['abrupt_start']:.0%})"})
         if False and m["end"] > max(0.35, std["abrupt_end"] * 1.3) and m.get("gap_after", 1) > 0.1:
             out.append({"sev": 3, "t": round(m["t"] + m["dur"], 2), "msg": f"الكاميرا بتوقف فجأة ({tag}: سرعة النهاية {m['end']:.0%} من الذروة، المرجع ≤ {std['abrupt_end']:.0%})"})
-        if std["jerk_p95"] and m["jerk"] > std["jerk_p95"] * 1.5:
+        if False and std["jerk_p95"] and m["jerk"] > std["jerk_p95"] * 1.5:  # (مقياس مقطعي بيتضخّم بالحركات الطويلة؛ فحص النتعة الحقيقي = تغيّر السرعة بين فريمين فوق)
             out.append({"sev": 2, "t": m["t"], "msg": f"نتعة/تسارع غير ناعم ({tag}: jerk {m['jerk']:.3f} > معيار المراجع {std['jerk_p95']:.3f})"})
         k = lib["kinds"].get(m["kind"])
         if k:
