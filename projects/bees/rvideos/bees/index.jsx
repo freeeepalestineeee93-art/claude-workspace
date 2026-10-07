@@ -170,12 +170,12 @@ function GlobeStage({ t }) {
 // ── القسم ٤: قرص Blender — ماكرو جوّا خلية بيسحب لورا (39 فريم) ثم صورة ثابتة عالية الدقة ──
 const COMB_T0 = 11.1;
 function Comb({ t }) {
-  if (t < 10.95 || t > 16.3) return null;
+  if (t < 10.95 || t > 15.8) return null;
   const f = Math.round((t - COMB_T0) * 30);
   const src = f < 38 ? `gen/comb/${String(Math.max(0, f)).padStart(4, '0')}.png` : 'gen/comb-hold/0038.png';
   // دخول: دائرة بتكبر من مكان نحلة المدار (النحلة "بتغطس" بالخلية)
   const r = out(clamp((t - 10.95) / 0.45), 3) * 1500;
-  const fade = 1 - clamp((t - 15.7) / 0.5);
+  const fade = 1 - clamp((t - 15.35) / 0.4);
   return <Layer z={700}><At x={-15} y={-1345} opacity={fade}>
     <div style={{ position: 'relative', width: 1210, height: 2150, clipPath: `circle(${r.toFixed(0)}px at 40% 62%)` }}>
       <Img src={asset(A(src))} style={{ width: '100%', height: '100%', display: 'block' }} />
@@ -199,7 +199,7 @@ function Jar({ t }) {
   if (t < 14.65) return null;
   const rise = (1 - out(clamp((t - 14.7) / 0.95), 3)) * 700;
   const f = Math.min(76, Math.max(0, Math.floor((t - 15.0) * 15)) * 2);
-  return <Layer z={660}><At x={JAR.x} y={JAR.y + rise}><Img src={asset(A(`gen/jar/${String(f).padStart(4, '0')}.png`))} style={{ width: JAR.w, display: 'block' }} /></At></Layer>;
+  return <Layer z={660}><At x={JAR.x} y={JAR.y + rise}><Img src={asset(A(`gen/jar/${String(f).padStart(4, '0')}.png`))} style={{ width: JAR.w, display: 'block', filter: 'saturate(1.12) hue-rotate(-7deg)' }} /></At></Layer>;
 }
 function Drop({ t }) {
   const k = clamp((t - 14.65) / 0.95);
@@ -214,16 +214,24 @@ function LandingBee({ t }) {
   const land = clamp((t - 16.62) / 0.25);   // لحظة الهبوط: ضغطة خفيفة
   const squash = 1 - 0.08 * Math.sin(Math.PI * land);
   const hover = (1 - clamp((t - 16.5) / 0.2)) * Math.sin(t * 3) * 7;
-  return <Layer z={600}><At x={lerp(-760, 0, k) + hover} y={lerp(-1150, -630, k) + hover} rotate={lerp(14, 4, k)} scale={squash} origin="50% 90%">
+  return <Layer z={600}><At x={lerp(-820, -236, k) + hover} y={lerp(-1150, -652, k) + hover} rotate={lerp(14, 4, k)} scale={squash} origin="50% 90%">
     <Bee kind="front" w={220} t={t} seed={9} still={t > 16.72} />
   </At></Layer>;
 }
-// ضربة الختام: نقطة عسل صغيرة بتنزل من راس الملعقة بعد ما تحط النحلة
-function EndDrip({ t }) {
-  const k = clamp((t - 16.95) / 0.5);
-  if (k <= 0) return null;
-  return <Layer z={655}><At x={14} y={-520 + k ** 2 * 120} opacity={1 - clamp((k - 0.85) / 0.15)}>
-    <svg width="26" height="36" viewBox="0 0 60 84"><path d="M30 2 C30 2 4 40 4 56 a26 26 0 0 0 52 0 C56 40 30 2 30 2Z" fill="#E59B17" /></svg></At></Layer>;
+// حلقة تموّج على سطح العسل لحظة وقوع النقطة (تموّج Blender خفيف، هاد بيأكّده)
+function Ripple({ t }) {
+  const k = clamp((t - 15.6) / 0.7);
+  if (k <= 0 || k >= 1) return null;
+  return <Layer z={660}>{[0, 0.18].map((d, i) => { const q = clamp((k - d) / (1 - d)); return q > 0 && <At key={i} x={JAR.x + 4} y={JAR.y - 88}>
+    <div style={{ width: 40 + q * 300, height: (40 + q * 300) * 0.22, borderRadius: '50%', border: `${(3 - q * 2).toFixed(1)}px solid rgba(255,226,150,${(0.8 * (1 - q)).toFixed(2)})` }} /></At>; })}</Layer>;
+}
+// ضربة الختام: لمعة ضو بتمسح زجاج المرطبان (مقصوصة على المرطبان نفسه) لما تحط النحلة
+function Glint({ t }) {
+  const k = clamp((t - 16.75) / 0.6);
+  if (k <= 0 || k >= 1) return null;
+  const m = `url(${asset(A('gen/jar/0040.png'))})`;
+  return <Layer z={659}><At x={JAR.x} y={JAR.y}><div style={{ width: JAR.w, height: JAR.w * 1.25, maskImage: m, WebkitMaskImage: m, maskSize: '100% 100%', WebkitMaskSize: '100% 100%', mixBlendMode: 'screen',
+    background: `linear-gradient(115deg, rgba(255,255,255,0) ${-30 + k * 150}%, rgba(255,250,230,.75) ${-18 + k * 150}%, rgba(255,255,255,0) ${-6 + k * 150}%)` }} /></At></Layer>;
 }
 
 // ── النصوص (كلها جوّا العالم، كل قسم بتكوين وخروج مختلف) ──
@@ -285,11 +293,12 @@ function Scene({ t }) {
     {/* غسلة خفيفة بس (النسخة ١ كانت مغسولة): فوق أكتر لقراية النص، وتحت الحقل بلونه */}
     <AbsoluteFill style={{ background: 'linear-gradient(180deg, rgba(251,247,239,.62) 0%, rgba(251,247,239,.3) 40%, rgba(251,247,239,.06) 100%)' }} />
     {/* ترتيب الرسم = العمق (بعيد ← قريب) */}
+    <GlobeStage t={t} />
     <Comb t={t} />
     <Drop t={t} />
     <Jar t={t} />
-    <EndDrip t={t} />
-    <GlobeStage t={t} />
+    <Ripple t={t} />
+    <Glint t={t} />
     <Plate t={t} />
     <Field t={t} inserts={FieldWords({ t })} />
     <Words t={t} />
