@@ -51,9 +51,9 @@ const CAM = {
     { t: 3.45, x: 20, y: -10, z: -40, profile: 'pull-pan' },              // drift
     { t: 4.55, x: 0, y: 30, z: -620, roll: 1, ease: [80, 85], dollyRef: 1800, perspective: 1500 }, // دفع لجوّا الحقل
     { t: 7.35, x: 40, y: 10, z: -680, roll: 0, profile: 'push-pan' },
-    { t: 8.45, x: 0, y: -2050, z: -650, roll: -1, ease: [75, 85] },       // ميلان للسما
-    { t: 11.3, x: -30, y: -2060, z: -700, roll: 0.5, profile: 'push-pan' },
-    { t: 14.75, x: 20, y: -2020, z: -660, roll: 0, profile: 'pull-pan' },
+    { t: 8.45, x: 0, y: -1350, z: -650, roll: -1, ease: [75, 85] },       // ميلان للسما
+    { t: 11.3, x: -30, y: -1360, z: -700, roll: 0.5, profile: 'push-pan' },
+    { t: 14.75, x: 20, y: -1320, z: -660, roll: 0, profile: 'pull-pan' },
     { t: 15.65, x: 0, y: -420, z: -660, roll: 0, ease: [60, 90] },        // لحاق نقطة العسل لتحت
     { t: 17.5, x: -15, y: -440, z: -720, roll: 0.6, profile: 'push-pan' },
   ],
@@ -78,20 +78,20 @@ function Stage({ t }) {
     const r = (k) => hash(i * 7.3 + k);
     const at = 3.7 + (i / 46) * 2.7 + r(1) * 0.25;
     const k = clamp((t - at) / 0.45), s = k <= 0 ? 0 : 1 + Math.sin(k * Math.PI) * 0.18 * (1 - k) - (1 - out(k, 3));
-    return { i, x: (r(2) - 0.5) * 1500, y: 180 + r(3) * 580, z: -330 + r(4) * 1250, w: 170 + r(5) * 140, src: r(6) > 0.45 ? 'cosmos.png' : 'daisy.png', s: Math.max(0, s), rot: (r(7) - 0.5) * 20 + Math.sin(t * 1.4 + i) * 3 };
+    return { i, x: (r(2) - 0.5) * 1500, y: 180 + r(3) * 580, z: -330 + r(4) * 1250, w: 170 + r(5) * 140, src: r(6) > 0.45 ? 'cosmos.png' : 'daisy.png', s: Math.max(0, s), rot: (r(7) - 0.5) * 20 + Math.sin(t * (1.1 + r(8) * 0.6) + i) * 6 + Math.sin(t * 2.7 + i * 1.7) * 2 };
   });
   // الكرة والقرص والمرطبان: z = −cam.z للقسم ⇒ حجم طبيعي (d = f + z + cam.z)
   const SZ = 660;
   const comb = clamp((t - 11.25) / 1.0), combIn = out(comb, 4);
   const combScale = lerp(4.2, 1, combIn) * (1 + 0.03 * Math.sin(t * 0.9));
   // نقطة العسل: بتنفصل من القرص وبتنزل بجاذبية لحد فم المرطبان
-  const dropT = clamp((t - 14.65) / 0.95), dropY = lerp(-1700, -560, dropT ** 1.8);
+  const dropT = clamp((t - 14.65) / 0.95), dropY = lerp(-1000, -560, dropT ** 1.8);
   const splash = clamp((t - 15.6) / 0.6);
   return <>
     {/* الصحن + حلقة الثلث (من المحرك القديم عبر الجسر) */}
     <Layer z={0}>
-      <At x={0} y={280 + plateOut * 700} opacity={1 - plateOut}><Img src={asset(A('plate.png'))} style={{ width: 820 }} /></At>
-      <div style={{ position: 'absolute', left: -540, top: -960 + plateOut * 700, opacity: 1 - plateOut }}>
+      <At x={0} y={280 + plateOut ** 2 * 1500} rotate={plateOut ** 2 * 14}><Img src={asset(A('plate.png'))} style={{ width: 820 }} /></At>
+      <div style={{ position: 'absolute', left: -540, top: -960 + plateOut ** 2 * 1500 }}>
         <Legacy project="projects/bees" id="ring" build={(S) => ({ layers: [
           S.donut({ value: { at: 1.25, from: 0, to: 1 / 3, dur: 1.1, ease: 'ae:60:90' }, r: S.px(455), width: S.px(22), color: '#E3A11C', track: 'rgba(43,42,51,0.08)', x: S.cx, y: S.cy + S.px(280) }),
         ] })} />
@@ -102,7 +102,7 @@ function Stage({ t }) {
     {/* الكرة الأرضية (3D) + نحلة على راس المدار */}
     <Layer z={SZ}><GlobeStage t={t} /></Layer>
     {/* قرص العسل: سحب لورا من خلية وحدة */}
-    {t > 11.0 && t < 16.4 && <Layer z={SZ}><At x={0} y={-1880} scale={combScale} opacity={clamp((t - 11.1) / 0.3) * (1 - clamp((t - 15.8) / 0.5))}>
+    {t > 11.0 && t < 16.4 && <Layer z={SZ}><At x={0} y={-1180} scale={combScale} opacity={clamp((t - 11.1) / 0.3) * (1 - clamp((t - 15.8) / 0.5))}>
       <div style={{ position: 'relative', width: 1500 }}>
         <Img src={asset(A('honeycomb.png'))} style={{ width: 1500, display: 'block' }} />
         <HexGlow t={t} />
@@ -110,7 +110,7 @@ function Stage({ t }) {
     </At></Layer>}
     {/* نقطة العسل + رذاذ */}
     {t > 14.6 && t < 16.2 && <Layer z={SZ}>
-      <At x={0} y={dropY}><svg width="110" height="154" viewBox="0 0 60 84"><path d="M30 2 C30 2 4 40 4 56 a26 26 0 0 0 52 0 C56 40 30 2 30 2Z" fill="#E9A21A" /><ellipse cx="22" cy="54" rx="6" ry="10" fill="#FFE3A3" opacity=".7" /></svg></At>
+      {dropT < 1 && <At x={0} y={dropY}><svg width="110" height="154" viewBox="0 0 60 84" style={{ transform: `scale(${1 - dropT * 0.15}, ${1 + dropT ** 2 * 0.35})` }}><path d="M30 2 C30 2 4 40 4 56 a26 26 0 0 0 52 0 C56 40 30 2 30 2Z" fill="#E9A21A" /><ellipse cx="22" cy="54" rx="6" ry="10" fill="#FFE3A3" opacity=".7" /></svg></At>}
       {splash > 0 && <At x={0} y={-560} scale={0.3 + splash * 1.8} opacity={1 - splash}><div style={{ width: 120, height: 34, borderRadius: '50%', border: '5px solid #E9A21A' }} /></At>}
     </Layer>}
     {/* المرطبان */}
@@ -145,11 +145,11 @@ function HexGlow({ t }) {
 
 function GlobeStage({ t }) {
   const laps = 3 * inOut(clamp((t - 8.25) / 2.6), 2);
-  const gin = out(clamp((t - 7.75) / 0.9), 3), gout = clamp((t - 11.05) / 0.5);
+  const gin = out(clamp((t - 7.45) / 0.8), 4), gout = clamp((t - 11.05) / 0.5);
   if (t < 7.4 || gout >= 1) return null;
   const size = 1000;
   const head = orbitHead2D(laps, size);
-  return <At x={0} y={-1860 - gout * 400} scale={(0.7 + 0.3 * gin) * (1 - 0.5 * gout)} opacity={gin * (1 - gout)}>
+  return <At x={0} y={-1160 - gout * 400 + Math.sin(t * 1.3) * 14} scale={(0.7 + 0.3 * gin) * (1 - 0.5 * gout)} opacity={clamp((t - 7.45) / 0.2) * (1 - gout)}>
     <div style={{ position: 'relative', width: size, height: size }}>
       <Globe size={size} spin={(tt) => 30 + tt * 22} orbit={laps > 0.01 ? { laps: () => laps, tilt: 18, color: '#E3A11C', width: 0.016 } : null} />
       {laps > 0.01 && <Img src={asset(A('bee-side.png'))} style={{ position: 'absolute', left: head.x - 70, top: head.y - 52, width: 140, opacity: head.front ? 1 : 0.25, transform: `scale(${head.front ? 1 : 0.8})` }} />}
