@@ -52,12 +52,12 @@ export const meta = {
 // ── الكاميرا: نقاط الراحة لكل قسم (ease أفتر للانتقالات، drift متعلّم للثبات) ──
 const CAM = {
   keys: [
-    { t: 0, x: 40, y: 220, z: -430, roll: -1.8 },
+    { t: 0, x: 30, y: 120, z: -200, roll: -1.8 },
     { t: 2.7, x: 0, y: 0, z: 0, roll: 0, ease: [55, 90] },
     { t: 3.45, x: 20, y: -10, z: -40, profile: 'pull-pan' },
     { t: 4.55, x: 0, y: 30, z: -620, roll: 1, ease: [80, 85], dollyRef: 1800, perspective: 1500 },
-    { t: 7.35, x: 40, y: 10, z: -680, roll: 0, profile: 'push-pan' },
-    { t: 8.45, x: 0, y: -1350, z: -650, roll: -1, ease: [75, 85] },
+    { t: 7.2, x: 40, y: 10, z: -680, roll: 0, profile: 'push-pan' },
+    { t: 8.6, x: 0, y: -1350, z: -650, roll: -1, ease: [55, 70] },
     { t: 11.3, x: -30, y: -1360, z: -700, roll: 0.5, profile: 'push-pan' },
     { t: 14.75, x: 20, y: -1320, z: -660, roll: 0, profile: 'pull-pan' },
     { t: 15.65, x: 0, y: -420, z: -660, roll: 0, ease: [92, 88] },
@@ -119,7 +119,7 @@ function HeroBee({ t }) {
 function HookBee({ t }) {
   const k = (t - 0.02) / 0.62;
   if (k < 0 || k > 1) return null;
-  const x = lerp(1050, -1250, inOut(k, 2)), y = 120 + Math.sin(k * Math.PI) * -160;
+  const x = lerp(330, -360, inOut(k, 2)), y = 110 + Math.sin(k * Math.PI) * -70;
   return <Layer z={-700}><At x={x} y={y} rotate={-12 + k * 10}><Bee kind="side" w={330} t={t} seed={3} flip blur={7} /></At></Layer>;
 }
 
@@ -159,33 +159,46 @@ function GlobeStage({ t }) {
   if (t < 7.4 || gout >= 1) return null;
   const size = 1000;
   const head = orbitHead2D(laps, size);
-  return <Layer z={650}><At x={-200} y={-1080 - gout * 300 + Math.sin(t * 1.3) * 14} scale={(0.7 + 0.3 * gin) * (1 - 0.4 * gout)} opacity={clamp((t - 7.45) / 0.2) * (1 - gout)}>
+  return <Layer z={650}><At x={-230 + clamp((t - 8.0) / 3) * 70} y={-1080 - gout * 300 + Math.sin(t * 1.3) * 14} scale={(0.7 + 0.3 * gin) * (1 - 0.4 * gout)} opacity={clamp((t - 7.45) / 0.2) * (1 - gout)}>
     <div style={{ position: 'relative', width: size, height: size }}>
-      <Globe size={size} spin={(tt) => 30 + tt * 22} orbit={laps > 0.01 ? { laps: () => laps, tilt: 18, color: '#E3A11C', width: 0.017 } : null} />
+      <Globe size={size} spin={(tt) => 30 + tt * 40} orbit={laps > 0.01 ? { laps: () => laps, tilt: 18, color: '#E3A11C', width: 0.017 } : null} />
       {laps > 0.01 && <div style={{ position: 'absolute', left: head.x - 80, top: head.y - 60, opacity: head.front ? 1 : 0.3, transform: `scale(${head.front ? 1 : 0.75})` }}><Bee kind="side" w={160} t={t} seed={5} /></div>}
     </div>
   </At></Layer>;
 }
 
 // ── القسم ٤: قرص Blender — ماكرو جوّا خلية بيسحب لورا (39 فريم) ثم صورة ثابتة عالية الدقة ──
-const COMB_T0 = 11.1;
+const COMB_T0 = 11.1, COMB_DUR = 1.45;
+// بعد كاميرا Blender عن الهدف لكل فريم (comb.py --dump). المقياس الظاهري ∝ 1/البعد، فالسرعة المحسوسة = d(log بعد)/dt.
+// Blender بيبلّش بقفزة (نتعة)؛ منعيد التوقيت لحتى log(البعد) يمشي على ease ناعم.
+const COMB_D = [1.1948, 1.26, 1.4516, 1.7633, 2.1886, 2.7207, 3.3524, 4.0767, 4.8864, 5.7744, 6.7336, 7.7569, 8.8372, 9.9674, 11.1405, 12.3495, 13.5872, 14.8466, 16.1206, 17.4022, 18.6843, 19.9598, 21.2218, 22.4631, 23.6767, 24.8555, 25.9925, 27.0806, 28.1127, 29.0819, 29.981, 30.803, 31.5408, 32.1874, 32.7358, 33.1788, 33.5094, 33.7206, 33.8053].map(Math.log);
+function combFrame(t) {
+  const u = clamp((t - COMB_T0) / COMB_DUR);
+  const e = u < 0.5 ? 2 * u * u : 1 - (-2 * u + 2) ** 2 / 2;
+  const L = COMB_D[0] + (COMB_D[38] - COMB_D[0]) * e;
+  let i = 0; while (i < 37 && COMB_D[i + 1] < L) i++;
+  return u >= 1 ? 38 : Math.min(38, i + clamp((L - COMB_D[i]) / (COMB_D[i + 1] - COMB_D[i])));
+}
 function Comb({ t }) {
   if (t < 10.95 || t > 15.8) return null;
-  const f = Math.round((t - COMB_T0) * 30);
-  const src = f < 38 ? `gen/comb/${String(Math.max(0, f)).padStart(4, '0')}.png` : 'gen/comb-hold/0038.png';
+  const fr = combFrame(t), f0 = Math.floor(fr), mix = fr - f0;
+  const at = (i) => `gen/comb/${String(i).padStart(4, '0')}.png`;
   // دخول: دائرة بتكبر من مكان نحلة المدار (النحلة "بتغطس" بالخلية)
   const r = out(clamp((t - 10.95) / 0.45), 3) * 1500;
   const fade = 1 - clamp((t - 15.35) / 0.4);
   return <Layer z={700}><At x={-15} y={-1345} opacity={fade}>
     <div style={{ position: 'relative', width: 1210, height: 2150, clipPath: `circle(${r.toFixed(0)}px at 40% 62%)` }}>
-      <Img src={asset(A(src))} style={{ width: '100%', height: '100%', display: 'block' }} />
-      {f >= 38 && <CombGlow t={t} />}
+      {fr >= 38 ? <Img src={asset(A('gen/comb-hold/0038.png'))} style={{ width: '100%', height: '100%', display: 'block' }} /> : <>
+        <Img src={asset(A(at(f0)))} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} />
+        {mix > 0.02 && <Img src={asset(A(at(f0 + 1)))} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: mix }} />}
+      </>}
+      {fr >= 38 && <CombGlow t={t} />}
     </div>
   </At></Layer>;
 }
 // موجة ضو بتنتشر على القرص مع العدّاد — مقصوصة على بكسلات القرص نفسه
 function CombGlow({ t }) {
-  const k = clamp((t - 12.25) / 1.7);
+  const k = clamp((t - 12.6) / 1.5);
   if (k <= 0 || k >= 1) return null;
   const R = 6 + out(k, 2) * 70, a = 0.75 * Math.sin(Math.PI * k);
   const m = `url(${asset(A('gen/comb-hold/0038.png'))})`;
@@ -239,11 +252,11 @@ function Words({ t }) {
   return <>
     {/* ١: عنوان يمين-فوق، «وراها نحلة» تحت يمين؛ خروج: حروف لفوق بـ blur / كلمات لتحت مع الصحن */}
     <WT z={-90}>
-      <T text="لقمة من كل ثلاث" size={108} anchor="start" x={430} y={-690} reveal={{ by: 'word', at: 0.45, dur: 0.6, stagger: 0.13, mask: true, from: { y: 110, opacity: 0 } }}
+      <T text="لقمة من كل ثلاث" size={108} anchor="start" x={380} y={-690} reveal={{ by: 'word', at: 0.45, dur: 0.6, stagger: 0.13, mask: true, from: { y: 110, opacity: 0 } }}
         exit={{ by: 'glyph', at: 3.2, dur: 0.32, stagger: 0.018, ease: 'in', to: { y: -90, opacity: 0, blur: 10 } }} />
-      <S text="على مائدتك…" size={54} anchor="start" x={430} y={-588} reveal={{ by: 'word', at: 0.95, dur: 0.45, stagger: 0.08, from: { x: 30, opacity: 0, blur: 6 } }}
+      <S text="على مائدتك…" size={54} anchor="start" x={380} y={-588} reveal={{ by: 'word', at: 0.95, dur: 0.45, stagger: 0.08, from: { x: 30, opacity: 0, blur: 6 } }}
         exit={{ by: 'all', at: 3.15, dur: 0.3, ease: 'in', to: { x: 60, opacity: 0 } }} />
-      <T text="وراها نحلة" size={150} anchor="start" x={430} y={790} words={{ 1: { fill: C.honey } }} kashida={[{ word: 1, amount: 200 * out(clamp((t - 2.3) / 0.5), 3) }]}
+      <T text="وراها نحلة" size={150} anchor="start" x={380} y={790} words={{ 1: { fill: C.honey } }} kashida={[{ word: 1, amount: 200 * out(clamp((t - 2.3) / 0.5), 3) }]}
         reveal={{ by: 'word', at: 1.95, dur: 0.55, stagger: 0.12, spring: { damping: 13, stiffness: 170, mass: 0.9 }, from: { y: 160, opacity: 0 } }}
         exit={{ by: 'word', at: 3.4, dur: 0.4, stagger: 0.06, ease: 'in', to: { y: 380, rotate: 6, opacity: 0 } }} />
     </WT>
@@ -271,7 +284,7 @@ function Words({ t }) {
         exit={{ by: 'word', at: 14.45, dur: 0.3, stagger: 0.05, ease: 'in', to: { y: -80, opacity: 0, blur: 8 } }} />
       <S text="تضمّ حتى" size={54} anchor="end" x={-460} y={-1995} reveal={{ by: 'word', at: 12.0, dur: 0.45, stagger: 0.08, from: { x: -30, opacity: 0, blur: 6 } }}
         exit={{ by: 'all', at: 14.4, dur: 0.3, to: { opacity: 0, x: -60 } }} />
-      {t > 12.25 && t < 14.9 && <T text={fmt(counter(t, 12.3, 13.9, 60000))} size={215} fill={C.honey} anchor="left" x={-460} y={-735}
+      {t > 12.25 && t < 14.9 && <T text={fmt(counter(t, 12.3, 13.9, 60000))} size={215} fill={C.honey} anchor="left" x={-440} y={-735}
         reveal={{ by: 'all', at: 12.3, dur: 0.4, spring: { damping: 15, stiffness: 140 }, from: { y: 80, opacity: 0 } }} exit={{ by: 'all', at: 14.5, dur: 0.35, ease: 'in', to: { y: 200, opacity: 0, blur: 10 } }} />}
       <T text="نحلة" size={104} anchor="end" x={-460} y={-560} reveal={{ by: 'word', at: 12.6, dur: 0.5, mask: true, from: { y: 100, opacity: 0 } }}
         exit={{ by: 'word', at: 14.55, dur: 0.3, ease: 'in', to: { y: 160, opacity: 0, blur: 8 } }} />

@@ -210,6 +210,14 @@ HONEY.node_tree.nodes['Value'].outputs[0].keyframe_insert('default_value', frame
 HONEY.node_tree.nodes['Value'].outputs[0].default_value = 9.5
 HONEY.node_tree.nodes['Value'].outputs[0].keyframe_insert('default_value', frame=88)
 
+# --dump: بعد الكاميرا عن الهدف لكل فريم (لإعادة توقيت التشغيل بـ Remotion بسرعة ناعمة)
+if '--dump' in argv:
+    import json
+    d = []
+    for f in range(F0, F1 + 1):
+        sc.frame_set(f); d.append(round((cam.matrix_world.translation - tgt.matrix_world.translation).length, 4))
+    print('DIST', json.dumps(d)); sys.exit(0)
+
 # رندر
 import os
 os.makedirs(OUT, exist_ok=True)
