@@ -76,9 +76,9 @@ function Stage({ t }) {
   // زهور الحقل: كل وحدة بتطلع لحالها (spring) حسب تقدّم العدّاد
   const flowers = Array.from({ length: 46 }, (_, i) => {
     const r = (k) => hash(i * 7.3 + k);
-    const at = 3.7 + (i / 46) * 2.7 + r(1) * 0.25;
+    const at = 3.3 + Math.pow(i / 46, 1.5) * 3.0 + r(1) * 0.25;
     const k = clamp((t - at) / 0.45), s = k <= 0 ? 0 : 1 + Math.sin(k * Math.PI) * 0.18 * (1 - k) - (1 - out(k, 3));
-    return { i, x: (r(2) - 0.5) * 1500, y: 180 + r(3) * 580, z: -330 + r(4) * 1250, w: 170 + r(5) * 140, src: r(6) > 0.45 ? 'cosmos.png' : 'daisy.png', s: Math.max(0, s), rot: (r(7) - 0.5) * 20 + Math.sin(t * (1.1 + r(8) * 0.6) + i) * 6 + Math.sin(t * 2.7 + i * 1.7) * 2 };
+    return { i, x: (r(2) - 0.5) * 1500, y: 120 + r(3) * 640, z: -330 + r(4) * 1250, w: 170 + r(5) * 140, src: r(6) > 0.45 ? 'cosmos.png' : 'daisy.png', s: Math.max(0, s), rot: (r(7) - 0.5) * 20 + Math.sin(t * (1.1 + r(8) * 0.6) + i) * 6 + Math.sin(t * 2.7 + i * 1.7) * 2 };
   });
   // الكرة والقرص والمرطبان: z = −cam.z للقسم ⇒ حجم طبيعي (d = f + z + cam.z)
   const SZ = 660;
@@ -114,7 +114,7 @@ function Stage({ t }) {
       {splash > 0 && <At x={0} y={-560} scale={0.3 + splash * 1.8} opacity={1 - splash}><div style={{ width: 120, height: 34, borderRadius: '50%', border: '5px solid #E9A21A' }} /></At>}
     </Layer>}
     {/* المرطبان */}
-    {t > 13 && <Layer z={SZ}><At x={0} y={-260} scale={0.96 + 0.04 * out(clamp((t - 15.2) / 0.8))}><Img src={asset(A('jar.png'))} style={{ width: 780 }} /></At></Layer>}
+    {t > 14.7 && <Layer z={SZ}><At x={0} y={-260 + (1 - out(clamp((t - 14.7) / 0.95), 3)) * 650} scale={0.96 + 0.04 * out(clamp((t - 15.2) / 0.8))}><Img src={asset(A('jar.png'))} style={{ width: 780 }} /></At></Layer>}
     {/* نحلة البطل (قسم ١) */}
     {beeOut < 1 && <Layer z={-240}><At x={bx - beeOut * 900} y={by - beeOut * 300} rotate={-8 + Math.sin(t * 9) * 2} opacity={1 - beeOut}>
       <Img src={asset(A('bee-side.png'))} style={{ width: 330, transform: 'scaleX(-1)' }} />
@@ -126,21 +126,14 @@ function Stage({ t }) {
   </>;
 }
 
-// خلايا سداسية بتضوي موجة موجة من النص (فوق صورة القرص) مع عدّاد الـ60 ألف
+// موجة ضو بتنتشر على القرص من النص (مع عدّاد الـ60 ألف) — مقصوصة على بكسلات القرص نفسه
 function HexGlow({ t }) {
-  const cells = [];
-  const R = 34, w = Math.sqrt(3) * R;
-  for (let row = 0; row < 9; row++) for (let col = 0; col < 13; col++) {
-    const x = col * w + (row % 2) * w / 2 + 80, y = row * R * 1.5 + 90;
-    const d = Math.hypot(x - 450, y - 330) / 520;
-    const k = clamp((t - 12.25 - d * 1.5 - hash(row * 13 + col) * 0.2) / 0.35);
-    if (k <= 0) continue;
-    const pts = Array.from({ length: 6 }, (_, i) => { const a = Math.PI / 6 + (i * Math.PI) / 3; return `${(x + Math.cos(a) * R * 0.86).toFixed(1)},${(y + Math.sin(a) * R * 0.86).toFixed(1)}`; }).join(' ');
-    cells.push(<polygon key={`${row}-${col}`} points={pts} fill="#FFD36B" opacity={0.45 * k * (1 - 0.5 * clamp((t - 13.6 - d) / 0.8))} />);
-  }
+  const k = clamp((t - 12.25) / 1.7);
+  if (k <= 0 || k >= 1) return null;
+  const R = 8 + out(k, 2) * 95, a = 0.85 * Math.sin(Math.PI * k);
   const m = `url(${asset(A('honeycomb.png'))})`;
-  return <div style={{ position: 'absolute', inset: 0, maskImage: m, WebkitMaskImage: m, maskSize: '100% 100%', WebkitMaskSize: '100% 100%' }}>
-    <svg viewBox="0 0 900 675" style={{ width: '100%', height: '100%', mixBlendMode: 'screen' }}>{cells}</svg></div>;
+  return <div style={{ position: 'absolute', inset: 0, maskImage: m, WebkitMaskImage: m, maskSize: '100% 100%', WebkitMaskSize: '100% 100%', mixBlendMode: 'screen',
+    background: `radial-gradient(ellipse 60% 70% at 50% 52%, rgba(255,240,180,0) ${Math.max(0, R - 16)}%, rgba(255,240,180,${a.toFixed(3)}) ${R}%, rgba(255,240,180,0) ${R + 12}%)` }} />;
 }
 
 function GlobeStage({ t }) {
@@ -181,16 +174,16 @@ function Texts({ t }) {
     <Txt text="وراها نحلة" size={128} x={X} y={540} words={{ 1: { fill: C.honey } }} kashida={[{ word: 1, amount: 190 * out(clamp((t - 2.25) / 0.5), 3) }]}
       reveal={{ by: 'word', at: 1.95, dur: 0.55, stagger: 0.12, mask: true, from: { y: 130, opacity: 0 } }} exit={{ by: 'word', at: 3.3, dur: 0.3, stagger: 0.05, ease: 'in', to: { y: -60, opacity: 0, blur: 8 } }} />
     {/* ٢ */}
-    <Txt text="لصنع كيلو عسل" size={86} x={X} y={250} reveal={{ by: 'word', at: 3.95, dur: 0.55, stagger: 0.1, mask: true, from: { y: 90, opacity: 0 } }} exit={{ by: 'word', at: 7.2, dur: 0.3, stagger: 0.04, ease: 'in', to: { y: -50, opacity: 0, blur: 8 } }} />
-    <Sub text="تزور النحلات نحو" size={58} x={X} y={345} reveal={{ by: 'word', at: 4.2, dur: 0.45, stagger: 0.08, from: { y: 24, opacity: 0, blur: 6 } }} exit={{ by: 'all', at: 7.15, dur: 0.3, to: { opacity: 0 } }} />
+    <Txt text="لصنع كيلو عسل" size={86} x={X} y={250} reveal={{ by: 'word', at: 3.75, dur: 0.55, stagger: 0.1, mask: true, from: { y: 90, opacity: 0 } }} exit={{ by: 'word', at: 7.2, dur: 0.3, stagger: 0.04, ease: 'in', to: { y: -50, opacity: 0, blur: 8 } }} />
+    <Sub text="تزور النحلات نحو" size={58} x={X} y={345} reveal={{ by: 'word', at: 4.0, dur: 0.45, stagger: 0.08, from: { y: 24, opacity: 0, blur: 6 } }} exit={{ by: 'all', at: 7.15, dur: 0.3, to: { opacity: 0 } }} />
     {t > 4.25 && t < 7.6 && <Txt text={fmt(counter(t, 4.25, 6.55, 4000000))} size={170} fill={C.honey} x={X} y={480} reveal={{ by: 'all', at: 4.25, dur: 0.35, from: { scale: 0.8, opacity: 0 } }} exit={{ by: 'all', at: 7.2, dur: 0.3, ease: 'in', to: { y: -60, opacity: 0, blur: 10 } }} />}
     <Txt text="زهرة" size={84} x={X} y={610} reveal={{ by: 'word', at: 4.5, dur: 0.5, mask: true, from: { y: 90, opacity: 0 } }} exit={{ by: 'word', at: 7.25, dur: 0.3, ease: 'in', to: { y: -50, opacity: 0, blur: 8 } }} />
     {/* ٣ */}
-    <Txt text="وتطير مسافة تعادل" size={86} x={X} y={250} reveal={{ by: 'word', at: 7.95, dur: 0.55, stagger: 0.1, mask: true, from: { y: 90, opacity: 0 } }} exit={{ by: 'word', at: 11.05, dur: 0.3, stagger: 0.04, ease: 'in', to: { y: -50, opacity: 0, blur: 8 } }} />
-    {t > 8.25 && t < 11.45 && <Txt text={String(Math.max(1, Math.min(3, Math.ceil(3 * inOut(clamp((t - 8.25) / 2.6), 2) - 1e-6))))} size={190} fill={C.honey} x={X - 120} y={410}
-      reveal={{ by: 'all', at: 8.25, dur: 0.35, from: { scale: 0.7, opacity: 0 } }} exit={{ by: 'all', at: 11.1, dur: 0.3, ease: 'in', to: { y: -60, opacity: 0, blur: 10 } }} />}
-    <Txt text="دورات" size={110} x={X + 90} y={415} reveal={{ by: 'word', at: 8.4, dur: 0.5, mask: true, from: { y: 110, opacity: 0 } }} exit={{ by: 'word', at: 11.1, dur: 0.3, ease: 'in', to: { y: -50, opacity: 0, blur: 8 } }} />
-    <Sub text="حول الأرض" size={62} x={X} y={530} reveal={{ by: 'word', at: 8.65, dur: 0.45, stagger: 0.08, from: { y: 24, opacity: 0, blur: 6 } }} exit={{ by: 'all', at: 11.05, dur: 0.3, to: { opacity: 0 } }} />
+    <Txt text="وتطير مسافة تعادل" size={86} x={X} y={250} reveal={{ by: 'word', at: 7.95, dur: 0.55, stagger: 0.1, mask: true, from: { y: 90, opacity: 0 } }} exit={{ by: 'word', at: 10.75, dur: 0.3, stagger: 0.04, ease: 'in', to: { y: -50, opacity: 0, blur: 8 } }} />
+    {t > 8.25 && t < 11.15 && <Txt text={String(Math.max(1, Math.min(3, Math.ceil(3 * inOut(clamp((t - 8.25) / 2.6), 2) - 1e-6))))} size={190} fill={C.honey} x={X - 120} y={410}
+      reveal={{ by: 'all', at: 8.25, dur: 0.35, from: { scale: 0.7, opacity: 0 } }} exit={{ by: 'all', at: 10.8, dur: 0.3, ease: 'in', to: { y: -60, opacity: 0, blur: 10 } }} />}
+    <Txt text="دورات" size={110} x={X + 90} y={415} reveal={{ by: 'word', at: 8.4, dur: 0.5, mask: true, from: { y: 110, opacity: 0 } }} exit={{ by: 'word', at: 10.8, dur: 0.3, ease: 'in', to: { y: -50, opacity: 0, blur: 8 } }} />
+    <Sub text="حول الأرض" size={62} x={X} y={530} reveal={{ by: 'word', at: 8.65, dur: 0.45, stagger: 0.08, from: { y: 24, opacity: 0, blur: 6 } }} exit={{ by: 'all', at: 10.75, dur: 0.3, to: { opacity: 0 } }} />
     {/* ٤ */}
     <Txt text="خلية واحدة" size={96} x={X} y={250} reveal={{ by: 'word', at: 11.75, dur: 0.55, stagger: 0.12, mask: true, from: { y: 100, opacity: 0 } }} exit={{ by: 'word', at: 14.45, dur: 0.3, stagger: 0.04, ease: 'in', to: { y: -50, opacity: 0, blur: 8 } }} />
     <Sub text="تضمّ حتى" size={58} x={X} y={345} reveal={{ by: 'word', at: 12.0, dur: 0.45, stagger: 0.08, from: { y: 24, opacity: 0, blur: 6 } }} exit={{ by: 'all', at: 14.4, dur: 0.3, to: { opacity: 0 } }} />
