@@ -91,6 +91,15 @@ button{cursor:pointer}
 .write-foot .sp{flex:1}
 .write-foot button{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:3px 10px;font-size:12.5px;color:var(--ink-2)}
 .write-foot button:hover{color:var(--danger);border-color:var(--danger)}
+.map-steps{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--surface-2);font-size:13px;color:var(--ink-2)}
+.map-steps ol{margin:0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:6px 14px;flex:1;min-width:0}
+.map-steps li{display:flex;align-items:center;gap:6px}
+.map-steps li b{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:6px;background:var(--music-soft);color:var(--music);font-size:12px}
+.map-steps .cp{display:inline-flex;align-items:center;gap:6px;border:0;background:var(--accent);color:var(--accent-ink);border-radius:9px;padding:6px 12px;font-size:13px;font-weight:600}
+.map-steps .cp svg{width:15px;height:15px}
+#mapText{direction:ltr;text-align:left;font-family:var(--f-mono);font-size:13px;line-height:1.6}
+#mapText::placeholder{direction:rtl;text-align:right;font-family:var(--f-body)}
+.scene-time{font-family:var(--f-mono);font-size:12px;direction:ltr;unicode-bidi:isolate;color:var(--sfx);border:1px solid color-mix(in srgb,var(--sfx) 45%,transparent);border-radius:6px;padding:1px 7px}
 
 .controls{padding:22px;display:flex;flex-direction:column;gap:18px}
 .label{font-size:12.5px;font-weight:600;color:var(--ink-3);letter-spacing:.2px;margin-bottom:8px;display:block}
@@ -351,6 +360,7 @@ kbd{font-family:var(--f-mono);font-size:12px;border:1px solid var(--line-strong)
       <div class="mode" role="tablist" aria-label="طريقة إدخال السكربت">
         <button type="button" role="tab" id="modeFile" aria-selected="true" aria-controls="drop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4"/><path d="m6 10 6-6 6 6"/><path d="M4 20h16"/></svg>رفع ملف</button>
         <button type="button" role="tab" id="modeText" aria-selected="false" aria-controls="writeBox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/></svg>كتابة أو لصق النص</button>
+        <button type="button" role="tab" id="modeVideo" aria-selected="false" aria-controls="mapBox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m10 9 5 3-5 3z"/></svg>خريطة فيديو</button>
       </div>
       <label class="drop" id="drop" for="fileInput">
         <canvas id="wave" aria-hidden="true"></canvas>
@@ -370,6 +380,18 @@ kbd{font-family:var(--f-mono);font-size:12px;border:1px solid var(--line-strong)
       <div class="write" id="writeBox" hidden>
         <textarea id="pasteText" aria-label="نص السكربت" placeholder="اكتب نص السكربت هنا أو الصقه…&#10;&#10;مثال:&#10;المشهد 1 – خارجي – محطة قطار – ليل&#10;مطر خفيف. رجل مسنّ يجلس وحيداً على مقعد خشبي وينظر إلى ساعته…"></textarea>
         <div class="write-foot"><span id="writeCount">0 كلمة</span><span class="sp"></span><button type="button" id="clearText">مسح النص</button></div>
+      </div>
+      <div class="write" id="mapBox" hidden>
+        <div class="map-steps">
+          <ol>
+            <li><b>١</b>انسخ برومبت Gemini</li>
+            <li><b>٢</b>ارفع الفيديو على Gemini والصق البرومبت</li>
+            <li><b>٣</b>الصق النتيجة هنا</li>
+          </ol>
+          <button type="button" class="cp" id="copyGemini"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/></svg>نسخ برومبت Gemini</button>
+        </div>
+        <textarea id="mapText" aria-label="خريطة الفيديو" placeholder="الصق هنا خريطة الفيديو التي أخرجها Gemini (JSON)…"></textarea>
+        <div class="write-foot"><span id="mapCount">لا يوجد محتوى</span><span class="sp"></span><button type="button" id="clearMap">مسح</button></div>
       </div>
     </div>
 
@@ -466,6 +488,21 @@ kbd{font-family:var(--f-mono);font-size:12px;border:1px solid var(--line-strong)
           <li><b>المحتوى الخبري:</b> التقارير والفيديو جراف تحصل على موسيقى فقط، بدون مؤثرات صوتية وبدون تقسيم مشاهد.</li>
           <li><b>مشهد بلا موسيقى:</b> أحياناً ينصح التحليل بالصمت لمشهد معين، وتظهر ملاحظة توضح السبب.</li>
           <li><b>زر «فتح الموقع»:</b> في envato يفتح نتائج البحث مباشرة. في الموقعين الآخرين يفتح صفحة البحث أو المكتبة، فالصق الكلمة هناك.</li>
+        </ul>
+      </section>
+
+      <section class="g-sec">
+        <h3>تحليل فيديو جاهز عبر Gemini</h3>
+        <p>لفيديو مُمنتج فعلاً، تبويب «خريطة فيديو» يعطيك موسيقى ومؤثرات بالتوقيت الدقيق بالثانية.</p>
+        <ol class="g-steps">
+          <li><div>افتح تبويب <b>«خريطة فيديو»</b> واضغط <b>«نسخ برومبت Gemini»</b>.</div></li>
+          <li><div>افتح Gemini (التطبيق أو AI Studio)، ارفع الفيديو، والصق البرومبت. Gemini يشاهد الفيديو ويسمعه ويُخرج «خريطة» بصيغة JSON.</div></li>
+          <li><div>انسخ نتيجة Gemini كاملة والصقها في التبويب. يظهر تحتها عدد المشاهد والمدة إذا كانت الخريطة سليمة.</div></li>
+          <li><div>اضغط «ابحث». كل مؤثر يظهر بتوقيته، وكل موسيقى بوقت دخولها وخروجها، وكل مشهد بمدته.</div></li>
+        </ol>
+        <ul class="g-list" style="margin-top:12px">
+          <li><b>الخصوصية:</b> الفيديو يُرفع على Google عند تحليله في Gemini. للأعمال الخاضعة لبنود سرية، راجع عقدك قبل ذلك.</li>
+          <li><b>الدقة:</b> التوقيتات من Gemini. راجع اللحظات المهمة بنفسك على خط المونتاج.</li>
         </ul>
       </section>
 
@@ -628,19 +665,38 @@ function setMode(m) {
   inputMode = m;
   $("#modeFile").setAttribute("aria-selected", m === "file");
   $("#modeText").setAttribute("aria-selected", m === "text");
+  $("#modeVideo").setAttribute("aria-selected", m === "video");
   $("#drop").hidden = m !== "file";
   $("#writeBox").hidden = m !== "text";
-  if (m === "text") $("#pasteText").focus(); else drawWave();
+  $("#mapBox").hidden = m !== "video";
+  if (m === "text") $("#pasteText").focus(); else if (m === "video") $("#mapText").focus(); else drawWave();
   notice(""); updateGo();
 }
 $("#modeFile").onclick = () => setMode("file");
 $("#modeText").onclick = () => setMode("text");
+$("#modeVideo").onclick = () => setMode("video");
+const GEMINI_PROMPT = 'You are a professional video analyst preparing a precise "video map" for a music supervisor and sound designer. Watch AND listen to the entire attached video, from the first frame to the last, then output ONE JSON object describing it. Do not skip any part of the video.\n\nRules:\n- Timestamps: "mm:ss" (or "h:mm:ss" if the video is longer than one hour), measured from the start of the video. Be exact.\n- Split the video into scenes at real story/location/time changes (not at every cut). For each scene list its cuts separately.\n- Describe only what is actually seen and heard. Do not invent. If something is unclear, write "غير واضح".\n- Write descriptions in Arabic. Keep proper nouns as heard. Write speech in its original language.\n- speech: one entry per line or sentence. Quote short lines verbatim; for long monologues give a faithful summary (max 25 words per entry).\n- existing_audio: describe music, sound effects and ambience that ALREADY exist in the video (style, mood, instruments, where they start and stop), plus any silences.\n- Keep the whole JSON compact: no empty fields, no repetition.\n\nOutput ONLY this JSON (no commentary, no markdown fences):\n{\n  "video": {\n    "duration": "mm:ss",\n    "format": "film | animation | series | documentary | promo | news_report | videograph | other",\n    "language": "",\n    "aspect_ratio": "",\n    "summary": "ملخص المحتوى في 2-3 جمل",\n    "overall_mood": "",\n    "pacing": "وصف إيقاع المونتاج عبر الفيديو",\n    "visual_style": "الألوان، الإضاءة، أسلوب التصوير"\n  },\n  "scenes": [\n    {\n      "n": 1,\n      "start": "00:00",\n      "end": "00:00",\n      "location": "",\n      "time_of_day": "",\n      "visual": "ما يظهر في المشهد",\n      "characters": ["", ""],\n      "motion": "الحركة داخل الكادر",\n      "camera": ["حركات الكاميرا مع توقيتها، مثل: 00:05 زووم بطيء"],\n      "cuts": [{"t": "00:00", "type": "قطع حاد | مزج | انتقال جرافيكي | ..."}],\n      "on_screen_text": [{"t": "00:00", "text": ""}],\n      "speech": [{"t": "00:00", "speaker": "", "text": ""}],\n      "existing_audio": {\n        "music": "وصف الموسيقى الموجودة أو لا يوجد",\n        "sfx": [{"t": "00:00", "sound": ""}],\n        "ambience": "",\n        "silences": [{"start": "00:00", "end": "00:00"}]\n      },\n      "emotion": "الحالة الشعورية للمشهد",\n      "energy": "1-10",\n      "key_moments": [{"t": "00:00", "event": "لحظة مهمة تستحق صوتاً أو تغيّراً موسيقياً"}]\n    }\n  ],\n  "climax": {"t": "00:00", "description": ""}\n}';
+$("#copyGemini").onclick = e => copyText(GEMINI_PROMPT, e.currentTarget, "نُسخ برومبت Gemini");
+function parseMap(t) {
+  if (!t) return null;
+  const tryP = x => { try { return JSON.parse(x); } catch { return null; } };
+  let o = tryP(t);
+  if (!o) { const f = t.match(/```(?:json)?\s*([\s\S]*?)```/); if (f) o = tryP(f[1]); }
+  if (!o) { const a = t.indexOf("{"), b = t.lastIndexOf("}"); if (a >= 0 && b > a) o = tryP(t.slice(a, b + 1)); }
+  return o && typeof o === "object" ? o : null;
+}
+function updateMapCount() {
+  const t = $("#mapText").value.trim(), o = parseMap(t);
+  $("#mapCount").textContent = !t ? "لا يوجد محتوى" : o ? `خريطة صالحة · ${(o.scenes || []).length} مشهد${o.video?.duration ? " · المدة " + o.video.duration : ""}` : "نص غير منظم: سيُحلل كما هو";
+}
+$("#mapText").addEventListener("input", () => { updateMapCount(); updateGo(); });
+$("#clearMap").onclick = () => { $("#mapText").value = ""; updateMapCount(); updateGo(); $("#mapText").focus(); };
 function updateWriteCount() { $("#writeCount").textContent = wordCount($("#pasteText").value).toLocaleString("ar") + " كلمة"; }
 $("#pasteText").addEventListener("input", () => { updateWriteCount(); updateGo(); });
 $("#clearText").onclick = () => { $("#pasteText").value = ""; updateWriteCount(); updateGo(); $("#pasteText").focus(); };
 
 function notice(msg, err) { const n = $("#notice"); n.hidden = !msg; n.textContent = msg || ""; n.classList.toggle("err", !!err); }
-function scriptText() { return inputMode === "text" ? $("#pasteText").value.trim() : source.text; }
+function scriptText() { return inputMode === "text" ? $("#pasteText").value.trim() : inputMode === "video" ? $("#mapText").value.trim() : source.text; }
 function updateGo() { $("#goBtn").disabled = !scriptText() || !!runCtl; }
 const wordCount = t => (t.match(/\S+/g) || []).length;
 
@@ -711,9 +767,16 @@ const ACCURACY = `ACCURACY RULES
 function notesBlock(notes) {
   return notes ? `\n\nUSER'S DIRECTION NOTES — the user wrote these after or before seeing results. They are mandatory: follow them in every recommendation (style, energy, instruments, tempo, per-scene wishes). Where they conflict with your own stylistic judgement, the notes win. They are instructions, not part of the script:\n"""\n${notes}\n"""` : "";
 }
+const isVideoSrc = () => (current?.meta?.source || inputMode) === "video";
+const VIDEO_RULES = `SOURCE IS A VIDEO MAP: the input is a structured map of a real, already-edited video, produced by a video model that watched and listened to it (scenes with exact timestamps, cuts, camera, speech, existing audio, key moments). Use the timestamps:
+- Every sfx "at" MUST start with the exact timestamp from the map, then the moment, e.g. "01:12 — إغلاق الباب".
+- Every music "hint" MUST include where the cue starts and ends, e.g. "يدخل 00:47 ويخرج 01:30، 70 BPM".
+- Respect speech: keep music under dialogue/voice-over, place swells in silences and on cuts/key_moments.
+- Consider existing_audio: do not duplicate sounds already present; suggest replacing or reinforcing only when useful.`;
 function stage1Prompt(text, forced, fileName, notes) {
+  const vid = inputMode === "video";
   const force = forced !== "auto" ? `\nThe user has confirmed the content type is "${forced}". Treat that as authoritative.\n` : "";
-  return `You are a senior music supervisor and sound designer working on Arabic-language film, animation and news productions. Analyse the script below with great precision and recommend music and sound effects that can be found on exactly three libraries: audionetwork, lensdistortions, envato.
+  return `You are a senior music supervisor and sound designer working on Arabic-language film, animation and news productions. Analyse the ${vid ? "video map" : "script"} below with great precision and recommend music and sound effects that can be found on exactly three libraries: audionetwork, lensdistortions, envato.
 
 STEP 1 — Classify. content_type is one of:
 "film" (live-action narrative film / short film), "animation" (cartoon / animated narrative), "series" (drama episode), "documentary", "promo" (ad / promo / trailer), "news_report" (TV news package: voice-over, interviews/SOT, stand-up), "videograph" (news explainer / motion-graphics video: numbered frames, on-screen text, figures, maps), "other".
@@ -725,7 +788,9 @@ STEP 3 — Whole-piece recommendations ("global") for each library:
 - music: exactly 2 items (first = main direction, second = alternative).
 - sfx: only for film, animation, series, documentary, promo, other: 3–5 signature/recurring sounds for the whole piece, each with "at" describing when it recurs. For news_report and videograph, sfx MUST be [].
 
-STEP 4 — scenes: if content_type is film, animation or series (or a documentary/promo clearly written as separate dramatic scenes), list EVERY scene in order: n (1-based), title (Arabic, max 6 words, from location/action), anchor = the EXACT first 4–8 words of that scene as written in the script (copied verbatim, same spelling and punctuation). Otherwise scenes = [].
+${vid ? `STEP 4 — scenes: if content_type is film, animation or series (or a documentary/promo with clearly separate dramatic scenes), list the dramatic scenes in order, merging map scenes that belong together: n (1-based), title (Arabic, max 6 words), time = "start – end" from the map, map_scenes = the map scene numbers it covers. Otherwise scenes = [].
+
+${VIDEO_RULES}` : `STEP 4 — scenes: if content_type is film, animation or series (or a documentary/promo clearly written as separate dramatic scenes), list EVERY scene in order: n (1-based), title (Arabic, max 6 words, from location/action), anchor = the EXACT first 4–8 words of that scene as written in the script (copied verbatim, same spelling and punctuation). Otherwise scenes = [].`}
 
 ${ITEM_RULES}
 
@@ -734,9 +799,9 @@ ${LIB_RULES}
 ${ACCURACY}${notesBlock(notes)}
 
 Reply with ONLY this JSON (no commentary):
-{"content_type":"","title":"Arabic working title taken from the script","summary":{"genre":"","pacing":"","mood":"","climax":""},"global":{"audionetwork":{"music":[{"q":"","hint":""}],"sfx":[{"q":"","hint":"","at":""}]},"lensdistortions":{"music":[],"sfx":[]},"envato":{"music":[],"sfx":[]}},"scenes":[{"n":1,"title":"","anchor":""}]}
+{"content_type":"","title":"Arabic working title taken from the script","summary":{"genre":"","pacing":"","mood":"","climax":""},"global":{"audionetwork":{"music":[{"q":"","hint":""}],"sfx":[{"q":"","hint":"","at":""}]},"lensdistortions":{"music":[],"sfx":[]},"envato":{"music":[],"sfx":[]}},"scenes":[${vid ? '{"n":1,"title":"","time":"00:00 – 00:30","map_scenes":[1]}' : '{"n":1,"title":"","anchor":""}'}]}
 
-SCRIPT${fileName ? " (file: " + fileName + ")" : ""}:
+${vid ? "VIDEO MAP" : "SCRIPT"}${fileName ? " (file: " + fileName + ")" : ""}:
 <<<
 ${text}
 >>>`;
@@ -744,8 +809,9 @@ ${text}
 
 function stage2Prompt(a, batch, texts) {
   const g = LIBS.map(l => l.name + ": " + (a.global?.[l.key]?.music || []).map(m => m.q).join(" | ")).join("\n");
-  const body = batch.map(s => `### SCENE ${s.n} — ${s.title}\n${texts[s.n]}`).join("\n\n");
-  return `You are a senior music supervisor and sound designer. The script has already been analysed:
+  const body = batch.map(s => `### SCENE ${s.n} — ${s.title}${s.time ? " (" + s.time + ")" : ""}\n${texts[s.n]}`).join("\n\n");
+  const vid = isVideoSrc();
+  return `You are a senior music supervisor and sound designer. The ${vid ? "video" : "script"} has already been analysed:
 - content_type: ${a.content_type}
 - title: ${a.title}
 - genre: ${a.summary?.genre} | pacing: ${a.summary?.pacing} | mood: ${a.summary?.mood} | climax: ${a.summary?.climax}
@@ -758,7 +824,7 @@ Now recommend music and sound effects for EACH scene below, on the same three li
 - music: exactly 1 item per library — the cue for THIS scene, matching its emotion and pace while keeping continuity with the whole-piece direction.
 - If the scene is better with NO music (silence for tension, dialogue-only realism), give music [] for all libraries and explain in silence_note (Arabic, one short sentence). Otherwise silence_note = "".
 - sfx: 2–5 items per library, each tied to a concrete event or ambience in that scene, each with a precise "at".
-
+${vid ? "\n" + VIDEO_RULES + "\n" : ""}
 ${ITEM_RULES}
 
 ${LIB_RULES}
@@ -787,6 +853,19 @@ function condense(text, budget) {
   return { text: t + "\n…", condensed: true };
 }
 const norm = s => s.replace(/[ً-ْـ]/g, "").replace(/[إأآ]/g, "ا").replace(/\s+/g, " ").trim();
+function sceneTexts(raw, scenes) {
+  if (!isVideoSrc()) return sliceScenes(raw, scenes);
+  const o = parseMap(raw); const ms = Array.isArray(o?.scenes) ? o.scenes : null;
+  if (!ms) return null;
+  const out = {};
+  for (const s of scenes) {
+    const ids = (s.map_scenes || []).map(Number);
+    const pick = ms.filter(m => ids.includes(Number(m?.n)));
+    if (!pick.length) return null;
+    out[s.n] = JSON.stringify(pick);
+  }
+  return out;
+}
 function sliceScenes(text, scenes) {
   // map normalised offsets back to the raw text by normalising progressively
   const nt = norm(text);
@@ -835,18 +914,19 @@ async function run(typeChoice) {
   setStep("read", "done"); setStep("analyze", "active"); setBar(.08, "يقرأ Claude السكربت ويحدد نوعه وإيقاعه… قد يستغرق ذلك دقيقة أو أكثر للسكربتات الطويلة.");
 
   const notes = $("#notes").value.trim();
-  const fixed = stage1Prompt("", typeChoice, inputMode === "text" ? "" : source.name, notes);
-  const { text: body, condensed } = condense(raw, MAX_BYTES - bytes(fixed) - 200);
+  const fixed = stage1Prompt("", typeChoice, inputMode === "file" ? source.name : "", notes);
+  const pm = inputMode === "video" ? parseMap(raw) : null;
+  const { text: body, condensed } = condense(pm ? JSON.stringify(pm, null, 1) : raw, MAX_BYTES - bytes(fixed) - 200);
   let analysis;
   try {
-    analysis = await sample.json(stage1Prompt(body, typeChoice, inputMode === "text" ? "" : source.name, notes), { signal, modelTier: "complex" });
+    analysis = await sample.json(stage1Prompt(body, typeChoice, inputMode === "file" ? source.name : "", notes), { signal, modelTier: "complex" });
   } catch (e) {
     finishRun(); if (e.code !== "cancelled") notice(errMsg(e), true); return;
   }
   analysis = cleanAnalysis(analysis, typeChoice);
   current = {
     id: "a" + Date.now().toString(36),
-    meta: { fileName: inputMode === "text" ? "نص مكتوب يدوياً" : source.name, words: wordCount(raw), date: Date.now(), condensed, forced: typeChoice, notes },
+    meta: { source: inputMode, fileName: inputMode === "text" ? "نص مكتوب يدوياً" : inputMode === "video" ? "خريطة فيديو" + (parseMap(raw)?.video?.duration ? " · " + parseMap(raw).video.duration : "") : source.name, words: wordCount(raw), date: Date.now(), condensed, forced: typeChoice, notes },
     analysis, scenes: {}, failed: {},
   };
   setStep("analyze", "done");
@@ -856,7 +936,7 @@ async function run(typeChoice) {
   const list = analysis.scenes;
   if (list.length) {
     setStep("scenes", "active");
-    const texts = sliceScenes(raw, list);
+    const texts = sceneTexts(raw, list);
     const batches = []; for (let i = 0; i < list.length; i += BATCH) batches.push(list.slice(i, i + BATCH));
     let done = 0;
     const tick = () => { $("#sceneProg").textContent = `(${done}/${list.length})`; setBar(.25 + .75 * done / list.length, `يجهّز Claude اقتراحات المشاهد… ${done} من ${list.length}`); };
@@ -914,7 +994,7 @@ function cleanAnalysis(a, forced) {
   let type = forced !== "auto" ? forced : str(a?.content_type);
   if (!TYPES[type]) type = "other";
   const sfx = TYPES[type].sfx;
-  const scenes = (Array.isArray(a?.scenes) ? a.scenes : []).map((s, i) => ({ n: i + 1, title: str(s?.title), anchor: str(s?.anchor) }));
+  const scenes = (Array.isArray(a?.scenes) ? a.scenes : []).map((s, i) => ({ n: i + 1, title: str(s?.title), anchor: str(s?.anchor), time: str(s?.time), map_scenes: Array.isArray(s?.map_scenes) ? s.map_scenes.map(Number).filter(Boolean) : [] }));
   return {
     content_type: type, title: str(a?.title) || "سكربت بدون عنوان",
     summary: { genre: str(a?.summary?.genre), pacing: str(a?.summary?.pacing), mood: str(a?.summary?.mood), climax: str(a?.summary?.climax) },
@@ -1019,7 +1099,7 @@ function renderScenes() {
   const box = $("#scenes"); if (!box || !current) return;
   box.innerHTML = current.analysis.scenes.map(s => {
     const d = current.scenes[s.n], f = current.failed[s.n];
-    const head = `<div class="scene-head"><span class="scene-no">${sceneName(s.n)}<span class="n">#${s.n}</span></span><span class="scene-title">${esc(s.title)}</span>${d?.mood ? `<span class="mood">${esc(d.mood)}</span>` : ""}</div>`;
+    const head = `<div class="scene-head"><span class="scene-no">${sceneName(s.n)}<span class="n">#${s.n}</span></span><span class="scene-title">${esc(s.title)}</span>${s.time ? `<span class="scene-time">${esc(s.time)}</span>` : ""}${d?.mood ? `<span class="mood">${esc(d.mood)}</span>` : ""}</div>`;
     if (d) return `<article class="scene" id="s${s.n}">${head}${d.silence_note ? `<div class="silence">${esc(d.silence_note)}</div>` : ""}${libsHTML(d, true, "s" + s.n)}</article>`;
     if (f) return `<article class="scene pending failed" id="s${s.n}"><span>${sceneName(s.n)}: ${esc(f)}</span><button class="retry" type="button" data-retry="${s.n}">أعد المحاولة</button></article>`;
     return `<article class="scene pending" id="s${s.n}"><span class="spin"></span>${sceneName(s.n)} — ${esc(s.title)} · ${runCtl ? "قيد التحضير…" : "لم يكتمل"}</article>`;
@@ -1031,7 +1111,7 @@ async function retryScene(n, btn) {
   if (!raw || !sample) { notice("ارفع السكربت من جديد لإعادة محاولة هذا المشهد.", true); return; }
   btn.disabled = true; btn.textContent = "جارٍ…";
   const s = current.analysis.scenes.find(x => x.n === n);
-  try { await sceneBatch([s], sliceScenes(raw, current.analysis.scenes), raw, new AbortController().signal); }
+  try { await sceneBatch([s], sceneTexts(raw, current.analysis.scenes), raw, new AbortController().signal); }
   catch (e) { current.failed[n] = errMsg(e); }
   renderScenes(); saveHistory(current);
 }
@@ -1053,7 +1133,7 @@ function cardPrompt(scope, libKey, note) {
   if (isG) {
     ctx = raw ? "SCRIPT (may be condensed):\n<<<\n" + condense(raw, 26000).text + "\n>>>" : "Scenes: " + a.scenes.map(x => x.n + ". " + x.title).join(" | ");
   } else {
-    const texts = raw ? sliceScenes(raw, a.scenes) : null;
+    const texts = raw ? sceneTexts(raw, a.scenes) : null;
     const t = texts?.[n];
     ctx = `SCENE ${n} — ${sc?.title || ""}\nScene mood: ${blockFor(scope)?.mood || ""}\n` + (t ? "<<<\n" + condense(t, 20000).text + "\n>>>" : "(scene text not available — rely on the title, mood and the piece's summary)");
   }
@@ -1077,7 +1157,7 @@ USER'S REVISION NOTE — mandatory, it overrides your previous choices:
 ${note}
 """
 
-Rules: change what the note asks for. If the note is only about music, return the sfx unchanged (identical items), and vice versa. Make the revised items clearly better matched to the note and the ${isG ? "piece" : "scene"}, not near-duplicates of the current ones. ${musRule} ${sfxRule}
+${isVideoSrc() ? VIDEO_RULES + "\n\n" : ""}Rules: change what the note asks for. If the note is only about music, return the sfx unchanged (identical items), and vice versa. Make the revised items clearly better matched to the note and the ${isG ? "piece" : "scene"}, not near-duplicates of the current ones. ${musRule} ${sfxRule}
 
 ${ITEM_RULES}
 

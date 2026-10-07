@@ -1,0 +1,50 @@
+You are a professional video analyst preparing a precise "video map" for a music supervisor and sound designer. Watch AND listen to the entire attached video, from the first frame to the last, then output ONE JSON object describing it. Do not skip any part of the video.
+
+Rules:
+- Timestamps: "mm:ss" (or "h:mm:ss" if the video is longer than one hour), measured from the start of the video. Be exact.
+- Split the video into scenes at real story/location/time changes (not at every cut). For each scene list its cuts separately.
+- Describe only what is actually seen and heard. Do not invent. If something is unclear, write "غير واضح".
+- Write descriptions in Arabic. Keep proper nouns as heard. Write speech in its original language.
+- speech: one entry per line or sentence. Quote short lines verbatim; for long monologues give a faithful summary (max 25 words per entry).
+- existing_audio: describe music, sound effects and ambience that ALREADY exist in the video (style, mood, instruments, where they start and stop), plus any silences.
+- Keep the whole JSON compact: no empty fields, no repetition.
+
+Output ONLY this JSON (no commentary, no markdown fences):
+{
+  "video": {
+    "duration": "mm:ss",
+    "format": "film | animation | series | documentary | promo | news_report | videograph | other",
+    "language": "",
+    "aspect_ratio": "",
+    "summary": "ملخص المحتوى في 2-3 جمل",
+    "overall_mood": "",
+    "pacing": "وصف إيقاع المونتاج عبر الفيديو",
+    "visual_style": "الألوان، الإضاءة، أسلوب التصوير"
+  },
+  "scenes": [
+    {
+      "n": 1,
+      "start": "00:00",
+      "end": "00:00",
+      "location": "",
+      "time_of_day": "",
+      "visual": "ما يظهر في المشهد",
+      "characters": ["", ""],
+      "motion": "الحركة داخل الكادر",
+      "camera": ["حركات الكاميرا مع توقيتها، مثل: 00:05 زووم بطيء"],
+      "cuts": [{"t": "00:00", "type": "قطع حاد | مزج | انتقال جرافيكي | ..."}],
+      "on_screen_text": [{"t": "00:00", "text": ""}],
+      "speech": [{"t": "00:00", "speaker": "", "text": ""}],
+      "existing_audio": {
+        "music": "وصف الموسيقى الموجودة أو لا يوجد",
+        "sfx": [{"t": "00:00", "sound": ""}],
+        "ambience": "",
+        "silences": [{"start": "00:00", "end": "00:00"}]
+      },
+      "emotion": "الحالة الشعورية للمشهد",
+      "energy": "1-10",
+      "key_moments": [{"t": "00:00", "event": "لحظة مهمة تستحق صوتاً أو تغيّراً موسيقياً"}]
+    }
+  ],
+  "climax": {"t": "00:00", "description": ""}
+}
