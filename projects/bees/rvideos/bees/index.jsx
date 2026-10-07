@@ -1,11 +1,13 @@
-// «أصغر عامل… أكبر وظيفة» — 17.5s، ألوان فاتحة (كريمي/عسلي/سماوي).
-// عالم واحد وكاميرا وحدة متصلة: سحب لورا من الصحن ← دفع لجوّا حقل الزهور ← ميلان للسما (كرة أرضية 3D حقيقية)
-// ← سحب لورا من خلية لقرص العسل ← الكاميرا بتلحق نقطة عسل نازلة للمرطبان.
-// الانتقالات: ease أفتر (influence 75–85)؛ الثبات: drift بمنحنى الجزيرة المتعلّم. ملمس الجزيرة بالـ post.
+// «أصغر عامل… أكبر وظيفة» — 17.5s، ألوان فاتحة (كريمي/عسلي/سماوي). النسخة ٢.
+// عالم واحد وكاميرا وحدة متصلة: نحلة بتمرق لاصقة بالعدسة (hook) ← سحب لورا من الصحن ← دفع لجوّا حقل الزهور
+// ← ميلان للكرة الأرضية (3D) ← نحلة المدار بتغطس بخلية: ماكرو Blender بيسحب لورا لقرص العسل ← نقطة عسل
+// بتنزل لمرطبان Blender (سطح العسل بيتموّج فعلياً) ← النحلة بتحط على الملعقة (ضربة الختام).
+// قواعد النسخة ٢ (من نقد النسخة ١): تكوين مختلف لكل قسم، النص جوّا العالم (parallax + عناصر بتغطيه)،
+// ضو شمس دافي بدل غسلة باهتة، جوانح بترفرف، خروج كل نص بحركة مختلفة، طنين نحلة stereo بيلحقها.
 import React from 'react';
 import { AbsoluteFill, useCurrentFrame, useVideoConfig, Img } from 'remotion';
 import { CameraMotionBlur } from '@remotion/motion-blur';
-import { useCamera, World, Layer, At, aeEase } from '../../../../remotion/kit/camera.jsx';
+import { useCamera, World, Layer, At } from '../../../../remotion/kit/camera.jsx';
 import { DepthImage } from '../../../../remotion/kit/depth.jsx';
 import { ArabicText } from '../../../../remotion/kit/arabic.jsx';
 import { Flyers } from '../../../../remotion/kit/flyers.jsx';
@@ -14,140 +16,265 @@ import { Globe, orbitHead2D } from '../../../../remotion/kit/globe.jsx';
 import { asset, clamp, out, inOut, hash, lerp } from '../../../../remotion/kit/base.js';
 
 const A = (f) => `projects/bees/assets/${f}`;
-const C = { ink: '#2B2A33', muted: '#857D70', honey: '#E3A11C', amber: '#C97F12', cream: '#FBF7EF' };
+const C = { ink: '#2B2A33', muted: '#7A6F60', honey: '#E3A11C', deep: '#B9700C' };
 const F = 'thmanyah sans';
 
-// ── السكربت والمؤثرات (المستويات حسب القاعدة: −18 لـ −26، والماستر −24 بدون موسيقى) ──
+// ── المؤثرات (−22 لـ −30، ماستر −24 بدون موسيقى) + طنين stereo (tools: projects/bees/blender/buzz.py) ──
 export const meta = {
   duration: 17.5,
-  post: { edge: 0.74, edgeWidth: 0.42, blur: 10, rgb: 3, bloom: 0.12, grain: 6 },
+  post: { edge: 0.72, edgeWidth: 0.42, blur: 10, rgb: 3, bloom: 0.14, grain: 6 },
   audio: {
     master: { lufs: -24 },
     sfx: [
-      { kind: 'swell', at: 0.1, params: { dur: 1.4 }, gain_db: -26 },
-      { kind: 'whoosh', at: 1.5, align: 'peak', params: { dur: 0.9, brightness: 0.8 }, gain_db: -25 },
+      { src: 'projects/bees/assets/gen/buzz.wav', at: 0, gain_db: -22 },
+      { kind: 'whoosh', at: 0.32, align: 'peak', params: { dur: 0.6, brightness: 0.9 }, gain_db: -27 },
+      { kind: 'swell', at: 0.4, params: { dur: 1.4 }, gain_db: -28 },
       { kind: 'pop', at: 1.45, params: { pitch: 0.8 }, gain_db: -27 },
-      { kind: 'swish', at: 2.25, gain_db: -26 },
-      { kind: 'whoosh', at: 3.95, align: 'peak', params: { dur: 1.1, brightness: 0.6 }, gain_db: -22 },
-      ...Array.from({ length: 9 }, (_, i) => ({ kind: 'pop', at: 4.15 + i * 0.27, params: { pitch: 0.8 + i * 0.05 }, gain_db: -30 })),
+      { kind: 'scribble', at: 1.3, params: { dur: 1.0 }, gain_db: -30 },
+      { kind: 'swish', at: 2.3, gain_db: -27 },
+      { kind: 'whoosh', at: 3.95, align: 'peak', params: { dur: 1.1, brightness: 0.6 }, gain_db: -23 },
+      ...[3.62, 3.9, 4.21, 4.45, 4.8, 5.02, 5.4, 5.71, 6.1].map((at, i) => ({ kind: 'pop', at, params: { pitch: 0.75 + i * 0.06 }, gain_db: -31 })),
       { kind: 'count', at: 4.3, gain_db: -28 },
-      { kind: 'whoosh', at: 7.85, align: 'peak', params: { dur: 1.1, brightness: 0.7 }, gain_db: -22 },
+      { kind: 'whoosh', at: 7.85, align: 'peak', params: { dur: 1.1, brightness: 0.7 }, gain_db: -23 },
       { kind: 'chime', at: 9.05, params: { pitch: 0.9 }, gain_db: -29 }, { kind: 'chime', at: 9.95, params: { pitch: 1.0 }, gain_db: -28 }, { kind: 'chime', at: 10.8, params: { pitch: 1.12 }, gain_db: -26 },
-      { kind: 'whoosh', at: 11.55, align: 'peak', params: { dur: 0.9, brightness: 0.8 }, gain_db: -22 },
-      { kind: 'count', at: 12.3, gain_db: -28 },
-      { kind: 'riser', at: 14.1, align: 'end', params: { dur: 0.6, intensity: 0.4 }, gain_db: -28 },
-      { kind: 'drop', at: 15.5, gain_db: -23 },
-      { kind: 'swish', at: 15.75, gain_db: -26 },
-      { kind: 'chime', at: 16.2, gain_db: -22 },
+      { kind: 'whoosh', at: 11.15, align: 'peak', params: { dur: 0.7, brightness: 0.9 }, gain_db: -23 },
+      { kind: 'sparkle', at: 12.3, params: { dur: 1.6 }, gain_db: -30 },
+      { kind: 'count', at: 12.3, gain_db: -29 },
+      { kind: 'riser', at: 14.6, align: 'end', params: { dur: 0.6, intensity: 0.4 }, gain_db: -29 },
+      { kind: 'pop', at: 15.6, params: { pitch: 0.55 }, gain_db: -24 },
+      { kind: 'swish', at: 15.75, gain_db: -27 },
+      { kind: 'hit', at: 16.62, gain_db: -26 },
+      { kind: 'chime', at: 17.0, params: { pitch: 1.2 }, gain_db: -23 },
     ],
   },
 };
 
-// ── الكاميرا: نقاط الراحة لكل قسم ──
+// ── الكاميرا: نقاط الراحة لكل قسم (ease أفتر للانتقالات، drift متعلّم للثبات) ──
 const CAM = {
   keys: [
-    { t: 0, x: 0, y: 200, z: -430, roll: -1.5 },
-    { t: 2.7, x: 0, y: 0, z: 0, roll: 0, ease: [55, 90] },               // سحب لورا يكشف الصحن والنحلة
-    { t: 3.45, x: 20, y: -10, z: -40, profile: 'pull-pan' },              // drift
-    { t: 4.55, x: 0, y: 30, z: -620, roll: 1, ease: [80, 85], dollyRef: 1800, perspective: 1500 }, // دفع لجوّا الحقل
+    { t: 0, x: 40, y: 220, z: -430, roll: -1.8 },
+    { t: 2.7, x: 0, y: 0, z: 0, roll: 0, ease: [55, 90] },
+    { t: 3.45, x: 20, y: -10, z: -40, profile: 'pull-pan' },
+    { t: 4.55, x: 0, y: 30, z: -620, roll: 1, ease: [80, 85], dollyRef: 1800, perspective: 1500 },
     { t: 7.35, x: 40, y: 10, z: -680, roll: 0, profile: 'push-pan' },
-    { t: 8.45, x: 0, y: -1350, z: -650, roll: -1, ease: [75, 85] },       // ميلان للسما
+    { t: 8.45, x: 0, y: -1350, z: -650, roll: -1, ease: [75, 85] },
     { t: 11.3, x: -30, y: -1360, z: -700, roll: 0.5, profile: 'push-pan' },
     { t: 14.75, x: 20, y: -1320, z: -660, roll: 0, profile: 'pull-pan' },
-    { t: 15.65, x: 0, y: -420, z: -660, roll: 0, ease: [92, 88] },        // لحاق نقطة العسل لتحت
-    { t: 17.5, x: -15, y: -440, z: -720, roll: 0.6, profile: 'push-pan' },
+    { t: 15.65, x: 0, y: -420, z: -660, roll: 0, ease: [92, 88] },
+    { t: 17.5, x: -10, y: -450, z: -760, roll: 0.6, profile: 'push-pan' },
   ],
   handheld: { amp: 2.5, freq: 0.32 },
 };
 const F0 = 1500;
 
-const Txt = (p) => <ArabicText family={F} weight={900} fill={C.ink} {...p} />;
-const Sub = (p) => <ArabicText family={F} weight={500} fill={C.muted} {...p} />;
+const T = (p) => <ArabicText family={F} weight={900} fill={C.ink} {...p} />;
+const S = (p) => <ArabicText family={F} weight={500} fill={C.muted} {...p} />;
+const WT = ({ z, children }) => <Layer z={z}>{children}</Layer>;   // نص جوّا العالم
 const counter = (t, a, b, to) => Math.round(to * out(clamp((t - a) / (b - a)), 3));
 const fmt = (n) => n.toLocaleString('en-US');
 
-// ── عناصر العالم ──
-function Stage({ t }) {
-  const plateOut = clamp((t - 3.45) / 0.6);
-  // نحلة البطل: بتدخل من اليمين بقوس وبتحوم
-  const bk = inOut((t - 0.9) / 1.3, 3);
-  const bx = lerp(980, -330, bk) + Math.sin(t * 2.3) * 14, by = lerp(-420, -60, bk) + Math.sin(t * 3.1) * 18 - Math.sin(Math.PI * clamp((t - 0.9) / 1.3)) * 180;
-  const beeOut = clamp((t - 3.3) / 0.7);
-  // زهور الحقل: كل وحدة بتطلع لحالها (spring) حسب تقدّم العدّاد
+// ── نحلة بجوانح بترفرف: جسم + 3 نسخ جوانح بزوايا مختلفة (متل اللي بتلقطه كاميرا حقيقية لجنح 200Hz) ──
+function Bee({ kind = 'side', w, t, seed = 0, flip = false, blur = 0, still = false }) {
+  const n = kind === 'side' ? 'bee-side' : 'bee-front';
+  const k = Math.floor(t * 30) + seed * 17;
+  const ph = hash(k);
+  const ghosts = kind === 'side'
+    ? [[-26 + ph * 10, 0.5], [4 + ph * 8, 0.38], [30 - ph * 6, 0.22]].map(([a, o]) => ({ tr: `rotate(${a}deg)`, o }))
+    : [[1, 0.5], [0.35 + ph * 0.2, 0.36], [-0.45 + ph * 0.2, 0.22]].map(([s, o]) => ({ tr: `scaleY(${s})`, o }));
+  const origin = kind === 'side' ? '37% 31%' : '50% 35%';
+  const gs = still ? [{ tr: 'none', o: 1 }] : ghosts;
+  const st = { position: 'absolute', left: 0, top: 0, width: w };
+  return <div style={{ position: 'relative', width: w, height: w * (kind === 'side' ? 0.749 : 1), transform: flip ? 'scaleX(-1)' : undefined, filter: blur > 0.3 ? `blur(${blur.toFixed(1)}px)` : undefined }}>
+    {gs.map((g, i) => <Img key={i} src={asset(A(`${n}-wings.png`))} style={{ ...st, opacity: g.o, transform: g.tr, transformOrigin: origin }} />)}
+    <Img src={asset(A(`${n}-body.png`))} style={st} />
+  </div>;
+}
+
+// ── القسم ١: الصحن + حلقة الثلث + نحلة البطل ──
+function Plate({ t }) {
+  const k = clamp((t - 3.45) / 0.6) ** 2;
+  if (t > 4.3) return null;   // ما منرسمها بعد ما تطلع (كانت تنرسم 17 ثانية على الفاضي)
+  return <Layer z={60}>
+    {/* ظل تلامس */}
+    <At x={-40} y={600 + k * 1500}><div style={{ width: 760, height: 90, borderRadius: '50%', background: 'radial-gradient(closest-side, rgba(90,60,20,.28), rgba(90,60,20,0))' }} /></At>
+    <At x={-40} y={330 + k * 1500} rotate={k * 14}><Img src={asset(A('plate.png'))} style={{ width: 880 }} /></At>
+    <div style={{ position: 'absolute', left: -540, top: -960 + k * 1500 }}>
+      <Legacy project="projects/bees" id="ring" build={(S) => ({ layers: [
+        S.donut({ value: { at: 1.25, from: 0, to: 1 / 3, dur: 1.1, ease: 'ae:60:90' }, r: S.px(470), width: S.px(24), color: '#E3A11C', track: 'rgba(43,42,51,0.07)', x: S.cx - S.px(40), y: S.cy + S.px(330) }),
+      ] })} />
+    </div>
+  </Layer>;
+}
+
+function HeroBee({ t }) {
+  // بتدخل من اليمين بقوس، بتحوم فوق الحلقة، وبتطلع لفوق-يسار مع الدفع
+  const bk = inOut((t - 0.9) / 1.3, 3), go = clamp((t - 3.3) / 0.7);
+  if (t < 0.85 || go >= 1) return null;
+  const bx = lerp(980, -360, bk) + Math.sin(t * 2.3) * 14 - out(go, 2) * 900;
+  const by = lerp(-460, -150, bk) + Math.sin(t * 3.1) * 18 - Math.sin(Math.PI * clamp((t - 0.9) / 1.3)) * 180 - go * 420;
+  return <Layer z={-240}><At x={bx} y={by} rotate={-8 + Math.sin(t * 9) * 2 - go * 18}><Bee kind="side" w={340} t={t} flip /></At></Layer>;
+}
+
+// hook: نحلة لاصقة بالعدسة بتمرق من اليمين لليسار بأول نص ثانية (مضببة، ضخمة)
+function HookBee({ t }) {
+  const k = (t - 0.02) / 0.62;
+  if (k < 0 || k > 1) return null;
+  const x = lerp(1050, -1250, inOut(k, 2)), y = 120 + Math.sin(k * Math.PI) * -160;
+  return <Layer z={-700}><At x={x} y={y} rotate={-12 + k * 10}><Bee kind="side" w={330} t={t} seed={3} flip blur={7} /></At></Layer>;
+}
+
+// ── القسم ٢: الحقل — زهور بتطلع spring، والرقم الضخم ورا الزهور القريبة ──
+function Field({ t, inserts = [] }) {
   const flowers = Array.from({ length: 46 }, (_, i) => {
     const r = (k) => hash(i * 7.3 + k);
     const at = 3.3 + Math.pow(i / 46, 1.5) * 3.0 + r(1) * 0.25;
     const k = clamp((t - at) / 0.45), s = k <= 0 ? 0 : 1 + Math.sin(k * Math.PI) * 0.18 * (1 - k) - (1 - out(k, 3));
-    return { i, x: (r(2) - 0.5) * 1500, y: 120 + r(3) * 640, z: -330 + r(4) * 1250, w: 170 + r(5) * 140, src: r(6) > 0.45 ? 'cosmos.png' : 'daisy.png', s: Math.max(0, s), rot: (r(7) - 0.5) * 20 + Math.sin(t * (1.1 + r(8) * 0.6) + i) * 6 + Math.sin(t * 2.7 + i * 1.7) * 2 };
+    return { i, x: (r(2) - 0.5) * 1500, y: 120 + r(3) * 640, z: -330 + r(4) * 1250, w: 170 + r(5) * 140, src: r(6) > 0.45 ? 'cosmos.png' : 'daisy.png', s: Math.max(0, s),
+      rot: (r(7) - 0.5) * 20 + Math.sin(t * (1.1 + r(8) * 0.6) + i) * 6 + Math.sin(t * 2.7 + i * 1.7) * 2 };
   });
-  // الكرة والقرص والمرطبان: z = −cam.z للقسم ⇒ حجم طبيعي (d = f + z + cam.z)
-  const SZ = 660;
-  const comb = clamp((t - 11.25) / 1.0), combIn = out(comb, 4);
-  const combScale = lerp(4.2, 1, combIn) * (1 + 0.03 * Math.sin(t * 0.9));
-  // نقطة العسل: بتنفصل من القرص وبتنزل بجاذبية لحد فم المرطبان
-  const dropT = clamp((t - 14.65) / 0.95), dropY = lerp(-1000, -560, dropT ** 1.8);
-  const splash = clamp((t - 15.6) / 0.6);
-  return <>
-    {/* الصحن + حلقة الثلث (من المحرك القديم عبر الجسر) */}
-    <Layer z={0}>
-      <At x={0} y={280 + plateOut ** 2 * 1500} rotate={plateOut ** 2 * 14}><Img src={asset(A('plate.png'))} style={{ width: 820 }} /></At>
-      <div style={{ position: 'absolute', left: -540, top: -960 + plateOut ** 2 * 1500 }}>
-        <Legacy project="projects/bees" id="ring" build={(S) => ({ layers: [
-          S.donut({ value: { at: 1.25, from: 0, to: 1 / 3, dur: 1.1, ease: 'ae:60:90' }, r: S.px(455), width: S.px(22), color: '#E3A11C', track: 'rgba(43,42,51,0.08)', x: S.cx, y: S.cy + S.px(280) }),
-        ] })} />
-      </div>
-    </Layer>
-    {/* الحقل */}
-    {flowers.map((f) => f.s > 0.001 && <Layer key={f.i} z={f.z}><At x={f.x} y={f.y} scale={f.s} rotate={f.rot} origin="50% 100%"><Img src={asset(A(f.src))} style={{ width: f.w }} /></At></Layer>)}
-    {/* الكرة الأرضية (3D) + نحلة على راس المدار */}
-    <Layer z={SZ}><GlobeStage t={t} /></Layer>
-    {/* قرص العسل: سحب لورا من خلية وحدة */}
-    {t > 11.0 && t < 16.4 && <Layer z={SZ}><At x={0} y={-1180} scale={combScale} opacity={clamp((t - 11.1) / 0.3) * (1 - clamp((t - 15.8) / 0.5))}>
-      <div style={{ position: 'relative', width: 1500 }}>
-        <Img src={asset(A('honeycomb.png'))} style={{ width: 1500, display: 'block' }} />
-        <HexGlow t={t} />
-      </div>
-    </At></Layer>}
-    {/* نقطة العسل + رذاذ */}
-    {t > 14.6 && t < 16.2 && <Layer z={SZ}>
-      {dropT < 1 && <At x={0} y={dropY}><svg width="110" height="154" viewBox="0 0 60 84" style={{ transform: `scale(${1 - dropT * 0.15}, ${1 + dropT ** 2 * 0.35})` }}><path d="M30 2 C30 2 4 40 4 56 a26 26 0 0 0 52 0 C56 40 30 2 30 2Z" fill="#E9A21A" /><ellipse cx="22" cy="54" rx="6" ry="10" fill="#FFE3A3" opacity=".7" /></svg></At>}
-      {splash > 0 && <At x={0} y={-560} scale={0.3 + splash * 1.8} opacity={1 - splash}><div style={{ width: 120, height: 34, borderRadius: '50%', border: '5px solid #E9A21A' }} /></At>}
-    </Layer>}
-    {/* المرطبان */}
-    {t > 14.7 && <Layer z={SZ}><At x={0} y={-260 + (1 - out(clamp((t - 14.7) / 0.95), 3)) * 650} scale={0.96 + 0.04 * out(clamp((t - 15.2) / 0.8))}><Img src={asset(A('jar.png'))} style={{ width: 780 }} /></At></Layer>}
-    {/* نحلة البطل (قسم ١) */}
-    {beeOut < 1 && <Layer z={-240}><At x={bx - beeOut * 900} y={by - beeOut * 300} rotate={-8 + Math.sin(t * 9) * 2} opacity={1 - beeOut}>
-      <Img src={asset(A('bee-side.png'))} style={{ width: 330, transform: 'scaleX(-1)' }} />
-    </At></Layer>}
-    {/* نحلة بتحط على ملعقة العسل (قسم ٥) */}
-    {t > 15.6 && <Layer z={SZ - 60}><At x={lerp(-700, 150, out(clamp((t - 15.7) / 0.9), 3)) + Math.sin(t * 2.2) * 8} y={lerp(-1100, -640, out(clamp((t - 15.7) / 0.9), 3)) + Math.sin(t * 3) * 6} rotate={6 + Math.sin(t * 8) * 1.5}>
-      <Img src={asset(A('bee-front.png'))} style={{ width: 230 }} />
-    </At></Layer>}
-  </>;
+  // ترتيب بالعمق (البعيد أول): الـ DOM ما بيرتّب حسب z، فالإدخالات (الرقم، «زهرة») بتنحط بمحلها بين الزهور
+  const items = flowers.filter((f) => f.s > 0.001).map((f) => ({ z: f.z, el: <Layer key={f.i} z={f.z}><At x={f.x} y={f.y} scale={f.s} rotate={f.rot} origin="50% 100%"><Img src={asset(A(f.src))} style={{ width: f.w }} /></At></Layer> }));
+  for (const [i, ins] of inserts.entries()) items.push({ z: ins.z, el: <React.Fragment key={`ins${i}`}>{ins.el}</React.Fragment> });
+  items.sort((a, b) => b.z - a.z);
+  return <>{items.map((it) => it.el)}</>;
 }
 
-// موجة ضو بتنتشر على القرص من النص (مع عدّاد الـ60 ألف) — مقصوصة على بكسلات القرص نفسه
-function HexGlow({ t }) {
-  const k = clamp((t - 12.25) / 1.7);
-  if (k <= 0 || k >= 1) return null;
-  const R = 8 + out(k, 2) * 95, a = 0.85 * Math.sin(Math.PI * k);
-  const m = `url(${asset(A('honeycomb.png'))})`;
-  return <div style={{ position: 'absolute', inset: 0, maskImage: m, WebkitMaskImage: m, maskSize: '100% 100%', WebkitMaskSize: '100% 100%', mixBlendMode: 'screen',
-    background: `radial-gradient(ellipse 60% 70% at 50% 52%, rgba(255,240,180,0) ${Math.max(0, R - 16)}%, rgba(255,240,180,${a.toFixed(3)}) ${R}%, rgba(255,240,180,0) ${R + 12}%)` }} />;
+function FieldWords({ t }) {
+  return [
+    { z: 780, el: t > 4.2 && t < 7.7 && <Layer z={780}>
+      <T text={fmt(counter(t, 4.25, 6.55, 4000000))} size={215} fill={C.honey} x={0} y={-330} reveal={{ by: 'all', at: 4.25, dur: 0.4, spring: { damping: 15, stiffness: 140 }, from: { scale: 0.75, opacity: 0 } }}
+        exit={{ by: 'all', at: 7.2, dur: 0.35, ease: 'in', to: { y: -140, scale: 1.08, opacity: 0, blur: 12 } }} />
+    </Layer> },
+    { z: 300, el: <Layer z={300}>
+      <T text="زهرة" size={128} fill={C.deep} x={180} y={-60} kashida={[{ word: 0, amount: 120 * out(clamp((t - 5.0) / 0.6), 3) }]}
+        reveal={{ by: 'all', at: 4.55, dur: 0.5, mask: true, from: { y: 120, opacity: 0 } }} exit={{ by: 'all', at: 7.25, dur: 0.3, ease: 'in', to: { y: 160, opacity: 0, blur: 8 } }} />
+    </Layer> },
+  ];
 }
 
+// ── القسم ٣: الكرة الأرضية (3D) + نحلة على راس المدار ──
 function GlobeStage({ t }) {
   const laps = 3 * inOut(clamp((t - 8.25) / 2.6), 2);
-  const gin = out(clamp((t - 7.45) / 0.8), 4), gout = clamp((t - 11.05) / 0.5);
+  const gin = out(clamp((t - 7.45) / 0.8), 4), gout = clamp((t - 11.0) / 0.45);
   if (t < 7.4 || gout >= 1) return null;
   const size = 1000;
   const head = orbitHead2D(laps, size);
-  return <At x={0} y={-1160 - gout * 400 + Math.sin(t * 1.3) * 14} scale={(0.7 + 0.3 * gin) * (1 - 0.5 * gout)} opacity={clamp((t - 7.45) / 0.2) * (1 - gout)}>
+  return <Layer z={650}><At x={-200} y={-1080 - gout * 300 + Math.sin(t * 1.3) * 14} scale={(0.7 + 0.3 * gin) * (1 - 0.4 * gout)} opacity={clamp((t - 7.45) / 0.2) * (1 - gout)}>
     <div style={{ position: 'relative', width: size, height: size }}>
-      <Globe size={size} spin={(tt) => 30 + tt * 22} orbit={laps > 0.01 ? { laps: () => laps, tilt: 18, color: '#E3A11C', width: 0.016 } : null} />
-      {laps > 0.01 && <Img src={asset(A('bee-side.png'))} style={{ position: 'absolute', left: head.x - 70, top: head.y - 52, width: 140, opacity: head.front ? 1 : 0.25, transform: `scale(${head.front ? 1 : 0.8})` }} />}
+      <Globe size={size} spin={(tt) => 30 + tt * 22} orbit={laps > 0.01 ? { laps: () => laps, tilt: 18, color: '#E3A11C', width: 0.017 } : null} />
+      {laps > 0.01 && <div style={{ position: 'absolute', left: head.x - 80, top: head.y - 60, opacity: head.front ? 1 : 0.3, transform: `scale(${head.front ? 1 : 0.75})` }}><Bee kind="side" w={160} t={t} seed={5} /></div>}
     </div>
-  </At>;
+  </At></Layer>;
+}
+
+// ── القسم ٤: قرص Blender — ماكرو جوّا خلية بيسحب لورا (39 فريم) ثم صورة ثابتة عالية الدقة ──
+const COMB_T0 = 11.1;
+function Comb({ t }) {
+  if (t < 10.95 || t > 16.3) return null;
+  const f = Math.round((t - COMB_T0) * 30);
+  const src = f < 38 ? `gen/comb/${String(Math.max(0, f)).padStart(4, '0')}.png` : 'gen/comb-hold/0038.png';
+  // دخول: دائرة بتكبر من مكان نحلة المدار (النحلة "بتغطس" بالخلية)
+  const r = out(clamp((t - 10.95) / 0.45), 3) * 1500;
+  const fade = 1 - clamp((t - 15.7) / 0.5);
+  return <Layer z={700}><At x={-15} y={-1345} opacity={fade}>
+    <div style={{ position: 'relative', width: 1210, height: 2150, clipPath: `circle(${r.toFixed(0)}px at 40% 62%)` }}>
+      <Img src={asset(A(src))} style={{ width: '100%', height: '100%', display: 'block' }} />
+      {f >= 38 && <CombGlow t={t} />}
+    </div>
+  </At></Layer>;
+}
+// موجة ضو بتنتشر على القرص مع العدّاد — مقصوصة على بكسلات القرص نفسه
+function CombGlow({ t }) {
+  const k = clamp((t - 12.25) / 1.7);
+  if (k <= 0 || k >= 1) return null;
+  const R = 6 + out(k, 2) * 70, a = 0.75 * Math.sin(Math.PI * k);
+  const m = `url(${asset(A('gen/comb-hold/0038.png'))})`;
+  return <div style={{ position: 'absolute', inset: 0, maskImage: m, WebkitMaskImage: m, maskSize: '100% 100%', WebkitMaskSize: '100% 100%', mixBlendMode: 'screen',
+    background: `radial-gradient(ellipse 50% 28% at 48% 52%, rgba(255,236,170,0) ${Math.max(0, R - 14)}%, rgba(255,236,170,${a.toFixed(3)}) ${R}%, rgba(255,236,170,0) ${R + 10}%)` }} />;
+}
+
+// ── القسم ٥: نقطة العسل + مرطبان Blender + النحلة بتحط على الملعقة ──
+const JAR = { x: -110, y: -230, w: 780 };
+function Jar({ t }) {
+  if (t < 14.65) return null;
+  const rise = (1 - out(clamp((t - 14.7) / 0.95), 3)) * 700;
+  const f = Math.min(76, Math.max(0, Math.floor((t - 15.0) * 15)) * 2);
+  return <Layer z={660}><At x={JAR.x} y={JAR.y + rise}><Img src={asset(A(`gen/jar/${String(f).padStart(4, '0')}.png`))} style={{ width: JAR.w, display: 'block' }} /></At></Layer>;
+}
+function Drop({ t }) {
+  const k = clamp((t - 14.65) / 0.95);
+  if (t < 14.6 || k >= 1) return null;
+  const x = lerp(-40, JAR.x, k), y = lerp(-890, -330, k ** 1.8);
+  return <Layer z={660}><At x={x} y={y}><svg width="96" height="134" viewBox="0 0 60 84" style={{ transform: `scale(${1 - k * 0.15}, ${1 + k ** 2 * 0.35})` }}>
+    <path d="M30 2 C30 2 4 40 4 56 a26 26 0 0 0 52 0 C56 40 30 2 30 2Z" fill="#E59B17" /><ellipse cx="22" cy="54" rx="6" ry="10" fill="#FFE3A3" opacity=".75" /></svg></At></Layer>;
+}
+function LandingBee({ t }) {
+  if (t < 15.6) return null;
+  const k = out(clamp((t - 15.7) / 0.95), 3);
+  const land = clamp((t - 16.62) / 0.25);   // لحظة الهبوط: ضغطة خفيفة
+  const squash = 1 - 0.08 * Math.sin(Math.PI * land);
+  const hover = (1 - clamp((t - 16.5) / 0.2)) * Math.sin(t * 3) * 7;
+  return <Layer z={600}><At x={lerp(-760, 0, k) + hover} y={lerp(-1150, -630, k) + hover} rotate={lerp(14, 4, k)} scale={squash} origin="50% 90%">
+    <Bee kind="front" w={220} t={t} seed={9} still={t > 16.72} />
+  </At></Layer>;
+}
+// ضربة الختام: نقطة عسل صغيرة بتنزل من راس الملعقة بعد ما تحط النحلة
+function EndDrip({ t }) {
+  const k = clamp((t - 16.95) / 0.5);
+  if (k <= 0) return null;
+  return <Layer z={655}><At x={14} y={-520 + k ** 2 * 120} opacity={1 - clamp((k - 0.85) / 0.15)}>
+    <svg width="26" height="36" viewBox="0 0 60 84"><path d="M30 2 C30 2 4 40 4 56 a26 26 0 0 0 52 0 C56 40 30 2 30 2Z" fill="#E59B17" /></svg></At></Layer>;
+}
+
+// ── النصوص (كلها جوّا العالم، كل قسم بتكوين وخروج مختلف) ──
+function Words({ t }) {
+  return <>
+    {/* ١: عنوان يمين-فوق، «وراها نحلة» تحت يمين؛ خروج: حروف لفوق بـ blur / كلمات لتحت مع الصحن */}
+    <WT z={-90}>
+      <T text="لقمة من كل ثلاث" size={108} anchor="start" x={430} y={-690} reveal={{ by: 'word', at: 0.45, dur: 0.6, stagger: 0.13, mask: true, from: { y: 110, opacity: 0 } }}
+        exit={{ by: 'glyph', at: 3.2, dur: 0.32, stagger: 0.018, ease: 'in', to: { y: -90, opacity: 0, blur: 10 } }} />
+      <S text="على مائدتك…" size={54} anchor="start" x={430} y={-588} reveal={{ by: 'word', at: 0.95, dur: 0.45, stagger: 0.08, from: { x: 30, opacity: 0, blur: 6 } }}
+        exit={{ by: 'all', at: 3.15, dur: 0.3, ease: 'in', to: { x: 60, opacity: 0 } }} />
+      <T text="وراها نحلة" size={150} anchor="start" x={430} y={790} words={{ 1: { fill: C.honey } }} kashida={[{ word: 1, amount: 200 * out(clamp((t - 2.3) / 0.5), 3) }]}
+        reveal={{ by: 'word', at: 1.95, dur: 0.55, stagger: 0.12, spring: { damping: 13, stiffness: 170, mass: 0.9 }, from: { y: 160, opacity: 0 } }}
+        exit={{ by: 'word', at: 3.4, dur: 0.4, stagger: 0.06, ease: 'in', to: { y: 380, rotate: 6, opacity: 0 } }} />
+    </WT>
+    {/* ٢: عنوان يسار-فوق، الرقم ضخم ورا الزهور القريبة، «زهرة» بكشيدة قدّامها */}
+    <WT z={560}>
+      <T text="لصنع كيلو عسل" size={92} anchor="end" x={-400} y={-690} reveal={{ by: 'word', at: 3.75, dur: 0.55, stagger: 0.1, mask: true, from: { y: 90, opacity: 0 } }}
+        exit={{ by: 'word', at: 7.15, dur: 0.3, stagger: 0.04, ease: 'in', to: { x: -120, opacity: 0, blur: 8 } }} />
+      <S text="تزور النحلات نحو" size={54} anchor="end" x={-400} y={-592} reveal={{ by: 'word', at: 4.0, dur: 0.45, stagger: 0.08, from: { y: 24, opacity: 0, blur: 6 } }}
+        exit={{ by: 'all', at: 7.1, dur: 0.3, to: { x: -80, opacity: 0 } }} />
+    </WT>
+    {/* ٣: كتلة يمين (الرقم 3 ضخم)، الكرة مقصوصة يسار-تحت */}
+    <WT z={560}>
+      <S text="وتطير مسافة تعادل" size={64} anchor="start" x={430} y={-2110} reveal={{ by: 'word', at: 7.95, dur: 0.5, stagger: 0.09, from: { x: 40, opacity: 0, blur: 6 } }}
+        exit={{ by: 'word', at: 10.7, dur: 0.3, stagger: 0.04, ease: 'in', to: { y: -60, opacity: 0, blur: 8 } }} />
+      {t > 8.2 && t < 11.15 && <T text={String(Math.max(1, Math.min(3, Math.ceil(3 * inOut(clamp((t - 8.25) / 2.6), 2) - 1e-6))))} size={340} fill={C.honey} anchor="right" x={430} y={-1840}
+        reveal={{ by: 'all', at: 8.25, dur: 0.4, spring: { damping: 12, stiffness: 160 }, from: { scale: 0.6, opacity: 0 } }} exit={{ by: 'all', at: 10.75, dur: 0.3, ease: 'in', to: { scale: 0.4, opacity: 0, blur: 10 } }} />}
+      <T text="دورات" size={124} anchor="start" x={200} y={-1810} reveal={{ by: 'word', at: 8.45, dur: 0.5, mask: true, from: { y: 120, opacity: 0 } }}
+        exit={{ by: 'word', at: 10.8, dur: 0.3, ease: 'in', to: { x: 120, opacity: 0, blur: 8 } }} />
+      <S text="حول الأرض" size={64} anchor="start" x={430} y={-1650} reveal={{ by: 'word', at: 8.7, dur: 0.45, stagger: 0.08, from: { y: 24, opacity: 0, blur: 6 } }}
+        exit={{ by: 'all', at: 10.7, dur: 0.3, to: { opacity: 0, y: 40 } }} />
+    </WT>
+    {/* ٤: عنوان يسار-فوق، الرقم تحت القرص يسار */}
+    <WT z={620}>
+      <T text="خلية واحدة" size={104} anchor="end" x={-460} y={-2100} reveal={{ by: 'word', at: 11.75, dur: 0.55, stagger: 0.12, mask: true, from: { y: 110, opacity: 0 } }}
+        exit={{ by: 'word', at: 14.45, dur: 0.3, stagger: 0.05, ease: 'in', to: { y: -80, opacity: 0, blur: 8 } }} />
+      <S text="تضمّ حتى" size={54} anchor="end" x={-460} y={-1995} reveal={{ by: 'word', at: 12.0, dur: 0.45, stagger: 0.08, from: { x: -30, opacity: 0, blur: 6 } }}
+        exit={{ by: 'all', at: 14.4, dur: 0.3, to: { opacity: 0, x: -60 } }} />
+      {t > 12.25 && t < 14.9 && <T text={fmt(counter(t, 12.3, 13.9, 60000))} size={215} fill={C.honey} anchor="left" x={-460} y={-735}
+        reveal={{ by: 'all', at: 12.3, dur: 0.4, spring: { damping: 15, stiffness: 140 }, from: { y: 80, opacity: 0 } }} exit={{ by: 'all', at: 14.5, dur: 0.35, ease: 'in', to: { y: 200, opacity: 0, blur: 10 } }} />}
+      <T text="نحلة" size={104} anchor="end" x={-460} y={-560} reveal={{ by: 'word', at: 12.6, dur: 0.5, mask: true, from: { y: 100, opacity: 0 } }}
+        exit={{ by: 'word', at: 14.55, dur: 0.3, ease: 'in', to: { y: 160, opacity: 0, blur: 8 } }} />
+    </WT>
+    {/* ٥: الختام يمين-فوق، المرطبان يسار-تحت، النحلة بالقطر بينهن */}
+    <WT z={600}>
+      <T text="أصغر عامل…" size={104} anchor="start" x={380} y={-1080} reveal={{ by: 'word', at: 15.7, dur: 0.55, stagger: 0.14, mask: true, from: { y: 110, opacity: 0 } }} />
+      <T text="أكبر وظيفة" size={150} anchor="start" x={380} y={-910} words={{ 1: { fill: C.honey } }} kashida={[{ word: 1, amount: 180 * out(clamp((t - 16.55) / 0.55), 3) }]}
+        reveal={{ by: 'word', at: 16.1, dur: 0.55, stagger: 0.15, spring: { damping: 13, stiffness: 170, mass: 0.9 }, from: { y: 150, opacity: 0 } }} />
+    </WT>
+  </>;
 }
 
 function Scene({ t }) {
@@ -155,44 +282,30 @@ function Scene({ t }) {
   return <World camera={cam} perspective={F0}>
     <AbsoluteFill style={{ background: '#F6F1E6' }} />
     <DepthImage dir={A('meadow-depth')} x={0} y={-1000} w={3500} z={1800} depth={600} />
-    {/* غسلة كريمية بتخلّي الألوان فاتحة والنص مقروء */}
-    <AbsoluteFill style={{ background: 'linear-gradient(180deg, rgba(251,247,239,.82) 0%, rgba(251,247,239,.55) 45%, rgba(251,247,239,.25) 100%)' }} />
-    <Stage t={t} />
-    {/* أشياء طايرة قريبة (متل الأوراق النقدية بالجزيرة): بتلات ونحلات صغيرة */}
+    {/* غسلة خفيفة بس (النسخة ١ كانت مغسولة): فوق أكتر لقراية النص، وتحت الحقل بلونه */}
+    <AbsoluteFill style={{ background: 'linear-gradient(180deg, rgba(251,247,239,.62) 0%, rgba(251,247,239,.3) 40%, rgba(251,247,239,.06) 100%)' }} />
+    {/* ترتيب الرسم = العمق (بعيد ← قريب) */}
+    <Comb t={t} />
+    <Drop t={t} />
+    <Jar t={t} />
+    <EndDrip t={t} />
+    <GlobeStage t={t} />
+    <Plate t={t} />
+    <Field t={t} inserts={FieldWords({ t })} />
+    <Words t={t} />
+    <LandingBee t={t} />
+    <HeroBee t={t} />
     <Flyers items={[{ src: A('daisy.png'), w: 110 }, { src: A('cosmos.png'), w: 120 }]} count={7} seed={4} t0={-2} t1={17.5} area={[-700, -1300, 700, 400]} z={[-520, -150]} drift={[-1, 0.55]} speed={[240, 420]} />
-    <Flyers items={[{ src: A('bee-front.png'), w: 90 }]} count={6} seed={9} t0={3.9} t1={15} area={[-800, -2600, 800, 300]} z={[-200, 500]} drift={[1, -0.35]} speed={[180, 340]} spin={[-20, 20]} blurNear={6} />
+    <Flyers items={[{ src: A('bee-front.png'), w: 90 }]} count={5} seed={9} t0={3.9} t1={15} area={[-800, -2600, 800, 300]} z={[-200, 500]} drift={[1, -0.35]} speed={[180, 340]} spin={[-20, 20]} blurNear={6} />
+    <HookBee t={t} />
   </World>;
 }
 
-// ── النصوص (طبقة الشاشة) ──
-function Texts({ t }) {
-  const X = 540;
+// ضو شمس دافي من فوق-يمين + vignette خفيف (بدل الغسلة الباهتة)
+function Light() {
   return <>
-    {/* ١ */}
-    <Txt text="لقمة من كل ثلاث" size={96} x={X} y={300} reveal={{ by: 'word', at: 0.35, dur: 0.6, stagger: 0.12, mask: true, from: { y: 100, opacity: 0 } }} exit={{ by: 'word', at: 3.25, dur: 0.3, stagger: 0.04, ease: 'in', to: { y: -50, opacity: 0, blur: 8 } }} />
-    <Sub text="على مائدتك…" size={58} x={X} y={395} reveal={{ by: 'word', at: 0.85, dur: 0.45, stagger: 0.08, from: { y: 24, opacity: 0, blur: 6 } }} exit={{ by: 'all', at: 3.2, dur: 0.3, to: { opacity: 0 } }} />
-    <Txt text="وراها نحلة" size={128} x={X} y={540} words={{ 1: { fill: C.honey } }} kashida={[{ word: 1, amount: 190 * out(clamp((t - 2.25) / 0.5), 3) }]}
-      reveal={{ by: 'word', at: 1.95, dur: 0.55, stagger: 0.12, mask: true, from: { y: 130, opacity: 0 } }} exit={{ by: 'word', at: 3.3, dur: 0.3, stagger: 0.05, ease: 'in', to: { y: -60, opacity: 0, blur: 8 } }} />
-    {/* ٢ */}
-    <Txt text="لصنع كيلو عسل" size={86} x={X} y={250} reveal={{ by: 'word', at: 3.75, dur: 0.55, stagger: 0.1, mask: true, from: { y: 90, opacity: 0 } }} exit={{ by: 'word', at: 7.2, dur: 0.3, stagger: 0.04, ease: 'in', to: { y: -50, opacity: 0, blur: 8 } }} />
-    <Sub text="تزور النحلات نحو" size={58} x={X} y={345} reveal={{ by: 'word', at: 4.0, dur: 0.45, stagger: 0.08, from: { y: 24, opacity: 0, blur: 6 } }} exit={{ by: 'all', at: 7.15, dur: 0.3, to: { opacity: 0 } }} />
-    {t > 4.25 && t < 7.6 && <Txt text={fmt(counter(t, 4.25, 6.55, 4000000))} size={170} fill={C.honey} x={X} y={480} reveal={{ by: 'all', at: 4.25, dur: 0.35, from: { scale: 0.8, opacity: 0 } }} exit={{ by: 'all', at: 7.2, dur: 0.3, ease: 'in', to: { y: -60, opacity: 0, blur: 10 } }} />}
-    <Txt text="زهرة" size={84} x={X} y={610} reveal={{ by: 'word', at: 4.5, dur: 0.5, mask: true, from: { y: 90, opacity: 0 } }} exit={{ by: 'word', at: 7.25, dur: 0.3, ease: 'in', to: { y: -50, opacity: 0, blur: 8 } }} />
-    {/* ٣ */}
-    <Txt text="وتطير مسافة تعادل" size={86} x={X} y={250} reveal={{ by: 'word', at: 7.95, dur: 0.55, stagger: 0.1, mask: true, from: { y: 90, opacity: 0 } }} exit={{ by: 'word', at: 10.75, dur: 0.3, stagger: 0.04, ease: 'in', to: { y: -50, opacity: 0, blur: 8 } }} />
-    {t > 8.25 && t < 11.15 && <Txt text={String(Math.max(1, Math.min(3, Math.ceil(3 * inOut(clamp((t - 8.25) / 2.6), 2) - 1e-6))))} size={190} fill={C.honey} x={X - 120} y={410}
-      reveal={{ by: 'all', at: 8.25, dur: 0.35, from: { scale: 0.7, opacity: 0 } }} exit={{ by: 'all', at: 10.8, dur: 0.3, ease: 'in', to: { y: -60, opacity: 0, blur: 10 } }} />}
-    <Txt text="دورات" size={110} x={X + 90} y={415} reveal={{ by: 'word', at: 8.4, dur: 0.5, mask: true, from: { y: 110, opacity: 0 } }} exit={{ by: 'word', at: 10.8, dur: 0.3, ease: 'in', to: { y: -50, opacity: 0, blur: 8 } }} />
-    <Sub text="حول الأرض" size={62} x={X} y={530} reveal={{ by: 'word', at: 8.65, dur: 0.45, stagger: 0.08, from: { y: 24, opacity: 0, blur: 6 } }} exit={{ by: 'all', at: 10.75, dur: 0.3, to: { opacity: 0 } }} />
-    {/* ٤ */}
-    <Txt text="خلية واحدة" size={96} x={X} y={250} reveal={{ by: 'word', at: 11.75, dur: 0.55, stagger: 0.12, mask: true, from: { y: 100, opacity: 0 } }} exit={{ by: 'word', at: 14.45, dur: 0.3, stagger: 0.04, ease: 'in', to: { y: -50, opacity: 0, blur: 8 } }} />
-    <Sub text="تضمّ حتى" size={58} x={X} y={345} reveal={{ by: 'word', at: 12.0, dur: 0.45, stagger: 0.08, from: { y: 24, opacity: 0, blur: 6 } }} exit={{ by: 'all', at: 14.4, dur: 0.3, to: { opacity: 0 } }} />
-    {t > 12.3 && t < 14.8 && <Txt text={fmt(counter(t, 12.3, 13.9, 60000))} size={170} fill={C.honey} x={X} y={480} reveal={{ by: 'all', at: 12.3, dur: 0.35, from: { scale: 0.8, opacity: 0 } }} exit={{ by: 'all', at: 14.45, dur: 0.3, ease: 'in', to: { y: -60, opacity: 0, blur: 10 } }} />}
-    <Txt text="نحلة" size={84} x={X} y={610} reveal={{ by: 'word', at: 12.55, dur: 0.5, mask: true, from: { y: 90, opacity: 0 } }} exit={{ by: 'word', at: 14.5, dur: 0.3, ease: 'in', to: { y: -50, opacity: 0, blur: 8 } }} />
-    {/* ٥ */}
-    <Txt text="أصغر عامل…" size={104} x={X} y={300} reveal={{ by: 'word', at: 15.7, dur: 0.55, stagger: 0.12, mask: true, from: { y: 110, opacity: 0 } }} />
-    <Txt text="أكبر وظيفة" size={134} x={X} y={460} words={{ 1: { fill: C.honey } }} kashida={[{ word: 1, amount: 170 * out(clamp((t - 16.45) / 0.55), 3) }]}
-      reveal={{ by: 'word', at: 16.05, dur: 0.55, stagger: 0.14, mask: true, from: { y: 140, opacity: 0 } }} />
+    <AbsoluteFill style={{ background: 'radial-gradient(120% 70% at 85% 0%, rgba(255,205,120,.32), rgba(255,205,120,0) 60%)', mixBlendMode: 'soft-light' }} />
+    <AbsoluteFill style={{ background: 'radial-gradient(130% 90% at 50% 45%, rgba(0,0,0,0) 55%, rgba(70,45,10,.16) 100%)', mixBlendMode: 'multiply' }} />
   </>;
 }
 
@@ -200,6 +313,6 @@ export default function Bees() {
   const f = useCurrentFrame(), { fps } = useVideoConfig(), t = f / fps;
   return <AbsoluteFill style={{ background: '#F6F1E6' }}>
     <CameraMotionBlur shutterAngle={170} samples={5}><Scene t={t} /></CameraMotionBlur>
-    <Texts t={t} />
+    <Light />
   </AbsoluteFill>;
 }
