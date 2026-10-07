@@ -186,7 +186,7 @@ function Comb({ t }) {
   // دخول: دائرة بتكبر من مكان نحلة المدار (النحلة "بتغطس" بالخلية)
   const r = out(clamp((t - 10.95) / 0.45), 3) * 1500;
   const fade = 1 - clamp((t - 15.35) / 0.4);
-  return <Layer z={700}><At x={-15} y={-1345} opacity={fade}>
+  return <Layer z={700}><At x={-15} y={-1420} opacity={fade}>
     <div style={{ position: 'relative', width: 1210, height: 2150, clipPath: `circle(${r.toFixed(0)}px at 40% 62%)` }}>
       {fr >= 38 ? <Img src={asset(A('gen/comb-hold/0038.png'))} style={{ width: '100%', height: '100%', display: 'block' }} /> : <>
         <Img src={asset(A(at(f0)))} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} />
@@ -217,7 +217,7 @@ function Jar({ t }) {
 function Drop({ t }) {
   const k = clamp((t - 14.65) / 0.95);
   if (t < 14.6 || k >= 1) return null;
-  const x = lerp(-40, JAR.x, k), y = lerp(-890, -330, k ** 1.8);
+  const x = lerp(-40, JAR.x, k), y = lerp(-960, -330, k ** 1.8);
   return <Layer z={660}><At x={x} y={y}><svg width="96" height="134" viewBox="0 0 60 84" style={{ transform: `scale(${1 - k * 0.15}, ${1 + k ** 2 * 0.35})` }}>
     <path d="M30 2 C30 2 4 40 4 56 a26 26 0 0 0 52 0 C56 40 30 2 30 2Z" fill="#E59B17" /><ellipse cx="22" cy="54" rx="6" ry="10" fill="#FFE3A3" opacity=".75" /></svg></At></Layer>;
 }
@@ -284,9 +284,9 @@ function Words({ t }) {
         exit={{ by: 'word', at: 14.45, dur: 0.3, stagger: 0.05, ease: 'in', to: { y: -80, opacity: 0, blur: 8 } }} />
       <S text="تضمّ حتى" size={54} anchor="end" x={-460} y={-1995} reveal={{ by: 'word', at: 12.0, dur: 0.45, stagger: 0.08, from: { x: -30, opacity: 0, blur: 6 } }}
         exit={{ by: 'all', at: 14.4, dur: 0.3, to: { opacity: 0, x: -60 } }} />
-      {t > 12.25 && t < 14.9 && <T text={fmt(counter(t, 12.3, 13.9, 60000))} size={215} fill={C.honey} anchor="left" x={-440} y={-735}
+      {t > 12.25 && t < 14.9 && <T text={fmt(counter(t, 12.3, 13.9, 60000))} size={215} fill={C.honey} anchor="left" x={-440} y={-680}
         reveal={{ by: 'all', at: 12.3, dur: 0.4, spring: { damping: 15, stiffness: 140 }, from: { y: 80, opacity: 0 } }} exit={{ by: 'all', at: 14.5, dur: 0.35, ease: 'in', to: { y: 200, opacity: 0, blur: 10 } }} />}
-      <T text="نحلة" size={104} anchor="end" x={-460} y={-560} reveal={{ by: 'word', at: 12.6, dur: 0.5, mask: true, from: { y: 100, opacity: 0 } }}
+      <T text="نحلة" size={104} anchor="end" x={-460} y={-505} reveal={{ by: 'word', at: 12.6, dur: 0.5, mask: true, from: { y: 100, opacity: 0 } }}
         exit={{ by: 'word', at: 14.55, dur: 0.3, ease: 'in', to: { y: 160, opacity: 0, blur: 8 } }} />
     </WT>
     {/* ٥: الختام يمين-فوق، المرطبان يسار-تحت، النحلة بالقطر بينهن */}
