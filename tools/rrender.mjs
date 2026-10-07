@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // رندر فيديو Remotion عبر خط إنتاجنا الكامل:
 //   bundle → رندر (المتصفح المحلي) → بناء الصوت (lib/audio/build.py) → دمج → فحص علو الصوت → فحص بصري (videoaudit) → contact sheet.
-// node tools/rrender.mjs projects/<مشروع>/rvideos/<اسم> [--still 3.5] [--from 2 --to 6] [--draft] [--concurrency 4]
+// node tools/rrender.mjs projects/<مشروع>/rvideos/<اسم> [--still 3.5] [--from 2 --to 6] [--draft] [--concurrency 2] [--chunk 90]
 import { bundle } from '@remotion/bundler';
 import { renderMedia, renderStill, selectComposition } from '@remotion/renderer';
 import { spawn } from 'node:child_process';
@@ -54,13 +54,32 @@ try {
   const from = Math.round(+(opt('from', 0)) * fps), to = Math.min(N - 1, Math.round(+(opt('to', N / fps)) * fps) - 1);
   const draft = !!opt('draft');
   const silent = path.join(outDir, '.video.mp4');
-  let last = 0;
-  await renderMedia({
-    composition, serveUrl, codec: 'h264', outputLocation: silent, inputProps, browserExecutable: SHELL, chromiumOptions, logLevel: 'error',
-    onBrowserLog, timeoutInMilliseconds: 120000, frameRange: [from, to], concurrency: +opt('concurrency', 4), crf: draft ? 26 : 16, imageFormat: 'jpeg', jpegQuality: draft ? 80 : 95, muted: true,
-    scale: draft ? 0.5 : 1,
-    onProgress: ({ renderedFrames }) => { if (renderedFrames !== last && (renderedFrames - last >= 15 || renderedFrames === to - from + 1)) { last = renderedFrames; process.stdout.write(`\r  🎞️  ${renderedFrames}/${to - from + 1} (${((Date.now() - t0) / 1000).toFixed(0)}s)   `); } },
-  });
+  // رندر على قطع (افتراضياً 90 فريم): كل قطعة بتنحفظ لحالها، فلو المتصفح وقع أو الجهاز عمل restart
+  // منرجع منكمّل من آخر قطعة (القطع الجاهزة بتنتخطى). مفتاح القطع = الكود + الإعدادات، فأي تعديل بيبطلها.
+  const chunk = +opt('chunk', 90);
+  const { createHash } = await import('node:crypto');
+  const { readFile, readdir } = await import('node:fs/promises');
+  const sig = createHash('md5').update(await readFile(path.join(abs, 'index.jsx'))).update(JSON.stringify([W, H, draft, fps])).digest('hex').slice(0, 8);
+  const cdir = path.join(outDir, `.chunks-${sig}`);
+  await mkdir(cdir, { recursive: true });
+  for (const d of await readdir(outDir)) if (d.startsWith('.chunks-') && d !== `.chunks-${sig}`) await rm(path.join(outDir, d), { recursive: true, force: true });
+  const parts = [];
+  for (let a = from; a <= to; a += chunk) {
+    const b = Math.min(to, a + chunk - 1), file = path.join(cdir, `${String(a).padStart(5, '0')}-${b}.mp4`);
+    parts.push(file);
+    if (existsSync(file)) { process.stdout.write(`\r  ♻️  ${a}–${b} جاهزة   `); continue; }
+    let last = 0;
+    await renderMedia({
+      composition, serveUrl, codec: 'h264', outputLocation: file + '.part.mp4', inputProps, browserExecutable: SHELL, chromiumOptions, logLevel: 'error',
+      onBrowserLog, timeoutInMilliseconds: 120000, frameRange: [a, b], concurrency: +opt('concurrency', 2), crf: draft ? 26 : 16, imageFormat: 'jpeg', jpegQuality: draft ? 80 : 95, muted: true,
+      scale: draft ? 0.5 : 1,
+      onProgress: ({ renderedFrames }) => { if (renderedFrames - last >= 15) { last = renderedFrames; process.stdout.write(`\r  🎞️  ${a + renderedFrames - from}/${to - from + 1} (${((Date.now() - t0) / 1000).toFixed(0)}s)   `); } },
+    });
+    await run('mv', [file + '.part.mp4', file]);
+    console.log(`\n  ✓ قطعة ${a}–${b}`);
+  }
+  await writeFile(path.join(cdir, 'list.txt'), parts.map((f) => `file '${f}'`).join('\n'));
+  await run('ffmpeg', ['-v', 'error', '-y', '-f', 'concat', '-safe', '0', '-i', path.join(cdir, 'list.txt'), '-c', 'copy', silent]);
   process.stdout.write('\n');
   for (const f of flags) console.warn('  ' + f);
 
@@ -85,7 +104,7 @@ try {
     audio = wav;
   }
   await run('ffmpeg', ['-v', 'error', '-y', '-i', silent, ...(audio ? ['-i', audio, '-map', '0:v', '-map', '1:a', '-c:a', 'aac', '-b:a', '256k', '-shortest'] : []), '-c:v', 'copy', '-movflags', '+faststart', out]);
-  await rm(silent, { force: true }); if (audio) await rm(audio, { force: true });
+  await rm(silent, { force: true }); await rm(cdir, { recursive: true, force: true }); if (audio) await rm(audio, { force: true });
 
   // ── ملمس نهائي (أسلوب الجزيرة): أطراف عدسة مضبّبة + RGB split عالأطراف + توهّج + grain ──
   // meta.post = { edge: 0.7, edgeWidth: 0.45, blur: 12, rgb: 4, bloom: 0.16, grain: 7, vignette: 0 }
