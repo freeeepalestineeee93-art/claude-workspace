@@ -196,7 +196,7 @@ button:disabled{cursor:default;opacity:.45}
 
 /* ---------- board ---------- */
 .boardwrap{overflow-x:auto;padding-bottom:6px}
-.board{display:grid;grid-template-columns:repeat(6,minmax(200px,1fr));gap:10px;min-width:1240px}
+.board{display:grid;grid-template-columns:repeat(4,minmax(220px,1fr));gap:10px;min-width:920px}
 .col{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r);padding:10px;display:grid;gap:8px;align-content:start}
 .col h4{margin:0 0 2px;font-size:.86rem;display:flex;justify-content:space-between;align-items:center;gap:6px;color:var(--sc)}
 .col h4 .n{font-family:var(--f-mono);color:var(--faint);font-size:.76rem}
@@ -256,6 +256,10 @@ button:disabled{cursor:default;opacity:.45}
 .arow .side2{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
 .age{font-size:.78rem;font-weight:600;color:var(--muted);white-space:nowrap}
 .age.warn{color:var(--warn)} .age.danger{color:var(--danger)}
+.donelink{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;border:1px dashed color-mix(in oklab,var(--s-approved) 50%,var(--line));background:color-mix(in oklab,var(--s-approved) 7%,var(--surface));color:var(--s-approved);border-radius:var(--r);padding:12px 15px;font-weight:700;font-size:.92rem;text-align:start}
+.donelink span{font-weight:600;font-size:.84rem;white-space:nowrap}
+.donelink:hover{border-style:solid}
+.badge.pub{background:color-mix(in oklab,var(--s-received) 13%,var(--surface));color:var(--s-received)}
 .nav button .n.red{background:var(--danger);color:#fff}
 .nav button .n.red:not([hidden]) + .n{margin-inline-start:4px}
 @media (max-width:720px){ .archbar{grid-template-columns:1fr 1fr} .archbar input{grid-column:1/-1} .arow{grid-template-columns:1fr} .arow .side2{flex-direction:row;justify-content:space-between;align-items:center;flex-wrap:wrap} }
@@ -378,7 +382,8 @@ dialog.sheet::backdrop{background:rgb(10 12 18 / .5)}
     <nav class="nav" id="nav" aria-label="الأقسام">
       <button data-tab="day"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M8 3v4M16 3v4M3.5 10h17"/></svg>يومي<span class="n red" id="n-late" hidden title="أعمال متأخّرة">0</span><span class="n" id="n-day">0</span></button>
       <button data-tab="board"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3.5" y="4" width="5" height="16" rx="1.5"/><rect x="10" y="4" width="5" height="10" rx="1.5"/><rect x="16.5" y="4" width="4" height="13" rx="1.5"/></svg>مراحل الأعمال<span class="n" id="n-board">0</span></button>
-      <button data-tab="all"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4" width="17" height="5" rx="1.5"/><path d="M5 9v9.5a1.5 1.5 0 0 0 1.5 1.5h11a1.5 1.5 0 0 0 1.5-1.5V9M10 13h4"/></svg>كل الأعمال<span class="n" id="n-all">0</span></button>
+      <button data-tab="all"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4" width="17" height="5" rx="1.5"/><path d="M5 9v9.5a1.5 1.5 0 0 0 1.5 1.5h11a1.5 1.5 0 0 0 1.5-1.5V9M10 13h4"/></svg>كل المفتوح<span class="n" id="n-all">0</span></button>
+      <button data-tab="archive"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M8.5 12.2l2.4 2.4 4.6-4.8"/></svg>الأرشيف<span class="n" id="n-arch">0</span></button>
       <button data-tab="week"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h9M8 12h12M4 18h7"/></svg>جدول الأسبوع</button>
       <button data-tab="platforms"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>المنصات والإحصائيات</button>
     </nav>
@@ -447,20 +452,20 @@ const KINDS = {
   motion: {name:"موشن جرافيك",    verb:"قيد التحريك"},
   other:  {name:"مهمة أخرى",       verb:"قيد العمل"}
 };
-const ST_ORDER = ["received","working","review","revision","approved","delivered"];
-const ST_NAME = {received:"تم الاستلام",working:null,review:"بانتظار الاعتماد",revision:"قيد التعديل",approved:"تم الاعتماد",delivered:"تم التسليم"};
-const ST_HINT = {received:"استلمت الشغل وما بلّشت فيه",working:"شغّال عليه هلّق",review:"بعتّه وناطر رد",revision:"طلبوا تعديلات",approved:"انقبل، ضايل تسليم النسخة النهائية",delivered:"خلص وتسلّم"};
-const ST_P = {received:.05,working:.4,review:.75,revision:.55,approved:.9,delivered:1};
-const ST_STEP = {received:1,working:2,review:3,revision:3,approved:4,delivered:5};
+const ST_ORDER = ["received","working","review","revision","approved"];
+const DONE = "approved";
+const ST_NAME = {received:"تم الاستلام",working:null,review:"بانتظار الاعتماد",revision:"قيد التعديل",approved:"تم الاعتماد"};
+const ST_HINT = {received:"استلمت الشغل وما بلّشت فيه",working:"شغّال عليه هلّق",review:"بعتّه وناطر رد",revision:"طلبوا تعديلات",approved:"خلص واعتُمد، موجود بالأرشيف"};
+const ST_P = {received:.05,working:.45,review:.8,revision:.6,approved:1};
+const ST_STEP = {received:1,working:2,review:3,revision:3,approved:4};
 const NEXT = {
   received:[["working","ابدأ الشغل"]],
   working:[["review","بعتّه للمراجعة"]],
   review:[["approved","تم الاعتماد"],["revision","طلبوا تعديلات"]],
   revision:[["review","بعتّ التعديل"]],
-  approved:[["delivered","تم التسليم"]],
-  delivered:[]
+  approved:[]
 };
-const ACT = new Set(["received","working","revision","approved"]);
+const ACT = new Set(["received","working","revision"]);
 const COLORS = ["#7C6CF2","#E9892B","#1FA5C9","#E4577E","#3BAA6E","#C04BD6","#5B7FE0","#B39A1C"];
 const PRIO = {3:"عالية",2:"متوسطة",1:"منخفضة"};
 const LS_KEY = "timeline-work-v2";
@@ -499,8 +504,10 @@ function normalize(id,raw){
   if(!Array.isArray(t.log)||!t.log.length){
     const at=t.createdAt>1e6?t.createdAt:Date.now();
     t.log=[{s:"received",at}];
-    if(t.stage!=null){ if(t.stage>=5||t.doneAt) t.log.push({s:"delivered",at:t.doneAt||at}); else if(t.stage>0) t.log.push({s:"working",at}); }
+    if(t.stage!=null){ if(t.stage>=5||t.doneAt) t.log.push({s:"approved",at:t.doneAt||at}); else if(t.stage>0) t.log.push({s:"working",at}); }
   }
+  // the old "delivered" stage is now part of "approved" (final); collapse repeats, keeping the first time
+  if(t.log.some(x=>x.s==="delivered")){ const out=[]; for(const e of t.log){ const x={...e,s:e.s==="delivered"?"approved":e.s}; if(out.length&&out[out.length-1].s===x.s&&x.s==="approved") continue; out.push(x);} t.log=out; }
   t.date=t.date||todayKey(); t.end=t.end&&t.end>=t.date?t.end:t.date;
   t.kind=KINDS[t.kind]?t.kind:"other";
   return t;
@@ -508,7 +515,8 @@ function normalize(id,raw){
 function statusOf(t){ return t.log[t.log.length-1].s; }
 function stName(s,kind){ return s==="working"?(KINDS[kind]||KINDS.other).verb:ST_NAME[s]; }
 function receivedAt(t){ const e=t.log.find(x=>x.s==="received"); return e?e.at:t.log[0].at; }
-function deliveredAt(t){ for(let i=t.log.length-1;i>=0;i--) if(t.log[i].s==="delivered") return t.log[i].at; return null; }
+function doneAt(t){ for(let i=t.log.length-1;i>=0;i--) if(t.log[i].s===DONE) return t.log[i].at; return null; }
+function isDone(t){ return statusOf(t)===DONE; }
 function revisions(t){ return t.log.filter(x=>x.s==="revision").length; }
 function span(t){ return diffDays(t.end,t.date)+1; }
 function share(t){ return Math.max(10,(+t.est||0)/span(t)); }
@@ -519,7 +527,7 @@ function pName(t){ const p=state.platforms[t.platform]; return p?p.name:"بدو�
 function allTasks(){ return Object.values(state.tasks); }
 function passFilter(t){ return state.filter==="all"||t.platform===state.filter; }
 function isLate(t){ return ACT.has(statusOf(t)) && t.end<todayKey(); }
-function isOverdue(t){ return statusOf(t)!=="delivered" && (isLate(t) || (!!t.due && t.due<todayKey())); }
+function isOverdue(t){ return !isDone(t) && (isLate(t) || (!!t.due && t.due<todayKey())); }
 function lastAt(t){ return t.log[t.log.length-1].at; }
 function waitDays(t){ return Math.floor((Date.now()-lastAt(t))/864e5); }
 function ageDays(t){ return Math.floor((Date.now()-receivedAt(t))/864e5); }
@@ -527,7 +535,7 @@ function sortTasks(a,b){
   return ((b.priority||2)-(a.priority||2)) || ((a.due||"9999")<(b.due||"9999")?-1:(a.due||"9999")>(b.due||"9999")?1:0) || (a.date<b.date?-1:a.date>b.date?1:0) || (receivedAt(a)-receivedAt(b));
 }
 function dueBadge(t){
-  if(!t.due || statusOf(t)==="delivered") return "";
+  if(!t.due || isDone(t)) return "";
   const n=diffDays(t.due,todayKey()), tm=t.dueTime?` ${t.dueTime}`:"";
   if(n<0) return `<span class="badge danger">فات التسليم بـ ${-n} يوم</span>`;
   if(n===0) return `<span class="badge warn">التسليم اليوم<span class="mono">${tm}</span></span>`;
@@ -596,7 +604,7 @@ function dayLists(k){
   const late = k===tk ? all.filter(isLate).sort(sortTasks) : [];
   const work = all.filter(t=>ACT.has(statusOf(t))&&inRange(t)).sort(sortTasks);
   const waiting = all.filter(t=>statusOf(t)==="review"&&(k===tk?t.date<=k:inRange(t))).sort(sortTasks);
-  const deliv = all.filter(t=>{ const d=deliveredAt(t); return statusOf(t)==="delivered"&&d&&keyOf(new Date(d))===k; }).sort((a,b)=>deliveredAt(b)-deliveredAt(a));
+  const deliv = all.filter(t=>{ const d=doneAt(t); return isDone(t)&&d&&keyOf(new Date(d))===k; }).sort((a,b)=>doneAt(b)-doneAt(a));
   return {late,work,waiting,deliv};
 }
 
@@ -606,16 +614,17 @@ function render(){
   renderHeader(); renderStats(); renderSample(); renderAlerts(); renderTrack(); renderSide();
   const isDay=state.tab==="day";
   $("quick").hidden=!isDay||readOnly; $("trackbox").hidden=!isDay; $("stats").hidden=!isDay;
-  $("archbar").hidden=state.tab!=="all";
+  $("archbar").hidden=!(state.tab==="all"||state.tab==="archive"); $("a-sort").hidden=state.tab==="archive";
   document.querySelector(".datenav").hidden=!(isDay||state.tab==="week");
   const v=$("view");
-  v.innerHTML = isDay?viewDay(): state.tab==="board"?viewBoard(): state.tab==="week"?viewWeek(): state.tab==="all"?viewAll(): viewPlatforms();
+  v.innerHTML = isDay?viewDay(): state.tab==="board"?viewBoard(): state.tab==="week"?viewWeek(): (state.tab==="all"||state.tab==="archive")?viewAll(): viewPlatforms();
   tickLive();
 }
 function renderHeader(){
   if(state.tab==="board"){ $("dayName").textContent="مراحل الأعمال"; $("daySub").textContent="كل شغلك الحالي مرتّب حسب المرحلة. اضغط على أي عمل لتفتح تفاصيله وسجلّه."; }
   else if(state.tab==="week"){ const ws=weekStart(state.day); $("dayName").textContent="جدول الأسبوع"; $("daySub").textContent=`${fmtLong.format(parseKey(ws))} – ${fmtLong.format(parseKey(addDays(ws,6)))}`; }
-  else if(state.tab==="all"){ $("dayName").textContent="كل الأعمال"; $("daySub").textContent="سجلّ كامل لشغلك، القديم والجديد. ما في شي بيضيع من هون."; }
+  else if(state.tab==="all"){ $("dayName").textContent="كل المفتوح"; $("daySub").textContent="كل شغل لسا ما اعتُمد، القديم والجديد. ما في شي بيضيع من هون."; }
+  else if(state.tab==="archive"){ $("dayName").textContent="الأرشيف"; $("daySub").textContent="الشغل اللي اعتُمد وخلص. إذا انطلب تعديل على شي قديم، رجّعه للطاولة."; }
   else if(state.tab==="platforms"){ $("dayName").textContent="المنصات والإحصائيات"; $("daySub").textContent="أداء كل منصة، ومتوسط مدة التسليم وعدد التعديلات."; }
   else{
     const d=parseKey(state.day), L=dayLists(state.day);
@@ -637,7 +646,7 @@ function renderStats(){
     <div class="ring" title="إنجاز اليوم حسب الوقت"><svg viewBox="0 0 74 74"><circle cx="37" cy="37" r="30" fill="none" stroke="var(--line)" stroke-width="8"/><circle cx="37" cy="37" r="30" fill="none" stroke="var(--accent)" stroke-width="8" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-p)}"/></svg><div class="v"><b>${Math.round(p*100)}%</b><small>إنجاز</small></div></div>
     <div class="stat s" data-s="working"><small>شغل اليوم</small><b>${L.work.length+L.late.length}</b><span class="sub">${rev?rev+" منها تعديلات":"&nbsp;"}</span></div>
     <div class="stat s" data-s="review"><small>بانتظار الاعتماد</small><b>${L.waiting.length}</b><span class="sub">ناطر رد</span></div>
-    <div class="stat s" data-s="delivered"><small>تسلّم اليوم</small><b>${L.deliv.length}</b><span class="sub">&nbsp;</span></div>
+    <div class="stat s" data-s="approved"><small>اعتُمد اليوم</small><b>${L.deliv.length}</b><span class="sub">&nbsp;</span></div>
     <div class="stat"><small>شغل متبقّي</small><b class="mono">${tc(remain)}</b><span class="sub">ساعة:دقيقة</span></div>`;
 }
 function renderSample(){
@@ -647,7 +656,7 @@ function renderSample(){
 }
 function renderAlerts(){
   if(state.tab!=="day"){ $("alerts").innerHTML=""; return; }
-  const tk=todayKey(), out=[], all=allTasks().filter(t=>statusOf(t)!=="delivered");
+  const tk=todayKey(), out=[], all=allTasks().filter(t=>!isDone(t));
   const names=arr=>arr.slice(0,3).map(t=>`<button class="linkish" data-act="open" data-id="${t.id}">${esc(t.title)}</button>`).join("، ")+(arr.length>3?` و${arr.length-3} غيرها`:"");
   const late=all.filter(t=>t.due&&t.due<tk), today=all.filter(t=>t.due===tk), tom=all.filter(t=>t.due===addDays(tk,1));
   const overdue=allTasks().filter(isOverdue);
@@ -663,8 +672,7 @@ function renderAlerts(){
   $("alerts").innerHTML=out.join("");
 }
 function trackTasks(L){
-  const inRangeDone=allTasks().filter(passFilter).filter(t=>statusOf(t)!=="review"&&!ACT.has(statusOf(t))&&t.date<=state.day&&state.day<=t.end);
-  const m=new Map(); [...L.late,...L.work,...L.waiting.filter(t=>t.date<=state.day&&state.day<=t.end),...inRangeDone].forEach(t=>m.set(t.id,t));
+  const m=new Map(); [...L.late,...L.work,...L.waiting.filter(t=>t.date<=state.day&&state.day<=t.end)].forEach(t=>m.set(t.id,t));
   return [...m.values()];
 }
 function renderTrack(){
@@ -683,12 +691,13 @@ function renderSide(){
   document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("on",b.dataset.tab===state.tab));
   const L=dayLists(state.day);
   $("n-day").textContent=L.work.length+L.late.length;
-  $("n-board").textContent=allTasks().filter(t=>statusOf(t)!=="delivered").length;
-  $("n-all").textContent=allTasks().length;
+  $("n-board").textContent=allTasks().filter(t=>!isDone(t)).length;
+  $("n-all").textContent=allTasks().filter(t=>!isDone(t)).length;
+  $("n-arch").textContent=allTasks().filter(isDone).length;
   const lc=allTasks().filter(isOverdue).length; $("n-late").hidden=!lc; $("n-late").textContent=lc;
   const ps=sortedPlatforms();
   if(state.filter!=="all"&&!state.platforms[state.filter]) state.filter="all";
-  const cnt=id=>allTasks().filter(t=>statusOf(t)!=="delivered"&&(id==="all"||t.platform===id)).length;
+  const cnt=id=>allTasks().filter(t=>!isDone(t)&&(id==="all"||t.platform===id)).length;
   $("pfl").innerHTML=`<button class="${state.filter==="all"?"on":""}" data-act="filter" data-id="all"><span class="dot" style="--c:var(--faint)"></span>كل المنصات<span class="n">${cnt("all")}</span></button>`+
     ps.map(([id,p])=>`<button class="${state.filter===id?"on":""}" data-act="filter" data-id="${id}"><span class="dot" style="--c:${p.color}"></span>${esc(p.name)}<span class="n">${cnt(id)}</span></button>`).join("");
 }
@@ -710,11 +719,11 @@ function card(t,k){
   return `<article class="card ${running?"running":""} ${isLate(t)?"late":""}" data-act="open" data-id="${t.id}" data-s="${s}">
     <div class="crow top"><span class="pf"><span class="dot" style="--c:${colorOf(t)}"></span><b>${esc(pName(t))}</b> · ${KINDS[t.kind].name}</span><span class="spill">${esc(stName(s,t.kind))}</span></div>
     <div class="ttl">${esc(t.title)}</div>
-    <div class="stepper" aria-hidden="true">${[1,2,3,4,5].map(i=>`<i class="${i<=ST_STEP[s]?"on":""}"></i>`).join("")}</div>
-    <div class="crow">${daysBadge(t,k)}${dueBadge(t)}${rv?`<span class="badge rev">تعديل ×${rv}</span>`:""}${(t.priority||2)===3&&s!=="delivered"?`<span class="badge danger">أولوية عالية</span>`:""}
-      ${s==="delivered"?`<span class="badge ok">تسلّم ${fmtDT.format(deliveredAt(t))}</span>`:`<span class="hint">استلام ${fmtDT.format(receivedAt(t))}</span>`}</div>
+    <div class="stepper" aria-hidden="true">${[1,2,3,4].map(i=>`<i class="${i<=ST_STEP[s]?"on":""}"></i>`).join("")}</div>
+    <div class="crow">${daysBadge(t,k)}${dueBadge(t)}${rv?`<span class="badge rev">تعديل ×${rv}</span>`:""}${(t.priority||2)===3&&s!==DONE?`<span class="badge danger">أولوية عالية</span>`:""}
+      ${s===DONE?`<span class="badge ok">اعتُمد ${fmtDT.format(doneAt(t))}</span>`:`<span class="hint">استلام ${fmtDT.format(receivedAt(t))}</span>`}</div>
     <div class="cfoot"><div class="acts">${acts}</div>
-      ${s!=="delivered"?`<button class="timer mono ${running?"on":""}" data-act="timer" data-id="${t.id}" title="${running?"إيقاف المؤقّت":"ابدأ المؤقّت"}" ${readOnly?"disabled":""}>${running?I.pause:I.play}<span data-live="${t.id}">${running?tcSec(spentMin(t)*60):tc(spentMin(t))}</span><span style="opacity:.6">/ ${tc(+t.est||0)}</span></button>`:`<span class="mono hint">${tc(spentMin(t))} شغل فعلي</span>`}
+      ${s!==DONE?`<button class="timer mono ${running?"on":""}" data-act="timer" data-id="${t.id}" title="${running?"إيقاف المؤقّت":"ابدأ المؤقّت"}" ${readOnly?"disabled":""}>${running?I.pause:I.play}<span data-live="${t.id}">${running?tcSec(spentMin(t)*60):tc(spentMin(t))}</span><span style="opacity:.6">/ ${tc(+t.est||0)}</span></button>`:`<span class="mono hint">${tc(spentMin(t))} شغل فعلي</span>`}
     </div></article>`;
 }
 function section(title,n,items,k,hint,extra=""){
@@ -724,46 +733,48 @@ function section(title,n,items,k,hint,extra=""){
 function viewDay(){
   const k=state.day, L=dayLists(k);
   let h="";
-  h+=section("متأخّر عن خطة الشغل",L.late.length,L.late,k,"أعمال خلص وقتها المخطّط وما تسلّمت. انقلها لليوم أو مدّد مدّتها.",readOnly?"":`<button class="btn small" data-act="carry-today">انقلها كلها لليوم</button>`);
+  h+=section("متأخّر عن خطة الشغل",L.late.length,L.late,k,"أعمال خلص وقتها المخطّط وما خلصت. انقلها لليوم أو مدّد مدّتها.",readOnly?"":`<button class="btn small" data-act="carry-today">انقلها كلها لليوم</button>`);
   h+=section("شغل اليوم",L.work.length,L.work,k,"");
   h+=section("بانتظار الاعتماد",L.waiting.length,L.waiting,k,"بعتّها وناطر رد العميل. لما يردّوا اضغط «تم الاعتماد» أو «طلبوا تعديلات».");
-  h+=section("تسلّم اليوم",L.deliv.length,L.deliv,k,"");
+  if(L.deliv.length) h+=`<button class="donelink" data-act="go-archive">✅ ${L.deliv.length===1?"اعتُمد عمل واحد":L.deliv.length===2?"اعتُمد عملين":"اعتُمد "+L.deliv.length+" أعمال"} ${k===todayKey()?"اليوم":"بهاليوم"} وانتقلوا للأرشيف<span>شوفهم ←</span></button>`;
   if(!h) h=`<div class="empty"><b>ما في شغل ${k===todayKey()?"لليوم":"لهاليوم"}${state.filter!=="all"?" بهالمنصة":""}</b>اكتب اسم العمل بالخانة فوق واختار مدّته، أو اضغط «عمل جديد» لتعبّي كل التفاصيل.</div>`;
   const rollable=L.work.filter(t=>t.end===k);
   if(rollable.length&&!readOnly) h+=`<div class="rollover"><button class="btn" data-act="roll">نهاية الدوام: أجّل الشغل الباقي (${rollable.length}) ${esc(relName(addDays(k,1))==="بكرة"?"لبكرة":"ليوم "+fmtDay.format(parseKey(addDays(k,1))))}</button></div>`;
   return h;
 }
 function viewBoard(){
-  const weekAgo=Date.now()-7*864e5, ts=allTasks().filter(passFilter).filter(t=>statusOf(t)!=="delivered"||deliveredAt(t)>weekAgo);
+  const ts=allTasks().filter(passFilter).filter(t=>!isDone(t));
   const mini=t=>{const s=statusOf(t), rv=revisions(t);
     return `<div class="mini" data-act="open" data-id="${t.id}" data-s="${s}"><div class="m"><span class="dot" style="--c:${colorOf(t)}"></span>${esc(pName(t))} · ${KINDS[t.kind].name}</div><div class="t">${esc(t.title)}</div>
       <div class="m">${dueBadge(t)}${rv?`<span class="badge rev">تعديل ×${rv}</span>`:""}${isLate(t)?`<span class="badge danger">متأخّر</span>`:""}${span(t)>1?`<span class="badge">${span(t)} أيام</span>`:""}</div>
       ${readOnly||!NEXT[s].length?"":`<div class="m">${NEXT[s].map(([to,l],i)=>`<button class="btn small sbtn ${i===0?"solid":""}" data-s="${to}" data-act="status" data-id="${t.id}" data-to="${to}">${l}</button>`).join("")}</div>`}</div>`;};
-  return `<div class="boardwrap"><div class="board">${ST_ORDER.map(s=>{const items=ts.filter(t=>statusOf(t)===s).sort(sortTasks);
-    return `<div class="col" data-s="${s}"><h4>${s==="working"?"قيد المونتاج / التصميم":ST_NAME[s]}${s==="delivered"?" (آخر ٧ أيام)":""}<span class="n">${items.length}</span></h4>${items.map(mini).join("")||`<div class="hint" style="padding:6px 4px">ما في شي</div>`}</div>`;}).join("")}</div></div>`;
+  return `<p class="hint" style="margin:0">الشغل المفتوح بس. اللي اعتُمد بتلاقيه بـ<button class="linkish" data-act="go-archive">الأرشيف</button>.</p><div class="boardwrap"><div class="board">${ST_ORDER.filter(x=>x!==DONE).map(s=>{const items=ts.filter(t=>statusOf(t)===s).sort(sortTasks);
+    return `<div class="col" data-s="${s}"><h4>${s==="working"?"قيد المونتاج / التصميم":ST_NAME[s]}<span class="n">${items.length}</span></h4>${items.map(mini).join("")||`<div class="hint" style="padding:6px 4px">ما في شي</div>`}</div>`;}).join("")}</div></div>`;
 }
 function viewWeek(){
   const ws=weekStart(state.day), we=addDays(ws,6), tk=todayKey(), cap=+state.settings.capacity||360;
   const days=[...Array(7)].map((_,i)=>addDays(ws,i));
   const effEnd=t=>isLate(t)||(statusOf(t)==="review"&&t.end<tk)?tk:t.end;
-  const ts=allTasks().filter(passFilter).filter(t=>t.date<=we&&effEnd(t)>=ws).sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:span(b)-span(a));
+  const ts=allTasks().filter(passFilter).filter(t=>state.weekDone||!isDone(t)).filter(t=>t.date<=we&&effEnd(t)>=ws).sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:span(b)-span(a));
   const heads=days.map((k,i)=>{
     const load=ts.filter(t=>(ACT.has(statusOf(t))||statusOf(t)==="review")&&t.date<=k&&k<=effEnd(t)).reduce((s,t)=>s+share(t),0);
     return `<button class="ghd ${k===tk?"today":""}" style="grid-column:${i+1};grid-row:1" data-act="goto" data-id="${k}"><div class="h"><b>${fmtDay.format(parseKey(k))}</b><span>${fmtShort.format(parseKey(k))}</span></div><div class="load ${load>cap?"over":""}"><i style="width:${Math.min(100,load/cap*100)}%"></i></div><span class="lbl">${tc(load)}</span></button>`;}).join("");
   const cols=days.map((k,i)=>`<div class="gcol ${k===tk?"today":""}" style="grid-column:${i+1}"></div>`).join("");
   const bars=ts.map((t,r)=>{ const s=statusOf(t), a=Math.max(0,diffDays(t.date,ws)), b=Math.min(6,diffDays(effEnd(t),ws));
-    return `<div class="gbar ${s==="delivered"?"done":""} ${t.date<ws?"cont-s":""} ${effEnd(t)>we?"cont-e":""}" style="--c:${colorOf(t)};grid-column:${a+1} / ${b+2};grid-row:${r+2}" data-act="open" data-id="${t.id}" data-s="${s}" title="${esc(t.title)} — ${esc(stName(s,t.kind))}"><span class="dot" style="--c:${colorOf(t)}"></span><span>${esc(t.title)}</span><i class="st"></i></div>`;}).join("");
-  return `<div class="weekhead"><div class="legend">${ST_ORDER.map(s=>`<span data-s="${s}"><i></i>${s==="working"?"قيد الشغل":ST_NAME[s]}</span>`).join("")}</div>
-    <div class="acts" style="display:flex;gap:6px"><button class="btn small" data-act="week" data-id="-7">الأسبوع السابق</button><button class="btn small" data-act="week" data-id="0">هالأسبوع</button><button class="btn small" data-act="week" data-id="7">الأسبوع الجاي</button></div></div>
+    return `<div class="gbar ${s===DONE?"done":""} ${t.date<ws?"cont-s":""} ${effEnd(t)>we?"cont-e":""}" style="--c:${colorOf(t)};grid-column:${a+1} / ${b+2};grid-row:${r+2}" data-act="open" data-id="${t.id}" data-s="${s}" title="${esc(t.title)} — ${esc(stName(s,t.kind))}"><span class="dot" style="--c:${colorOf(t)}"></span><span>${esc(t.title)}</span><i class="st"></i></div>`;}).join("");
+  return `<div class="weekhead"><div class="legend">${ST_ORDER.filter(x=>state.weekDone||x!==DONE).map(s=>`<span data-s="${s}"><i></i>${s==="working"?"قيد الشغل":ST_NAME[s]}</span>`).join("")}</div>
+    <div class="acts" style="display:flex;gap:6px"><button class="btn small" data-act="week" data-id="-7">الأسبوع السابق</button><button class="btn small" data-act="week" data-id="0">هالأسبوع</button><button class="btn small" data-act="week" data-id="7">الأسبوع الجاي</button><button class="btn small ${state.weekDone?"primary":""}" data-act="week-done">${state.weekDone?"إخفاء المعتمد":"إظهار المعتمد"}</button></div></div>
     <div class="ganttwrap"><div class="gantt" style="grid-template-rows:auto repeat(${Math.max(1,ts.length)},auto) 12px">${cols}${heads}${bars||`<div class="gempty" style="grid-row:2">ما في شغل مخطّط بهالأسبوع.</div>`}</div></div>
     <p class="hint" style="margin:0">كل شريط بيمتد على أيام شغل العمل. الشريط تحت اسم اليوم بيبيّن ضغط اليوم مقارنة بطاقتك (${tc(cap)})، والأحمر يعني محمّل زيادة. اضغط على اليوم لتفتح شغله.</p>`;
 }
-const AF=[["open","غير مسلّم"],["late","متأخّر"],["review","بانتظار الاعتماد"],["revision","قيد التعديل"],["delivered","مسلّم"],["all","الكل"]];
+const AF=[["open","كل المفتوح"],["late","متأخّر"],["review","بانتظار الاعتماد"],["revision","قيد التعديل"]];
 const fmtMonth=new Intl.DateTimeFormat(LOC,{month:"long",year:"numeric"});
-function archMatch(t,f){ const s=statusOf(t); return f==="all"?true:f==="open"?s!=="delivered":f==="late"?isOverdue(t):s===f; }
+function archMatch(t,f){ const s=statusOf(t); if(s===DONE) return false; return f==="open"?true:f==="late"?isOverdue(t):s===f; }
 function archData(){
   const q=state.arch.q.trim().toLowerCase();
   const base=allTasks().filter(passFilter).filter(t=>!q||(t.title+" "+(t.notes||"")+" "+pName(t)+" "+KINDS[t.kind].name).toLowerCase().includes(q));
+  if(state.tab==="archive"){ const list=base.filter(isDone).sort((a,b)=>doneAt(b)-doneAt(a)); return {list,counts:{}}; }
+  if(!AF.some(([k])=>k===state.arch.f)) state.arch.f="open";
   const counts=Object.fromEntries(AF.map(([k])=>[k,base.filter(t=>archMatch(t,k)).length]));
   const list=base.filter(t=>archMatch(t,state.arch.f)), so=state.arch.sort;
   list.sort((a,b)=> so==="new"?receivedAt(b)-receivedAt(a) : so==="due"?((a.due||"9999")<(b.due||"9999")?-1:(a.due||"9999")>(b.due||"9999")?1:receivedAt(a)-receivedAt(b)) : receivedAt(a)-receivedAt(b));
@@ -771,13 +782,19 @@ function archData(){
 }
 function ageHtml(t){
   const s=statusOf(t);
-  if(s==="delivered") return `<span class="age">تسلّم ${fmtDT.format(deliveredAt(t))} · خلص بـ ${human(deliveredAt(t)-receivedAt(t))}</span>`;
+  if(s===DONE) return `<span class="age">خلص بـ ${human(doneAt(t)-receivedAt(t))}</span>`;
   if(s==="review"){ const d=waitDays(t); return `<span class="age ${d>=(+state.settings.staleDays||3)?"warn":""}">ناطر رد ${d?"من "+d+" يوم":"من اليوم"}</span>`; }
   const d=ageDays(t); return `<span class="age ${d>=14?"danger":d>=7?"warn":""}">${d?"صرلو "+d+" يوم مفتوح":"استلمته اليوم"}</span>`;
 }
 function arow(t){
   const s=statusOf(t), tk=todayKey(), rv=revisions(t);
   const inToday=t.date<=tk&&tk<=t.end;
+  if(s===DONE){ const acts=readOnly?"":`${t.publishedAt?"":`<button class="btn small" data-act="pub-now" data-id="${t.id}" title="سجّل إنها انتشرت هلّق">انتشرت هلّق</button>`}<button class="btn small" data-act="reopen" data-id="${t.id}">رجّعه للطاولة</button>`;
+    return `<div class="arow" data-act="open" data-id="${t.id}" data-s="${s}">
+    <div style="min-width:0;display:grid;gap:4px"><span class="pf"><span class="dot" style="--c:${colorOf(t)}"></span><b>${esc(pName(t))}</b> · ${KINDS[t.kind].name}</span>
+      <div class="ttl">${esc(t.title)}</div>
+      <div class="crow"><span class="hint">استلام ${fmtDT.format(receivedAt(t))}</span><span class="badge ok">اعتُمد ${fmtDT.format(doneAt(t))}</span>${t.publishedAt?`<span class="badge pub">انتشرت ${fmtDT.format(t.publishedAt)}</span>`:""}${rv?`<span class="badge rev">تعديل ×${rv}</span>`:""}</div></div>
+    <div class="side2">${ageHtml(t)}${acts?`<div class="crow">${acts}</div>`:""}</div></div>`; }
   const acts=readOnly?"":[ ACT.has(s)&&!inToday?`<button class="btn small" data-act="to-today" data-id="${t.id}">اشتغل عليه اليوم</button>`:"",
     ...NEXT[s].slice(0,1).map(([to,l])=>`<button class="btn small sbtn solid" data-s="${to}" data-act="status" data-id="${t.id}" data-to="${to}">${l}</button>`)].join("");
   return `<div class="arow ${isOverdue(t)?"late":""}" data-act="open" data-id="${t.id}" data-s="${s}">
@@ -788,8 +805,13 @@ function arow(t){
 }
 function viewAll(){
   const {list,counts}=archData();
+  if(state.tab==="archive"){
+    if(!list.length) return `<div class="empty"><b>${state.arch.q?"ما لقيت شي بهالبحث":"الأرشيف لسا فاضي"}</b>${state.arch.q?"جرّب كلمة تانية.":"لما تكبس «تم الاعتماد» على أي عمل بينتقل لهون."}</div>`;
+    const g=new Map(); for(const t of list){ const k=fmtMonth.format(new Date(doneAt(t))); if(!g.has(k)) g.set(k,[]); g.get(k).push(t); }
+    return [...g].map(([k,ts])=>`<div class="month">اعتُمد ${esc(k)}<span class="n">${ts.length}</span></div><div class="arows">${ts.map(arow).join("")}</div>`).join("");
+  }
   const chips=`<div class="fchips">${AF.map(([k,l])=>`<button class="fchip ${state.arch.f===k?"on":""} ${k==="late"&&counts.late?"hot":""}" data-act="arch-f" data-id="${k}">${l}<span class="n">${counts[k]}</span></button>`).join("")}</div>`;
-  if(!list.length) return chips+`<div class="empty"><b>${state.arch.q?"ما لقيت شي بهالبحث":state.arch.f==="late"?"ما في ولا عمل متأخّر 👏":"ما في أعمال هون"}</b>${state.arch.q?"جرّب كلمة تانية أو غيّر الفلتر.":"جرّب فلتر تاني من فوق."}</div>`;
+  if(!list.length) return chips+`<div class="empty"><b>${state.arch.q?"ما لقيت شي بهالبحث":state.arch.f==="late"?"ما في ولا عمل متأخّر 👏":"ما في شغل مفتوح هون 👏"}</b>${state.arch.q?"جرّب كلمة تانية أو غيّر الفلتر.":"جرّب فلتر تاني من فوق."}</div>`;
   const groups=new Map();
   for(const t of list){ const k= state.arch.sort==="due" ? (t.due?fmtMonth.format(parseKey(t.due)):"بدون موعد تسليم") : fmtMonth.format(new Date(receivedAt(t))); if(!groups.has(k)) groups.set(k,[]); groups.get(k).push(t); }
   return chips+[...groups].map(([k,ts])=>`<div class="month">${state.arch.sort==="due"&&k!=="بدون موعد تسليم"?"تسليم ":""}${esc(k)}<span class="n">${ts.length}</span></div><div class="arows">${ts.map(arow).join("")}</div>`).join("");
@@ -798,8 +820,8 @@ function csvCell(v){ v=String(v??""); return /[",\n]/.test(v)?'"'+v.replace(/"/g
 async function exportCsv(){
   if(!dl) return;
   const fd=ms=>ms?toLocalInput(ms).replace("T"," "):"";
-  const rows=[["العمل","المنصة","النوع","الحالة","الاستلام","التسليم","موعد التسليم المطلوب","بداية الشغل","نهاية الشغل","عدد التعديلات","الوقت الفعلي (ساعات)","ملاحظات"]];
-  for(const t of archData().list) rows.push([t.title,pName(t),KINDS[t.kind].name,stName(statusOf(t),t.kind),fd(receivedAt(t)),fd(deliveredAt(t)),(t.due||"")+(t.dueTime?" "+t.dueTime:""),t.date,t.end,revisions(t),(spentMin(t)/60).toFixed(1),t.notes||""]);
+  const rows=[["العمل","المنصة","النوع","الحالة","الاستلام","الاعتماد","النشر","موعد التسليم المطلوب","بداية الشغل","نهاية الشغل","عدد التعديلات","الوقت الفعلي (ساعات)","ملاحظات"]];
+  for(const t of archData().list) rows.push([t.title,pName(t),KINDS[t.kind].name,stName(statusOf(t),t.kind),fd(receivedAt(t)),fd(doneAt(t)),fd(t.publishedAt),(t.due||"")+(t.dueTime?" "+t.dueTime:""),t.date,t.end,revisions(t),(spentMin(t)/60).toFixed(1),t.notes||""]);
   const csv="\ufeff"+rows.map(r=>r.map(csvCell).join(",")).join("\r\n");
   try{ await dl.save({filename:`تايملاين-${todayKey()}.csv`,data:csv}); toast("انحفظ الملف"); }
   catch(e){ if(e&&e.code!=="declined") toast("ما زبط التصدير هالمرة. جرّب كمان شوي."); }
@@ -808,16 +830,16 @@ async function exportCsv(){
 function viewPlatforms(){
   const ps=sortedPlatforms(), ts=allTasks(), month=todayKey().slice(0,7);
   const cards=ps.map(([id,p])=>{
-    const mine=ts.filter(t=>t.platform===id), open=mine.filter(t=>statusOf(t)!=="delivered");
-    const del=mine.filter(t=>statusOf(t)==="delivered"), delMonth=del.filter(t=>keyOf(new Date(deliveredAt(t))).slice(0,7)===month).length;
-    const avg=del.length?del.reduce((s,t)=>s+(deliveredAt(t)-receivedAt(t)),0)/del.length:null;
+    const mine=ts.filter(t=>t.platform===id), open=mine.filter(t=>!isDone(t));
+    const del=mine.filter(t=>isDone(t)), delMonth=del.filter(t=>keyOf(new Date(doneAt(t))).slice(0,7)===month).length;
+    const avg=del.length?del.reduce((s,t)=>s+(doneAt(t)-receivedAt(t)),0)/del.length:null;
     const revAvg=mine.length?(mine.reduce((s,t)=>s+revisions(t),0)/mine.length):0;
     const pd=pendingDelete.has("p:"+id);
     return `<div class="pcard"><div class="h"><span class="dot" style="--c:${p.color};width:14px;height:14px"></span>
       <input id="pname-${id}" value="${esc(p.name)}" data-act="pname" data-id="${id}" aria-label="اسم المنصة" ${readOnly?"disabled":""}>
       ${readOnly?"":pd?`<button class="confirm" data-act="pdel" data-id="${id}">تأكيد الحذف</button>`:`<button class="iconbtn" data-act="pdel" data-id="${id}" aria-label="حذف المنصة">${I.trash}</button>`}</div>
-      <div class="pnums"><div><small>شغل مفتوح</small><b>${open.length}</b></div><div><small>تسلّم هالشهر</small><b>${delMonth}</b></div><div><small>بانتظار اعتماد</small><b>${open.filter(t=>statusOf(t)==="review").length}</b></div>
-      <div><small>متوسط التسليم</small><b style="font-size:.9rem">${avg==null?"—":human(avg)}</b></div><div><small>تعديلات / عمل</small><b>${revAvg.toFixed(1)}</b></div><div><small>متأخّر</small><b style="${open.filter(isLate).length?"color:var(--danger)":""}">${open.filter(isLate).length}</b></div></div>
+      <div class="pnums"><div><small>شغل مفتوح</small><b>${open.length}</b></div><div><small>اعتُمد هالشهر</small><b>${delMonth}</b></div><div><small>بانتظار اعتماد</small><b>${open.filter(t=>statusOf(t)==="review").length}</b></div>
+      <div><small>متوسط الإنجاز</small><b style="font-size:.9rem">${avg==null?"—":human(avg)}</b></div><div><small>تعديلات / عمل</small><b>${revAvg.toFixed(1)}</b></div><div><small>متأخّر</small><b style="${open.filter(isLate).length?"color:var(--danger)":""}">${open.filter(isLate).length}</b></div></div>
       ${readOnly?"":`<div class="swatches">${COLORS.map(c=>`<button class="sw ${c===p.color?"on":""}" style="--c:${c}" data-act="pcolor" data-id="${id}" data-c="${c}" aria-label="لون"></button>`).join("")}</div>`}</div>`;}).join("");
   return `${readOnly?"":`<form class="quick" id="pform" style="grid-template-columns:minmax(0,1fr) auto"><input id="p-new" placeholder="أضف منصة أو عميل جديد…" aria-label="اسم المنصة"><button class="btn primary" type="submit">أضف منصة</button></form>`}
     ${ps.length?`<div class="pgrid">${cards}</div>`:`<div class="empty"><b>ما في منصات بعد</b>أضف المنصات اللي بتشتغل معها، وكل وحدة بتاخد لون خاص.</div>`}
@@ -844,12 +866,12 @@ function renderSheet(){
   let statusBlock, histBlock="";
   if(isNew){
     statusBlock=`<div class="block"><h4>الحالة والاستلام</h4><div class="fgrid">
-      <div class="field"><label for="d-init">الحالة الحالية</label><select id="d-init">${ST_ORDER.filter(x=>x!=="delivered").map(x=>`<option value="${x}" ${x===s?"selected":""}>${stName(x,t.kind)}</option>`).join("")}</select></div>
+      <div class="field"><label for="d-init">الحالة الحالية</label><select id="d-init">${ST_ORDER.filter(x=>x!==DONE).map(x=>`<option value="${x}" ${x===s?"selected":""}>${stName(x,t.kind)}</option>`).join("")}</select></div>
       <div class="field"><label for="d-received">تاريخ ووقت الاستلام</label><input type="datetime-local" id="d-received" value="${toLocalInput(t.receivedAt)}"></div></div></div>`;
   } else {
     const rv=revisions(t);
     statusBlock=`<div class="statusbox" data-s="${s}"><div class="now"><b>${esc(stName(s,t.kind))}</b><small>${esc(ST_HINT[s])}${rv?` · ${rv===1?"تعديل واحد":rv+" تعديلات"}`:""}</small></div>
-      ${readOnly?"":`<div class="acts">${NEXT[s].map(([to,l],i)=>`<button class="btn small sbtn ${i===0?"solid":""}" data-s="${to}" data-act="status" data-id="${t.id}" data-to="${to}">${l}</button>`).join("")}
+      ${readOnly?"":`<div class="acts">${s===DONE?`<button class="btn small" data-act="reopen" data-id="${t.id}">رجّعه للطاولة</button>`:""}${NEXT[s].map(([to,l],i)=>`<button class="btn small sbtn ${i===0?"solid":""}" data-s="${to}" data-act="status" data-id="${t.id}" data-to="${to}">${l}</button>`).join("")}
       <select id="d-setstatus" aria-label="غيّر الحالة يدوياً"><option value="">غيّر الحالة يدوياً…</option>${ST_ORDER.filter(x=>x!==s).map(x=>`<option value="${x}">${stName(x,t.kind)}</option>`).join("")}</select></div>`}</div>`;
     let prev=null;
     histBlock=`<div class="block"><h4>سجلّ المراحل (بتقدر تعدّل التاريخ والوقت)</h4><ol class="hist">${t.log.map((e,i)=>{
@@ -870,7 +892,8 @@ function renderSheet(){
         <div class="field"><label for="d-kind">نوع العمل</label><select id="d-kind" ${dis}>${kindOptions(t.kind)}</select></div></div></div>
       <div class="block"><h4>المواعيد</h4><div class="fgrid">
         ${isNew?"":`<div class="field"><label>تاريخ ووقت الاستلام</label><div class="ro mono">${fmtDT.format(receivedAt(t))}</div></div>
-        <div class="field"><label>تاريخ ووقت التسليم</label><div class="ro mono">${deliveredAt(t)?fmtDT.format(deliveredAt(t)):"لسا ما تسلّم"}</div></div>`}
+        <div class="field"><label>تاريخ ووقت الاعتماد</label><div class="ro mono">${doneAt(t)?fmtDT.format(doneAt(t)):"لسا ما اعتُمد"}</div></div>
+        <div class="field full"><label for="d-pub">تم النشر (اختياري)</label><div style="display:flex;gap:6px"><input type="datetime-local" id="d-pub" value="${t.publishedAt?toLocalInput(t.publishedAt):""}" ${dis}>${readOnly?"":`<button type="button" class="btn small" data-act="pub-now" data-id="${t.id}">هلّق</button>`}</div><span class="hint">لتعرف إيمت انتشرت المادة. ما إلها علاقة بالمراحل، إذا تركتها فاضية ما بيصير شي.</span></div>`}
         <div class="field"><label for="d-date">بلّش شغل فيه يوم</label><input type="date" id="d-date" value="${t.date}" ${dis}></div>
         <div class="field"><label for="d-end">لخلّص الشغل يوم</label><input type="date" id="d-end" value="${t.end}" ${dis}><div class="presets" id="spanPresets">${[1,2,3,5,7].map(n=>`<button type="button" data-span="${n}">${n===1?"يوم":n===2?"يومين":n+" أيام"}</button>`).join("")}</div></div>
         <div class="field"><label for="d-due">الموعد المطلوب للتسليم</label><input type="date" id="d-due" value="${t.due||""}" ${dis}></div>
@@ -882,8 +905,8 @@ function renderSheet(){
           <div class="presets" id="estPresets">${[30,60,120,240,480,960].map(m=>`<button type="button" data-m="${m}">${tc(m)}</button>`).join("")}</div>
           <span class="hint" id="perDay">${span(t)>1?`يعني تقريباً ${tc((+t.est||0)/span(t))} باليوم على ${span(t)} أيام`:"&nbsp;"}</span></div>
         ${isNew?"":`<div class="timebox"><span class="big" data-live="${t.id}">${running?tcSec(spentMin(t)*60):tc(spentMin(t))}</span><span class="of">شغل فعلي من ${tc(+t.est||0)}</span>
-          ${statusOf(t)!=="delivered"&&!readOnly?`<button class="btn small ${running?"primary":""}" data-act="timer" data-id="${t.id}">${running?I.pause+"إيقاف":I.play+"ابدأ المؤقّت"}</button>`:""}</div>`}</div>
-      ${isNew||statusOf(t)==="delivered"?"":calBlock(t)}
+          ${!isDone(t)&&!readOnly?`<button class="btn small ${running?"primary":""}" data-act="timer" data-id="${t.id}">${running?I.pause+"إيقاف":I.play+"ابدأ المؤقّت"}</button>`:""}</div>`}</div>
+      ${isNew||isDone(t)?"":calBlock(t)}
       <div class="block"><h4>الملفات والملاحظات</h4>
         <div class="field"><label for="d-link">رابط الملفات</label><div style="display:flex;gap:6px"><input id="d-link" type="url" dir="ltr" placeholder="https://drive.google.com/…" value="${esc(t.link||"")}" ${dis}>${t.link?`<a class="btn small" href="${esc(t.link)}" target="_blank" rel="noopener">فتح ${I.link}</a>`:""}</div></div>
         <div class="field"><label for="d-notes">ملاحظات / البريف</label><textarea id="d-notes" placeholder="تفاصيل الطلب، المقاسات، الموسيقى، الشعار…" ${dis}>${esc(t.notes||"")}</textarea></div></div>
@@ -945,12 +968,13 @@ dlg.addEventListener("change",e=>{
     else if(FIELD[el.id]) d[FIELD[el.id]]= ["priority","est"].includes(FIELD[el.id])?+el.value:el.value.trim?el.value.trim():el.value;
     if(el.id==="d-date"&&d.end<d.date){ d.end=d.date; $("d-end").value=d.end; }
     if(el.id==="d-end"&&d.end<d.date){ d.end=d.date; $("d-end").value=d.end; }
-    if(el.id==="d-kind"){ const sel=$("d-init"), v=sel.value; sel.innerHTML=ST_ORDER.filter(x=>x!=="delivered").map(x=>`<option value="${x}">${stName(x,d.kind)}</option>`).join(""); sel.value=v; }
+    if(el.id==="d-kind"){ const sel=$("d-init"), v=sel.value; sel.innerHTML=ST_ORDER.filter(x=>x!==DONE).map(x=>`<option value="${x}">${stName(x,d.kind)}</option>`).join(""); sel.value=v; }
     updatePerDay(d); return;
   }
   const id=sheet.id, t=state.tasks[id]; if(!t) return;
   if(el.id==="d-setstatus"&&el.value){ setStatus(id,el.value); return; }
   if(el.dataset.hat!=null){ const i=+el.dataset.hat, at=fromLocalInput(el.value); if(at){ const log=t.log.map(x=>({...x})); log[i].at=at; patchTask(id,{log}); renderSheet(); } return; }
+  if(el.id==="d-pub"){ patchTask(id,{publishedAt:fromLocalInput(el.value)}); return; }
   if(el.dataset.h!=null){ const i=+el.dataset.h, log=t.log.map(x=>({...x})); log[i].note=el.value.trim(); patchTask(id,{log}); return; }
   const f=FIELD[el.id]; if(!f) return;
   let v=["priority","est"].includes(f)?Math.max(0,+el.value||0):el.value.trim();
@@ -978,9 +1002,9 @@ function setStatus(id,to){
   const t=state.tasks[id]; if(!t||statusOf(t)===to) return;
   const log=[...t.log.map(x=>({...x})),{s:to,at:Date.now()}];
   const patch={log};
-  if(to==="delivered"&&t.timerStart){ patch.spent=(t.spent||0)+(Date.now()-t.timerStart)/6e4; patch.timerStart=null; }
+  if(to===DONE&&t.timerStart){ patch.spent=(t.spent||0)+(Date.now()-t.timerStart)/6e4; patch.timerStart=null; }
   patchTask(id,patch);
-  if(to==="delivered") toast(`يعطيك العافية! «${t.title}» تسلّم ✓`);
+  if(to===DONE) toast(`✅ اعتُمد «${t.title}» وانتقل للأرشيف. يعطيك العافية!`);
   else if(to==="revision"){ openSheet(id,{focusNote:true}); return; }
   else toast(`«${t.title}»: ${stName(to,t.kind)}`);
   if(sheet.id===id) renderSheet();
@@ -1001,7 +1025,7 @@ document.addEventListener("click",e=>{
   if(e.target.closest("a")) return;
   const act=b.dataset.act, id=b.dataset.id;
   if(act!=="open") e.stopPropagation();
-  const safe=["open","filter","goto","week","close","arch-f","arch-late"];
+  const safe=["open","filter","goto","week","close","arch-f","arch-late","go-archive","week-done"];
   if(readOnly&&!safe.includes(act)) return;
   switch(act){
     case "open": if(b.tagName!=="ARTICLE"||!e.target.closest("button")) openSheet(id); break;
@@ -1016,6 +1040,11 @@ document.addEventListener("click",e=>{
       break;
     case "filter": state.filter=id; render(); break;
     case "arch-f": state.arch.f=id; render(); break;
+    case "go-archive": state.tab="archive"; saveTab(); render(); window.scrollTo({top:0}); break;
+    case "week-done": state.weekDone=!state.weekDone; render(); break;
+    case "pub-now": { const t=state.tasks[id]; if(!t) break; patchTask(id,{publishedAt:Date.now()}); if(sheet.id===id) renderSheet(); toast(`سجّلت إنو «${t.title}» انتشرت هلّق`); break; }
+    case "reopen": { const t=state.tasks[id]; if(!t) break; const tk=todayKey(); const patch={log:[...t.log.map(x=>({...x})),{s:"revision",at:Date.now()}]}; if(t.end<tk){ patch.end=tk; } if(t.date>tk) patch.date=tk;
+      patchTask(id,patch); if(sheet.id===id) renderSheet(); toast(`«${t.title}» رجع للطاولة كـ«قيد التعديل»`); break; }
     case "arch-late": state.tab="all"; state.arch.f="late"; saveTab(); render(); break;
     case "to-today": { const t=state.tasks[id], tk=todayKey(); if(!t) break; patchTask(id, t.date>tk?{date:tk}:{end:tk}); toast(`«${t.title}» صار ضمن شغل اليوم`); break; }
     case "dup": { const t=state.tasks[id]; if(!t) break; const nid=uid(), tk=todayKey(), now=Date.now();
@@ -1105,7 +1134,7 @@ try{ applyTheme(localStorage.getItem(LS_KEY+":theme")||"auto"); }catch(e){ apply
 
 /* ---------- boot ---------- */
 loadLocal();
-try{ const tb=localStorage.getItem(LS_KEY+":tab"); if(tb&&["day","board","week","all","platforms"].includes(tb)) state.tab=tb; }catch(e){}
+try{ const tb=localStorage.getItem(LS_KEY+":tab"); if(tb&&["day","board","week","all","archive","platforms"].includes(tb)) state.tab=tb; }catch(e){}
 renderSelects(); render(); checkReminders();
 connectDb();
 })();
