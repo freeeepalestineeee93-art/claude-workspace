@@ -87,7 +87,9 @@ export function ArabicText({ text, family = 'IBM Plex Sans Arabic', weight = 700
     {units.map((u, i) => {
       let p = reveal ? progress(reveal, i, n, t, fps) : 1;
       const st = { x: 0, y: 0, opacity: 1, scale: 1, rotate: 0, blur: 0 };
-      for (const [k, v] of Object.entries(reveal?.from ?? {})) st[k] = v + (st[k] - v) * p;
+      // from ممكن تكون دالة (i, n) → قيم مختلفة لكل وحدة (كلمات بتطير من أماكن متفرقة)
+      const fr = typeof reveal?.from === 'function' ? reveal.from(i, n) : reveal?.from;
+      for (const [k, v] of Object.entries(fr ?? {})) st[k] = v + (st[k] - v) * p;
       if (exit && t >= exit.at) { const q = progress(exit, i, n, t, fps); for (const [k, v] of Object.entries(exit.to ?? {})) st[k] = st[k] + (v - st[k]) * q; }
       if (st.opacity <= 0.001) return null;
       const cx = u.box.cx, cy = u.box.cy;
