@@ -15,11 +15,22 @@ BUILD_DIR="$(mktemp -d)"
 trap 'rm -rf "$BUILD_DIR"' EXIT
 APP="FindIt.app"
 SRC="$(pwd)/FindItApp.swift"
+ICON_SRC="$(pwd)/make_icon.swift"
 cd "$BUILD_DIR"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 
 echo "عم ابني التطبيق..."
 swiftc -O -parse-as-library "$SRC" -o "$APP/Contents/MacOS/FindIt"
+
+echo "عم ارسم الأيقونة..."
+swiftc -O "$ICON_SRC" -o make_icon
+./make_icon icon_1024.png
+mkdir AppIcon.iconset
+for s in 16 32 128 256 512; do
+  sips -z $s $s icon_1024.png --out "AppIcon.iconset/icon_${s}x${s}.png" >/dev/null
+  sips -z $((s * 2)) $((s * 2)) icon_1024.png --out "AppIcon.iconset/icon_${s}x${s}@2x.png" >/dev/null
+done
+iconutil -c icns AppIcon.iconset -o "$APP/Contents/Resources/AppIcon.icns"
 
 cat > "$APP/Contents/Info.plist" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
@@ -27,6 +38,7 @@ cat > "$APP/Contents/Info.plist" <<PLIST
 <plist version="1.0">
 <dict>
   <key>CFBundleExecutable</key><string>FindIt</string>
+  <key>CFBundleIconFile</key><string>AppIcon</string>
   <key>CFBundleIdentifier</key><string>local.findit</string>
   <key>CFBundleName</key><string>FindIt</string>
   <key>CFBundleDisplayName</key><string>FindIt</string>
