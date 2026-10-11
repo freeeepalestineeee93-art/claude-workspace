@@ -29,12 +29,25 @@ struct FoundFile: Identifiable, Hashable, Sendable {
 enum Scope: String, CaseIterable, Identifiable {
     case home = "مجلدي"
     case whole = "كل الجهاز"
+    case external = "الهاردات الخارجية"
     var id: String { rawValue }
 
-    var root: URL {
+    var roots: [URL] {
         switch self {
-        case .home: return FileManager.default.homeDirectoryForCurrentUser
-        case .whole: return URL(fileURLWithPath: "/")
+        case .home: return [FileManager.default.homeDirectoryForCurrentUser]
+        case .whole: return [URL(fileURLWithPath: "/")]
+        case .external: return Scope.externalVolumes()
+        }
+    }
+
+    /// كل الهاردات الموصولة تحت /Volumes، من غير قرص الماك نفسه
+    static func externalVolumes() -> [URL] {
+        let keys: [URLResourceKey] = [.volumeIsRootFileSystemKey]
+        let volumes = FileManager.default.mountedVolumeURLs(
+            includingResourceValuesForKeys: keys, options: [.skipHiddenVolumes]) ?? []
+        return volumes.filter { url in
+            let isRoot = (try? url.resourceValues(forKeys: Set(keys)))?.volumeIsRootFileSystem ?? false
+            return url.path.hasPrefix("/Volumes/") && !isRoot
         }
     }
 }
@@ -97,45 +110,44 @@ final class Searcher: ObservableObject {
         }
         isSearching = true
 
-        let root = scope.root
+        let roots = scope.roots
         let matcher = Matcher(query)
 
         task = Task.detached(priority: .userInitiated) { [weak self] in
             let fm = FileManager.default
-            guard let enumerator = fm.enumerator(
-                at: root,
-                includingPropertiesForKeys: [.isDirectoryKey],
-                options: [.skipsHiddenFiles, .skipsPackageDescendants],
-                errorHandler: { _, _ in true }
-            ) else {
-                await self?.finish([], hitLimit: false, gen: gen)
-                return
-            }
-
             var batch: [FoundFile] = []
             var found = 0
             var lastFlush = Date()
 
-            while let url = enumerator.nextObject() as? URL {
-                if Task.isCancelled { return }
+            search: for root in roots {
+                guard let enumerator = fm.enumerator(
+                    at: root,
+                    includingPropertiesForKeys: [.isDirectoryKey],
+                    options: [.skipsHiddenFiles, .skipsPackageDescendants],
+                    errorHandler: { _, _ in true }
+                ) else { continue }
 
-                let name = url.lastPathComponent
-                if SearchConfig.skippedNames.contains(name) || SearchConfig.skippedPaths.contains(url.path) {
-                    enumerator.skipDescendants()
-                    continue
-                }
+                while let url = enumerator.nextObject() as? URL {
+                    if Task.isCancelled { return }
 
-                if matcher.matches(name) {
-                    batch.append(FoundFile(url: url))
-                    found += 1
-                    if found >= SearchConfig.maxResults { break }
-                }
+                    let name = url.lastPathComponent
+                    if SearchConfig.skippedNames.contains(name) || SearchConfig.skippedPaths.contains(url.path) {
+                        enumerator.skipDescendants()
+                        continue
+                    }
 
-                if !batch.isEmpty && Date().timeIntervalSince(lastFlush) > 0.15 {
-                    let chunk = batch
-                    batch.removeAll()
-                    lastFlush = Date()
-                    await self?.append(chunk, gen: gen)
+                    if matcher.matches(name) {
+                        batch.append(FoundFile(url: url))
+                        found += 1
+                        if found >= SearchConfig.maxResults { break search }
+                    }
+
+                    if !batch.isEmpty && Date().timeIntervalSince(lastFlush) > 0.15 {
+                        let chunk = batch
+                        batch.removeAll()
+                        lastFlush = Date()
+                        await self?.append(chunk, gen: gen)
+                    }
                 }
             }
 
@@ -188,7 +200,7 @@ struct ContentView: View {
                 }
                 .pickerStyle(.segmented)
                 .labelsHidden()
-                .frame(width: 180)
+                .frame(width: 300)
             }
             .padding(14)
 
@@ -257,9 +269,20 @@ struct ContentView: View {
                     .font(.system(size: 40))
                 Text(query.isEmpty
                      ? "اكتب اسم الملف أو جزء منه — بتقدر تستعمل * مثل report*.pdf"
-                     : (scope == .home ? "ما لقيت شي بمجلدك — جرّب «كل الجهاز»" : "ما لقيت أي ملف بهالاسم"))
+                     : emptyMessage)
             }
             .foregroundStyle(.secondary)
+        }
+    }
+
+    private var emptyMessage: String {
+        switch scope {
+        case .home: return "ما لقيت شي بمجلدك — جرّب «كل الجهاز» أو «الهاردات الخارجية»"
+        case .whole: return "ما لقيت أي ملف بهالاسم"
+        case .external:
+            return Scope.externalVolumes().isEmpty
+                ? "ما في ولا هارد خارجي موصول هلّق"
+                : "ما لقيت شي عالهاردات الخارجية"
         }
     }
 
