@@ -9,12 +9,17 @@ if ! command -v swiftc >/dev/null 2>&1; then
   exit 1
 fi
 
+# منبني بمجلد مؤقت على قرص الماك: لو المشروع على هارد خارجي (ExFAT) الماك بيزرع
+# ملفات ._ جوّا التطبيق وهيك التوقيع بيفشل
+BUILD_DIR="$(mktemp -d)"
+trap 'rm -rf "$BUILD_DIR"' EXIT
 APP="FindIt.app"
-rm -rf "$APP"
+SRC="$(pwd)/FindItApp.swift"
+cd "$BUILD_DIR"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 
 echo "عم ابني التطبيق..."
-swiftc -O -parse-as-library FindItApp.swift -o "$APP/Contents/MacOS/FindIt"
+swiftc -O -parse-as-library "$SRC" -o "$APP/Contents/MacOS/FindIt"
 
 cat > "$APP/Contents/Info.plist" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
@@ -34,9 +39,9 @@ cat > "$APP/Contents/Info.plist" <<PLIST
 </plist>
 PLIST
 
-codesign --force --sign - "$APP" >/dev/null 2>&1 || true
+codesign --force --sign - "$APP"
 
 rm -rf "/Applications/$APP"
-cp -R "$APP" /Applications/
+ditto "$APP" "/Applications/$APP"
 echo "تم ✅  التطبيق صار بمجلد Applications — افتحه من Launchpad أو اكتب FindIt بـ Spotlight"
 open "/Applications/$APP"

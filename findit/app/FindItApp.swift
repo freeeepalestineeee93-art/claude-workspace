@@ -80,9 +80,13 @@ final class Searcher: ObservableObject {
     @Published private(set) var hitLimit = false
 
     private var task: Task<Void, Never>?
+    // رقم كل بحث — منه منعرف إذا النتائج اللي وصلت تابعة لبحث قديم انلغى
+    private var generation = 0
 
     func search(_ rawQuery: String, scope: Scope) {
         task?.cancel()
+        generation += 1
+        let gen = generation
         results = []
         hitLimit = false
 
@@ -103,7 +107,10 @@ final class Searcher: ObservableObject {
                 includingPropertiesForKeys: [.isDirectoryKey],
                 options: [.skipsHiddenFiles, .skipsPackageDescendants],
                 errorHandler: { _, _ in true }
-            ) else { return }
+            ) else {
+                await self?.finish([], hitLimit: false, gen: gen)
+                return
+            }
 
             var batch: [FoundFile] = []
             var found = 0
@@ -128,22 +135,24 @@ final class Searcher: ObservableObject {
                     let chunk = batch
                     batch.removeAll()
                     lastFlush = Date()
-                    await self?.append(chunk)
+                    await self?.append(chunk, gen: gen)
                 }
             }
 
             if Task.isCancelled { return }
             let chunk = batch
             let limited = found >= SearchConfig.maxResults
-            await self?.finish(chunk, hitLimit: limited)
+            await self?.finish(chunk, hitLimit: limited, gen: gen)
         }
     }
 
-    private func append(_ chunk: [FoundFile]) {
+    private func append(_ chunk: [FoundFile], gen: Int) {
+        guard gen == generation else { return }
         results.append(contentsOf: chunk)
     }
 
-    private func finish(_ chunk: [FoundFile], hitLimit: Bool) {
+    private func finish(_ chunk: [FoundFile], hitLimit: Bool, gen: Int) {
+        guard gen == generation else { return }
         results.append(contentsOf: chunk)
         self.hitLimit = hitLimit
         isSearching = false
