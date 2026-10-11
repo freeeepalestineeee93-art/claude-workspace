@@ -1,0 +1,87 @@
+#!/bin/bash
+# findit — بحث سريع عن الملفات بالاسم على الماك، بدون الاعتماد على Spotlight.
+#
+# الاستخدام:
+#   findit <جزء من الاسم>          بحث داخل مجلد المستخدم (~)
+#   findit -a <الاسم>              بحث بكل الجهاز
+#   findit -d <مجلد> <الاسم>       بحث داخل مجلد معيّن
+#   findit -e <الاسم>              تطابق الاسم بالضبط (مو جزء منه)
+#   findit -n <الاسم>              بدون سؤال فتح الملف بالفايندر
+#
+# البحث ما بيفرّق بين الأحرف الكبيرة والصغيرة، ويقبل * كـ wildcard (مثال: findit "report*.pdf").
+
+set -u
+
+ROOT="$HOME"
+EXACT=0
+INTERACTIVE=1
+MAX=200
+
+usage() { sed -n '2,12p' "$0" | sed 's/^# \{0,1\}//'; exit "${1:-0}"; }
+
+while getopts ":ad:enh" opt; do
+  case "$opt" in
+    a) ROOT="/" ;;
+    d) ROOT="$OPTARG" ;;
+    e) EXACT=1 ;;
+    n) INTERACTIVE=0 ;;
+    h) usage 0 ;;
+    *) usage 1 ;;
+  esac
+done
+shift $((OPTIND - 1))
+
+[ $# -eq 0 ] && usage 1
+QUERY="$*"
+
+if [ ! -d "$ROOT" ]; then
+  echo "المجلد غير موجود: $ROOT" >&2
+  exit 1
+fi
+
+if [ "$EXACT" -eq 1 ]; then
+  PATTERN="$QUERY"
+else
+  PATTERN="*$QUERY*"
+fi
+
+# مجلدات ضخمة وما فيها ملفات شخصية — منتخطاها لنسرّع البحث
+PRUNE=( -name .Trash -o -name node_modules -o -name .git -o -name Caches \
+        -o -name .cache -o -name .npm -o -name System -o -name private \
+        -o -name Volumes -o -path "$HOME/Library/Containers" \
+        -o -path "$HOME/Library/Group Containers" )
+
+if [ -t 1 ]; then
+  BOLD=$'\033[1m'; DIM=$'\033[2m'; GREEN=$'\033[32m'; RESET=$'\033[0m'
+else
+  BOLD=""; DIM=""; GREEN=""; RESET=""
+fi
+
+echo "${DIM}عم دوّر على \"$QUERY\" داخل $ROOT ...${RESET}" >&2
+
+RESULTS=()
+while IFS= read -r line; do
+  RESULTS+=("$line")
+  n=${#RESULTS[@]}
+  dir=$(dirname "$line"); base=$(basename "$line")
+  printf "%s%3d)%s %s%s%s/%s%s%s\n" "$GREEN" "$n" "$RESET" "$DIM" "$dir" "$RESET" "$BOLD" "$base" "$RESET"
+  [ "$n" -ge "$MAX" ] && break
+done < <(find "$ROOT" \( "${PRUNE[@]}" \) -prune -o -iname "$PATTERN" -print 2>/dev/null)
+
+COUNT=${#RESULTS[@]}
+if [ "$COUNT" -eq 0 ]; then
+  echo "ما لقيت أي ملف اسمه فيه \"$QUERY\"." >&2
+  [ "$ROOT" != "/" ] && echo "جرّب البحث بكل الجهاز: findit -a \"$QUERY\"" >&2
+  exit 1
+fi
+
+[ "$COUNT" -ge "$MAX" ] && echo "${DIM}(وقفت عند أول $MAX نتيجة — جرّب اسم أدق)${RESET}" >&2
+
+# فتح المكان بالفايندر (بس إذا كنا على ماك وبتيرمنال تفاعلي)
+if [ "$INTERACTIVE" -eq 1 ] && [ -t 0 ] && command -v open >/dev/null 2>&1; then
+  printf "\nاكتب رقم الملف لتفتح مكانه بالفايندر (أو Enter للخروج): " >&2
+  read -r choice
+  if [[ "$choice" =~ ^[0-9]+$ ]] && [ "$choice" -ge 1 ] && [ "$choice" -le "$COUNT" ]; then
+    open -R "${RESULTS[$((choice - 1))]}"
+  fi
+fi
